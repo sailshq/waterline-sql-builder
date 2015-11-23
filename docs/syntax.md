@@ -209,9 +209,11 @@ select * from "accounts" where "id" IN (select "id" from "users" where "votes" >
 {
   select: ['id'],
   from: 'users',
-  whereNot: {
-    firstName: 'Test',
-    lastName: 'User'
+  where: {
+    not: {
+      firstName: 'Test',
+      lastName: 'User'
+    }
   }
 }
 ```
