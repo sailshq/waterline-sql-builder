@@ -26,7 +26,9 @@ single `'*'` value to represent all values.
 
 **Outputs:**
 
-`select 'title', 'author', 'year' from 'books'`
+```sql
+select 'title', 'author', 'year' from 'books'
+```
 
 **Example of all columns**
 
@@ -39,7 +41,9 @@ single `'*'` value to represent all values.
 
 **Outputs:**
 
-`select * from 'books'`
+```sql
+select * from 'books'
+```
 
 
 ### From
@@ -57,7 +61,9 @@ Specifies which table to perform the query on.
 
 **Outputs:**
 
-`select * from "books"`
+```sql
+select * from "books"
+```
 
 
 ### Schemas
@@ -75,7 +81,9 @@ You can specifiy a schema to be used as a prefix of the table name.
 
 **Outputs:**
 
-`select * from "public"."books"`
+```sql
+select * from "public"."books"
+```
 
 
 ## Where Clauses
@@ -100,7 +108,9 @@ as sub queries.
 
 **Outputs:**
 
-`select "id" from "books" where "firstName" = 'Test' and "lastName" = 'User'`
+```sql
+select "id" from "books" where "firstName" = 'Test' and "lastName" = 'User'
+```
 
 
 ### Using Operators
@@ -117,7 +127,9 @@ as sub queries.
 
 **Outputs:**
 
-`select * from "users" where "votes" > '100'`
+```sql
+select * from "users" where "votes" > '100'
+```
 
 
 ### Grouped Clauses
@@ -146,7 +158,9 @@ as sub queries.
 
 **Outputs:**
 
-`select * from "users" where ("id" = '1' or "id" > '10') or "name" = 'Tester'`
+```sql
+select * from "users" where ("id" = '1' or "id" > '10') or "name" = 'Tester'
+```
 
 
 ### Sub-Queries
@@ -180,7 +194,9 @@ queries within a query as well as show a combination of AND and OR operators.
 
 **Outputs:**
 
-`select * from "accounts" where "id" IN (select "id" from "users" where "votes" > '100' and "status" = 'active' or "name" = 'John')`
+```sql
+select * from "accounts" where "id" IN (select "id" from "users" where "votes" > '100' and "status" = 'active' or "name" = 'John')
+```
 
 
 ## Where Not Clauses
@@ -202,7 +218,9 @@ queries within a query as well as show a combination of AND and OR operators.
 
 **Outputs:**
 
-`select "id" from "users" where not "firstName" = 'Test' and not "lastName" = 'User'`
+```sql
+select "id" from "users" where not "firstName" = 'Test' and not "lastName" = 'User'
+```
 
 
 ### Grouped Clauses
@@ -235,7 +253,9 @@ queries within a query as well as show a combination of AND and OR operators.
 
 **Outputs:**
 
-`select * from "users" where not ("id" = '1' or not "id" > '10') or not "name" = 'Tester'`
+```sql
+select * from "users" where not ("id" = '1' or not "id" > '10') or not "name" = 'Tester'
+```
 
 
 ### Operators
@@ -256,7 +276,9 @@ queries within a query as well as show a combination of AND and OR operators.
 
 **Outputs:**
 
-`select * from "users" where not "votes" > '100'`
+```sql
+select * from "users" where not "votes" > '100'
+```
 
 
 ## Where In
@@ -280,7 +302,9 @@ queries within a query as well as show a combination of AND and OR operators.
 
 **Outputs:**
 
-`select * from "users" where "id" in ('1', '2', '3') or "id" in ('4', '5', '6')`
+```sql
+select * from "users" where "id" in ('1', '2', '3') or "id" in ('4', '5', '6')
+```
 
 
 ### Sub Queries
@@ -304,7 +328,9 @@ queries within a query as well as show a combination of AND and OR operators.
 
 **Outputs:**
 
-`select "name" from "users" where "accountId" in (select "id" from "accounts")`
+```sql
+select "name" from "users" where "accountId" in (select "id" from "accounts")
+```
 
 
 ### Operators
@@ -331,4 +357,6 @@ queries within a query as well as show a combination of AND and OR operators.
 
 **Outputs:**
 
-`select * from "users" where "name" = 'John' or ("votes" > '100' and "title" not 'Admin')`
+```sql
+select * from "users" where "name" = 'John' or ("votes" > '100' and "title" not 'Admin')
+```
