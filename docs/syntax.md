@@ -362,3 +362,93 @@ select "name" from "users" where "accountId" in (select "id" from "accounts")
 ```sql
 select * from "users" where "name" = 'John' or ("votes" > '100' and "title" not 'Admin')
 ```
+
+
+## Where Not In
+
+#### Key Value
+
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  where: {
+    id: {
+      not: [1,2,3]
+    }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" where "id" not in ('1','2','3')
+```
+
+#### Operators
+
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  where: {
+    or: [
+      { name: { like: '%Test%' } },
+      { id: { not: [1,2,3] } }
+    ]
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" where "name" like '%Test%' or "id" not in ('1','2','3')
+```
+
+
+## Where Null
+
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  where: {
+    updatedAt: 'NULL'
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" where "updatedAt" is null
+```
+
+
+## Where Not Null
+
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  where: {
+    updatedAt: { not: 'NULL' }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" where "updatedAt" is not null
+```
