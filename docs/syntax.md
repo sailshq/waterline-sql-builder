@@ -91,7 +91,7 @@ select * from "public"."books"
 There are several helpers available to you to create complex where queries as well
 as sub queries.
 
-### Key Value
+#### Key Value
 
 **Example**
 
@@ -113,7 +113,7 @@ select "id" from "books" where "firstName" = 'Test' and "lastName" = 'User'
 ```
 
 
-### Using Operators
+#### Using Operators
 
 ```javascript
 {
@@ -132,7 +132,7 @@ select * from "users" where "votes" > '100'
 ```
 
 
-### Grouped Clauses
+#### Grouped Clauses
 
 **Example**
 
@@ -163,7 +163,7 @@ select * from "users" where ("id" = '1' or "id" > '10') or "name" = 'Tester'
 ```
 
 
-### Sub-Queries
+#### Sub-Queries
 
 You can also create subqueries. The following example will show you how to nest
 queries within a query as well as show a combination of AND and OR operators.
@@ -201,7 +201,7 @@ select * from "accounts" where "id" IN (select "id" from "users" where "votes" >
 
 ## Where Not Clauses
 
-### Key Value
+#### Key Value
 
 **Example**
 
@@ -223,7 +223,7 @@ select "id" from "users" where not "firstName" = 'Test' and not "lastName" = 'Us
 ```
 
 
-### Grouped Clauses
+#### Grouped Clauses
 
 **Example**
 
@@ -258,7 +258,7 @@ select * from "users" where not ("id" = '1' or not "id" > '10') or not "name" = 
 ```
 
 
-### Operators
+#### Operators
 
 **Example**
 
@@ -283,7 +283,7 @@ select * from "users" where not "votes" > '100'
 
 ## Where In
 
-### Key Value
+#### Key Value
 
 **Example:**
 
@@ -307,7 +307,7 @@ select * from "users" where "id" in ('1', '2', '3') or "id" in ('4', '5', '6')
 ```
 
 
-### Sub Queries
+#### Sub Queries
 
 **Example:**
 
@@ -333,7 +333,7 @@ select "name" from "users" where "accountId" in (select "id" from "accounts")
 ```
 
 
-### Operators
+#### Operators
 
 **Example:**
 
