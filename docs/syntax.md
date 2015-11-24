@@ -462,3 +462,58 @@ select * from "users" where "updatedAt" is not null
 
 **NOT SUPPORTED**
 
+
+## Where Between (proposed syntax)
+
+**NOTE:** Note sure if this is needed if we support the `>` and `<` operators.
+This could be represented as less than and greater than.
+
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  where: {
+    votes: {
+      between: [1, 100]
+    }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" where "votes" between '1' and '100'
+```
+
+
+## Where Raw (proposed syntax)
+
+Sometimes you can't express the query needed using the defined query language. For
+these rare cases a `raw` key is provided that allows you to pass in a string value
+to use as a where clause. For a NoSQL storage provider, a JSON stringified version
+may be supplied.
+
+**NOTE:** In this proposal, the word `raw` is reserved which would prevent you from
+searching using a column name `raw`. An alternative could be a clearer `whereRaw`
+object key name.
+
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  where: {
+    raw: ['id = ?', [1]]
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" where id = '1'
+```
