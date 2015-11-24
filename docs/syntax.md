@@ -86,6 +86,31 @@ select * from "public"."books"
 ```
 
 
+### Distinct (proposed syntax)
+
+Allows the ability to select `distinct` values.
+
+**NOTE:** Need to figure out what this would look like in a NOSql data store such
+as mongo. If it's a sql only syntax could it just be covered by a raw key?
+
+**Example:**
+
+```javascript
+{
+  select: {
+    distinct: ['firstName', 'lastName']
+  },
+  from: 'customers'
+}
+```
+
+**Outputs:**
+
+```sql
+select distinct "first_name", "last_name" from "customers"
+```
+
+
 ## Where Clauses
 
 There are several helpers available to you to create complex where queries as well
