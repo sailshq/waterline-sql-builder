@@ -709,3 +709,13 @@ Adds a `limit` clause to the query.
 ```sql
 select * from "users" limit '10' offset '30'
 ```
+
+
+## Union
+
+**NOT SUPPORTED**
+
+
+## Union All
+
+**NOT SUPPORTED**
