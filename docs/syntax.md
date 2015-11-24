@@ -627,3 +627,47 @@ select * from "users" order by "name" desc
 ```sql
 select * from "table" order by col NULLS LAST DESC
 ```
+
+
+## Having
+
+Adds a `having` clause to the query.
+
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  groupBy: ['count'],
+  orderBy: [{ name: 'desc' }],
+  having: [{ count: { '>': 100 }}]
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" group by "count" having "count" > '100' order by "name" desc
+```
+
+
+### Having Raw
+
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  groupBy: ['count'],
+  orderBy: [{ name: 'desc' }],
+  having: [{ raw: ['count > ?', [100]] }]
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" group by "count" having count > '100' order by "name" desc
+```
