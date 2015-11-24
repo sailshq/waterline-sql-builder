@@ -719,3 +719,58 @@ select * from "users" limit '10' offset '30'
 ## Union All
 
 **NOT SUPPORTED**
+
+
+## Insert
+
+Creates an `insert` query taking either an object of values or an array of objects
+representing a set of records that will be inserted in a single query.
+
+**Example:**
+
+```javascript
+{
+  insert: {
+    title: 'Slaughterhouse Five'
+  },
+  into: 'books'
+}
+```
+
+**Outputs:**
+
+```sql
+insert into "books" ("title") values ('Slaughterhouse Five')
+```
+
+
+**Example:**
+
+```javascript
+{
+  insert: [{x: 20}, {y: 30},  {x: 10, y: 20}],
+  into: 'coords'
+}
+```
+
+**Outputs:**
+
+```sql
+insert into "coords" ("x", "y") values ('20', NULL), (NULL, '30'), ('10', '20')
+```
+
+
+**Example:**
+
+```javascript
+{
+  insert: [{x: 20}, {y: 30},  {x: 10, y: 20}],
+  into: 'coords'
+}
+```
+
+**Outputs:**
+
+```sql
+insert into "coords" ("x", "y") values ('20', NULL), (NULL, '30'), ('10', '20')
+```
