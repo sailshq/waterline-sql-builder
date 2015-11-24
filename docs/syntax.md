@@ -517,3 +517,9 @@ object key name.
 ```sql
 select * from "users" where id = '1'
 ```
+
+
+## Join Methods
+
+Placeholder
+
