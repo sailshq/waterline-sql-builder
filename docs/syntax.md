@@ -824,3 +824,172 @@ rows based on matching criteria.
 ```sql
 delete from "accounts" where "activated" = 'false'
 ```
+
+
+## Count
+
+Performs a count on the specified attribute.
+
+**Example:**
+
+```javascript
+{
+  select: {
+    count: 'active'
+  },
+  from: 'users'
+}
+```
+
+**Outputs:**
+
+```sql
+select count("active") from "users"
+```
+
+## Min
+
+Gets the minimum value for the specified attribute.
+
+**Example:**
+
+```javascript
+{
+  select: {
+    min: 'age'
+  },
+  from: 'users'
+}
+```
+
+**Outputs:**
+
+```sql
+select min("age") from "users"
+```
+
+**Example:**
+
+```javascript
+{
+  select: [{ raw: ['min(age) as a'] }],
+  from: 'users'
+}
+```
+
+**Outputs:**
+
+```sql
+select min("age") as "a" from "users"
+```
+
+
+## Max
+
+Gets the maximum value for the specified attribute.
+
+**Example:**
+
+```javascript
+{
+  select: {
+    max: 'age'
+  },
+  from: 'users'
+}
+```
+
+**Outputs:**
+
+```sql
+select max("age") from "users"
+```
+
+**Example:**
+
+```javascript
+{
+  select: [{ raw: ['max(age) as a'] }],
+  from: 'users'
+}
+```
+
+**Outputs:**
+
+```sql
+select max("age") as "a" from "users"
+```
+
+
+## Sum
+
+Retrieve the sum of the values of a given attribute.
+
+**Example:**
+
+```javascript
+{
+  select: {
+    sum: 'products'
+  },
+  from: 'users'
+}
+```
+
+**Outputs:**
+
+```sql
+select sum("products") from "users"
+```
+
+**Example:**
+
+```javascript
+{
+  select: [{ raw: ['sum(products) as p'] }],
+  from: 'users'
+}
+```
+
+**Outputs:**
+
+```sql
+select sum("products") as "p" from "users"
+```
+
+
+## Avg
+
+Retrieve the average of the values of a given attribute.
+
+**Example:**
+
+```javascript
+{
+  select: {
+    avg: 'age'
+  },
+  from: 'users'
+}
+```
+
+**Outputs:**
+
+```sql
+select avg("age") from "users"
+```
+
+**Example:**
+
+```javascript
+{
+  select: [{ raw: ['avg(age) as a'] }],
+  from: 'users'
+}
+```
+
+**Outputs:**
+
+```sql
+select avg("age") as "a" from "users"
+```
