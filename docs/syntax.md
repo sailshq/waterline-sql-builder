@@ -548,3 +548,82 @@ select * from "users" where id = '1'
 
 Placeholder
 
+
+## Group By
+
+Adds a `group by` clause to the query.
+
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  groupBy: ['count']
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" group by "count"
+```
+
+
+### Group By Raw
+
+**Example:**
+
+```javascript
+{
+  select: ['year', { raw: 'SUM(profit)' }]
+  from: 'sales',
+  groupBy: [{ raw: 'year WITH ROLLUP' }]
+}
+```
+
+**Outputs:**
+
+```sql
+select "year", SUM(profit) from "sales" group by year WITH ROLLUP
+```
+
+
+## Order By
+
+Adds an `order by` clause to the query.
+
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  orderBy: [{ name: 'desc' }]
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" order by "name" desc
+```
+
+
+### Order By Raw
+
+**Example:**
+
+```javascript
+{
+  select: '*'
+  from: 'table',
+  orderBy: [{ raw: 'col NULLS LAST DESC' }]
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "table" order by col NULLS LAST DESC
+```
