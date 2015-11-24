@@ -671,3 +671,41 @@ select * from "users" group by "count" having "count" > '100' order by "name" de
 ```sql
 select * from "users" group by "count" having count > '100' order by "name" desc
 ```
+
+## Offset
+
+Adds an `offset` clause to the query.
+
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  offset: 10
+}
+```
+
+```sql
+select * from "users" offset '10'
+```
+
+
+## Limit
+
+Adds a `limit` clause to the query.
+
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  limit: 10,
+  offset: 30
+}
+```
+
+```sql
+select * from "users" limit '10' offset '30'
+```
