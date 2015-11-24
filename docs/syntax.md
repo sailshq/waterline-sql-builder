@@ -801,3 +801,26 @@ in the query.
 update "books" set "status" = 'archived' where "published_date" < '2000'
 ```
 
+
+## Delete
+
+Aliased to `del` as `delete` is a reserved word in javascript. Deletes one or more
+rows based on matching criteria.
+
+**Example:**
+
+```javascript
+{
+  del: true,
+  from: 'accounts',
+  where: {
+    activated: false
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+delete from "accounts" where "activated" = 'false'
+```
