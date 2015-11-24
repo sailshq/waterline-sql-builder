@@ -774,3 +774,30 @@ insert into "coords" ("x", "y") values ('20', NULL), (NULL, '30'), ('10', '20')
 ```sql
 insert into "coords" ("x", "y") values ('20', NULL), (NULL, '30'), ('10', '20')
 ```
+
+
+## Update
+
+Creates an `update` query. Any reasonable and valid `where` criteria may be used
+in the query.
+
+**Example:**
+
+```javascript
+{
+  update: {
+    status: 'archived'
+  },
+  where: {
+    publishedDate: { '>': 2000 }
+  },
+  using: 'books'
+}
+```
+
+**Outputs:**
+
+```sql
+update "books" set "status" = 'archived' where "published_date" < '2000'
+```
+
