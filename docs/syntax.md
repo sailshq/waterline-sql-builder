@@ -452,3 +452,13 @@ select * from "users" where "updatedAt" is null
 ```sql
 select * from "users" where "updatedAt" is not null
 ```
+
+## Where Exists
+
+**NOT SUPPORTED**
+
+
+## Where Not Exists
+
+**NOT SUPPORTED**
+
