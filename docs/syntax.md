@@ -576,9 +576,9 @@ select * from "users" group by "count"
 
 ```javascript
 {
-  select: ['year', { raw: 'SUM(profit)' }]
+  select: ['year', { raw: ['SUM(profit)'] }]
   from: 'sales',
-  groupBy: [{ raw: 'year WITH ROLLUP' }]
+  groupBy: [{ raw: ['year WITH ROLLUP'] }]
 }
 ```
 
@@ -618,7 +618,7 @@ select * from "users" order by "name" desc
 {
   select: '*'
   from: 'table',
-  orderBy: [{ raw: 'col NULLS LAST DESC' }]
+  orderBy: [{ raw: ['col NULLS LAST DESC'] }]
 }
 ```
 
