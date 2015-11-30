@@ -546,7 +546,93 @@ select * from "users" where id = '1'
 
 ## Join Methods
 
-Placeholder
+Several methods are available for assisting with "joins" or populates.
+
+### Join
+
+Allows joins between collections to be specified.
+
+**Example:**
+
+```javascript
+{
+  select: ['users.id', 'contacts.phone'],
+  from: 'users',
+  join: {
+    from: 'contacts',
+    using: {
+      users: 'id',
+      contacts: 'user_id'
+    }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+select "users"."id", "contacts"."phone" from "users" inner join "contacts" on "users"."id" = "contacts"."user_id"
+```
+
+
+### Grouped Joins
+
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  join: {
+    from: 'accounts',
+    using: {
+      or: [
+        {
+          accounts: 'id',
+          users: 'account_id'
+        },
+        {
+          accounts: 'owner_id',
+          users: 'id'
+        }
+      ]
+    }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" inner join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"
+```
+
+
+### Raw Join Values
+
+If you need to use a literal value in the join you can use the `raw` syntax.
+
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  join: {
+    from: 'accounts',
+    using: {
+      accounts: 'type',
+      raw: ['?', ['admin']]
+    }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" inner join "accounts" on "accounts"."type" = 'admin'
+```
 
 
 ## Group By
