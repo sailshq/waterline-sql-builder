@@ -635,6 +635,118 @@ select * from "users" inner join "accounts" on "accounts"."type" = 'admin'
 ```
 
 
+### Inner Joins
+
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  innerJoin: {
+    from: 'accounts',
+    using: {
+      users: 'id',
+      accounts: 'user_id'
+    }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" inner join "accounts" on "users"."id" = "accounts"."user_id"
+```
+
+
+### Grouped Inner Joins
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  innerJoin: {
+    from: 'accounts',
+    using: {
+      or: [
+        {
+          accounts: 'id',
+          users: 'account_id'
+        },
+        {
+          accounts: 'owner_id',
+          users: 'id'
+        }
+      ]
+    }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" inner join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"
+```
+
+
+### Left Joins
+
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  leftJoin: {
+    from: 'accounts',
+    using: {
+      users: 'id',
+      accounts: 'user_id'
+    }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" left join "accounts" on "users"."id" = "accounts"."user_id"
+```
+
+
+### Grouped Left Joins
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  leftJoin: {
+    from: 'accounts',
+    using: {
+      or: [
+        {
+          accounts: 'id',
+          users: 'account_id'
+        },
+        {
+          accounts: 'owner_id',
+          users: 'id'
+        }
+      ]
+    }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" left join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"
+```
+
+
 ## Group By
 
 Adds a `group by` clause to the query.
