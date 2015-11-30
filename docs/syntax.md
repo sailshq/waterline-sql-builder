@@ -89,7 +89,7 @@ db.books.find()
 ```
 
 
-### Schemas
+### Schemas (SQL Only)
 
 You can specifiy a schema to be used as a prefix of the table name.
 
@@ -105,6 +105,7 @@ You can specifiy a schema to be used as a prefix of the table name.
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "public"."books"
 ```
 
@@ -130,7 +131,13 @@ as mongo. If it's a sql only syntax could it just be covered by a raw key?
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select distinct "first_name", "last_name" from "customers"
+```
+
+```javascript
+// MongoDB
+db.customers.aggregate([{"$group": {"_id": { firstName: "$firstName", lastName: "$lastName" }}}]);
 ```
 
 
