@@ -747,6 +747,342 @@ select * from "users" left join "accounts" on "accounts"."id" = "users"."account
 ```
 
 
+### Left Outer Joins
+
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  leftOuterJoin: {
+    from: 'accounts',
+    using: {
+      users: 'id',
+      accounts: 'user_id'
+    }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" left outer join "accounts" on "users"."id" = "accounts"."user_id"
+```
+
+
+### Grouped Left Outer Joins
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  leftOuterJoin: {
+    from: 'accounts',
+    using: {
+      or: [
+        {
+          accounts: 'id',
+          users: 'account_id'
+        },
+        {
+          accounts: 'owner_id',
+          users: 'id'
+        }
+      ]
+    }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" left outer join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"
+```
+
+
+### Right Joins
+
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  rightJoin: {
+    from: 'accounts',
+    using: {
+      users: 'id',
+      accounts: 'user_id'
+    }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" right join "accounts" on "users"."id" = "accounts"."user_id"
+```
+
+
+### Grouped Right Joins
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  rightJoin: {
+    from: 'accounts',
+    using: {
+      or: [
+        {
+          accounts: 'id',
+          users: 'account_id'
+        },
+        {
+          accounts: 'owner_id',
+          users: 'id'
+        }
+      ]
+    }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" right join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"
+```
+
+
+### Right Outer Joins
+
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  rightOuterJoin: {
+    from: 'accounts',
+    using: {
+      users: 'id',
+      accounts: 'user_id'
+    }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" right outer join "accounts" on "users"."id" = "accounts"."user_id"
+```
+
+
+### Grouped Right Outer Joins
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  rightOuterJoin: {
+    from: 'accounts',
+    using: {
+      or: [
+        {
+          accounts: 'id',
+          users: 'account_id'
+        },
+        {
+          accounts: 'owner_id',
+          users: 'id'
+        }
+      ]
+    }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" right outer join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"
+```
+
+
+### Outer Joins
+
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  outerJoin: {
+    from: 'accounts',
+    using: {
+      users: 'id',
+      accounts: 'user_id'
+    }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" outer join "accounts" on "users"."id" = "accounts"."user_id"
+```
+
+
+### Grouped Outer Joins
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  outerJoin: {
+    from: 'accounts',
+    using: {
+      or: [
+        {
+          accounts: 'id',
+          users: 'account_id'
+        },
+        {
+          accounts: 'owner_id',
+          users: 'id'
+        }
+      ]
+    }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" outer join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"
+```
+
+
+### Full Outer Joins
+
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  fullOuterJoin: {
+    from: 'accounts',
+    using: {
+      users: 'id',
+      accounts: 'user_id'
+    }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" full outer join "accounts" on "users"."id" = "accounts"."user_id"
+```
+
+
+### Grouped Full Outer Joins
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  fullOuterJoin: {
+    from: 'accounts',
+    using: {
+      or: [
+        {
+          accounts: 'id',
+          users: 'account_id'
+        },
+        {
+          accounts: 'owner_id',
+          users: 'id'
+        }
+      ]
+    }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" full outer join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"
+```
+
+
+### Cross Joins
+
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  crossJoin: {
+    from: 'accounts',
+    using: {
+      users: 'id',
+      accounts: 'user_id'
+    }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" cross join "accounts" on "users"."id" = "accounts"."user_id"
+```
+
+
+### Grouped Cross Joins
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  crossJoin: {
+    from: 'accounts',
+    using: {
+      or: [
+        {
+          accounts: 'id',
+          users: 'account_id'
+        },
+        {
+          accounts: 'owner_id',
+          users: 'id'
+        }
+      ]
+    }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+select * from "users" cross join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"
+```
+
+
 ## Group By
 
 Adds a `group by` clause to the query.
