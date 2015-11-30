@@ -32,7 +32,7 @@ single `'*'` value to represent all values.
 **Outputs:**
 
 ```sql
-// PostgreSQL
+-- PostgreSQL
 select 'title', 'author', 'year' from 'books'
 ```
 
@@ -53,7 +53,7 @@ db.books.find({}, { title: 1, author: 1, year: 1 })
 **Outputs:**
 
 ```sql
-// PostgreSQL
+-- PostgreSQL
 select * from 'books'
 ```
 
@@ -79,7 +79,7 @@ Specifies which table to perform the query on.
 **Outputs:**
 
 ```sql
-// PostgreSQL
+-- PostgreSQL
 select * from "books"
 ```
 
