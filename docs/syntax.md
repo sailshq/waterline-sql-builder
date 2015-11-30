@@ -32,7 +32,13 @@ single `'*'` value to represent all values.
 **Outputs:**
 
 ```sql
+// PostgreSQL
 select 'title', 'author', 'year' from 'books'
+```
+
+```javascript
+// MongoDB
+db.books.find({}, { title: 1, author: 1, year: 1 })
 ```
 
 **Example of all columns**
@@ -47,7 +53,13 @@ select 'title', 'author', 'year' from 'books'
 **Outputs:**
 
 ```sql
+// PostgreSQL
 select * from 'books'
+```
+
+```javascript
+// MongoDB
+db.books.find()
 ```
 
 
@@ -67,7 +79,13 @@ Specifies which table to perform the query on.
 **Outputs:**
 
 ```sql
+// PostgreSQL
 select * from "books"
+```
+
+```javascript
+// MongoDB
+db.books.find()
 ```
 
 
