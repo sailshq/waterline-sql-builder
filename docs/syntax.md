@@ -719,7 +719,10 @@ select * from "users" where id = '1'
 
 ## Join Methods
 
-Several methods are available for assisting with "joins" or populates.
+Several methods are available for assisting with joins. If using a nosql database
+such as MongoDB, you have the option to use "populate" instead. This "inflates"
+the return values, giving you less performant queries but still allows for querying
+the values.
 
 ### Join
 
@@ -1274,6 +1277,14 @@ select * from "users" cross join "accounts" on "users"."id" = "accounts"."user_i
 select * from "users" cross join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"
 ```
 
+## Populates
+
+Populate is the nosql equivalent of a join. It performs multiple queries to get
+the data requested. It's similar to the `.populate()` method in [Mongoose](http://mongoosejs.com/docs/populate.html).
+
+### Populate
+
+**TODO**
 
 ## Group By
 
