@@ -1,0 +1,28 @@
+{
+  "name": "machinepack-sql-builder",
+  "version": "1.0.0",
+  "description": "Generate SQL queries.",
+  "scripts": {
+    "test": "node ./node_modules/test-machinepack-mocha/bin/testmachinepack-mocha.js"
+  },
+  "keywords": [
+    "sql",
+    "machines",
+    "machinepack"
+  ],
+  "author": "Cody Stoltman <particlebanana@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "machine": "^10.0.0"
+  },
+  "devDependencies": {
+    "test-machinepack-mocha": "^2.0.0"
+  },
+  "machinepack": {
+    "friendlyName": "SQL Builder",
+    "machineDir": "machines/",
+    "machines": [
+    
+    ]
+  }
+}
