@@ -22,7 +22,7 @@
     "friendlyName": "SQL Builder",
     "machineDir": "machines/",
     "machines": [
-    
+      "generate-sql"
     ]
   }
 }
