@@ -328,7 +328,7 @@ db.users.find({
     { firstName: { $ne: 'Test' } },
     { lastName: { $ne: 'User' } }
   ]
-});
+}, { _id: 1 });
 ```
 
 #### Grouped Clauses
@@ -440,7 +440,7 @@ db.users.find({
 
 ```sql
 -- PostgreSQL
-select * from "users" where "id" in ('1', '2', '3') or "id" in ('4', '5', '6')
+select "name" from "users" where "id" in ('1', '2', '3') or "id" in ('4', '5', '6')
 ```
 
 ```javascript
@@ -450,7 +450,7 @@ db.users.find({
     { _id: { $in: [1,2,3] } },
     { _id: { $in: [4,5,6] } }
   ]
-});
+}, { name: 1 });
 ```
 
 #### Sub Queries
