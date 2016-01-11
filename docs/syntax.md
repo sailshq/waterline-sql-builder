@@ -839,6 +839,37 @@ select * from "users" inner join "accounts" on "accounts"."type" = 'admin'
 select * from "users" inner join "accounts" on "users"."id" = "accounts"."user_id"
 ```
 
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  innerJoin: {
+    from: 'accounts',
+    using: {
+      users: 'id',
+      accounts: 'user_id'
+    }
+  },
+  where: {
+    accounts: {
+      value: { '>': 1000 }
+    },
+    users: {
+      age: { '>': 18 }
+    }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+-- PostgreSQL
+select * from "users" inner join "accounts" on "users"."id" = "accounts"."user_id" where "accounts"."value" > 1000 and "users"."age" > 18;
+```
+
 
 ### Grouped Inner Joins
 
