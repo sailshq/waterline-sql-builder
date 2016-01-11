@@ -227,6 +227,21 @@ db.users.find({ votes: { $gt: 100 }});
 select * from "users" where ("id" = '1' or "id" > '10') or "name" = 'Tester'
 ```
 
+```javascript
+// MongoDB
+db.users.find({$or: [
+  {
+    $or: [
+      { _id: 1 },
+      { _id: { $gt: 10 } }
+    ]
+  },
+  {
+    name: 'Tester'
+  }
+]});
+```
+
 
 #### Sub-Queries
 
@@ -264,6 +279,21 @@ queries within a query as well as show a combination of AND and OR operators.
 select * from "accounts" where "id" IN (select "id" from "users" where "votes" > '100' and "status" = 'active' or "name" = 'John')
 ```
 
+```javascript
+// MongoDB
+var users = db.users.find({
+  $and: [
+    { votes: { $gt: 100 } },
+    {
+      $or: [
+        { status: 'active' },
+        { name: 'John' }
+      ]
+    }
+  ]
+}, { _id: 0 });
+db.accounts.find({ _id: { $in: users }});
+```
 
 ## Where Not Clauses
 
@@ -291,6 +321,15 @@ select * from "accounts" where "id" IN (select "id" from "users" where "votes" >
 select "id" from "users" where not "firstName" = 'Test' and not "lastName" = 'User'
 ```
 
+```javascript
+// MongoDB
+db.users.find({
+  $and: [
+    { firstName: { $ne: 'Test' } },
+    { lastName: { $ne: 'User' } }
+  ]
+});
+```
 
 #### Grouped Clauses
 
@@ -327,6 +366,24 @@ select "id" from "users" where not "firstName" = 'Test' and not "lastName" = 'Us
 select * from "users" where not ("id" = '1' or not "id" > '10') or not "name" = 'Tester'
 ```
 
+```javascript
+// MongoDB
+db.users.find({
+  $or: [
+    {
+      $not: {
+        $or: [
+          { _id: 1 },
+          { _id: { $gt: 100 } }
+        ]
+      }
+    },
+    {
+      name: { $ne: 'Tester' }
+    }
+  ]
+});
+```
 
 #### Operators
 
@@ -351,6 +408,14 @@ select * from "users" where not ("id" = '1' or not "id" > '10') or not "name" = 
 select * from "users" where not "votes" > '100'
 ```
 
+```javascript
+// MongoDB
+db.users.find({
+  $not: {
+    votes: { $gt: 100 }
+  }
+});
+```
 
 ## Where In
 
@@ -378,6 +443,15 @@ select * from "users" where not "votes" > '100'
 select * from "users" where "id" in ('1', '2', '3') or "id" in ('4', '5', '6')
 ```
 
+```javascript
+// MongoDB
+db.users.find({
+  $or: [
+    { _id: { $in: [1,2,3] } },
+    { _id: { $in: [4,5,6] } }
+  ]
+});
+```
 
 #### Sub Queries
 
