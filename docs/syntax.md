@@ -479,6 +479,11 @@ db.users.find({
 select "name" from "users" where "accountId" in (select "id" from "accounts")
 ```
 
+```javascript
+// MongoDB
+var accountIds = db.accounts.find({}, { _id: 1 });
+db.users.find({ accountId: { $in: accountIds } }, { name: 1 });
+```
 
 #### Operators
 
@@ -509,6 +514,20 @@ select "name" from "users" where "accountId" in (select "id" from "accounts")
 select * from "users" where "name" = 'John' or ("votes" > '100' and "title" not 'Admin')
 ```
 
+```javascript
+// MongoDB
+db.users.find({
+  $or: [
+    { name: 'John' },
+    {
+      $and: [
+        { votes: { $gt: 100 } },
+        { title: { $ne: 'Admin' } }
+      ]
+    }
+  ]
+});
+```
 
 ## Where Not In
 
@@ -535,6 +554,11 @@ select * from "users" where "name" = 'John' or ("votes" > '100' and "title" not 
 select * from "users" where "id" not in ('1','2','3')
 ```
 
+```javascript
+// MongoDB
+db.users.find({ _id: { $nin: [1,2,3] } });
+```
+
 #### Operators
 
 **Example:**
@@ -559,6 +583,15 @@ select * from "users" where "id" not in ('1','2','3')
 select * from "users" where "name" like '%Test%' or "id" not in ('1','2','3')
 ```
 
+```javascript
+// MongoDB
+db.users.find({
+  $or: [
+    { name: { like: /Test/ } },
+    { _id: { $nin: [1,2,3] } }
+  ]
+});
+```
 
 ## Where Null
 
@@ -581,6 +614,10 @@ select * from "users" where "name" like '%Test%' or "id" not in ('1','2','3')
 select * from "users" where "updatedAt" is null
 ```
 
+```javascript
+// MongoDB
+db.users.find({ updatedAt: { $exists: false } });
+```
 
 ## Where Not Null
 
@@ -603,14 +640,19 @@ select * from "users" where "updatedAt" is null
 select * from "users" where "updatedAt" is not null
 ```
 
+```javascript
+// MongoDB
+db.users.find({ updatedAt: { $exists: true } });
+```
+
 ## Where Exists
 
-**NOT SUPPORTED**
+** Same as NOT NULL **
 
 
 ## Where Not Exists
 
-**NOT SUPPORTED**
+** Same as NOT NULL **
 
 
 ## Where Between (proposed syntax)
@@ -639,6 +681,10 @@ This could be represented as less than and greater than.
 select * from "users" where "votes" between '1' and '100'
 ```
 
+```javascript
+// MongoDB
+db.users.find({ votes: { $gt: 1, $lt: 100 } });
+```
 
 ## Where Raw (proposed syntax)
 
