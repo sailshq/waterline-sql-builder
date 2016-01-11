@@ -1,6 +1,6 @@
 # Waterline Query Syntax Documentation
 
-This will document the declaritive query syntax used in the Waterline Query Builder
+This will document the declarative query syntax used in the Waterline Query Builder
 notation. Through this syntax you should be able to compose complex queries that
 can run on both a SQL data store or a NoSQL data store. The language is completely
 database independent. This acts as an interchange format that can be processed
@@ -9,7 +9,7 @@ influenced by a relational sequel language but should be normalized enough to
 be converted into NoSql queries as well.
 
 For familiarity the generated SQL query is shown next to each example using the
-PostgreSQL dialect. The equivelent MongoDB query is also shown.
+PostgreSQL dialect. The equivalent MongoDB query is also shown.
 
 
 ## Query Building
@@ -91,7 +91,7 @@ db.books.find()
 
 ### Schemas (SQL Only)
 
-You can specifiy a schema to be used as a prefix of the table name.
+You can specify a schema to be used as a prefix of the table name.
 
 **Example**
 
