@@ -110,12 +110,9 @@ select * from "public"."books"
 ```
 
 
-### Distinct (proposed syntax)
+### Distinct
 
 Allows the ability to select `distinct` values.
-
-**NOTE:** Need to figure out what this would look like in a NOSql data store such
-as mongo. If it's a sql only syntax could it just be covered by a raw key?
 
 **Example:**
 
@@ -168,6 +165,11 @@ as sub queries.
 select "id" from "books" where "firstName" = 'Test' and "lastName" = 'User'
 ```
 
+```javascript
+// MongoDB
+db.users.find({ firstName: 'Test', lastName: 'User' }, { _id: 1 });
+```
+
 
 #### Using Operators
 
@@ -186,6 +188,11 @@ select "id" from "books" where "firstName" = 'Test' and "lastName" = 'User'
 ```sql
 -- PostgreSQL
 select * from "users" where "votes" > '100'
+```
+
+```javascript
+// MongoDB
+db.users.find({ votes: { $gt: 100 }});
 ```
 
 
