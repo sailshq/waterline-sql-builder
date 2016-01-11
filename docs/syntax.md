@@ -164,6 +164,7 @@ as sub queries.
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select "id" from "books" where "firstName" = 'Test' and "lastName" = 'User'
 ```
 
@@ -183,6 +184,7 @@ select "id" from "books" where "firstName" = 'Test' and "lastName" = 'User'
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" where "votes" > '100'
 ```
 
@@ -214,6 +216,7 @@ select * from "users" where "votes" > '100'
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" where ("id" = '1' or "id" > '10') or "name" = 'Tester'
 ```
 
@@ -250,6 +253,7 @@ queries within a query as well as show a combination of AND and OR operators.
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "accounts" where "id" IN (select "id" from "users" where "votes" > '100' and "status" = 'active' or "name" = 'John')
 ```
 
@@ -276,6 +280,7 @@ select * from "accounts" where "id" IN (select "id" from "users" where "votes" >
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select "id" from "users" where not "firstName" = 'Test' and not "lastName" = 'User'
 ```
 
@@ -311,6 +316,7 @@ select "id" from "users" where not "firstName" = 'Test' and not "lastName" = 'Us
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" where not ("id" = '1' or not "id" > '10') or not "name" = 'Tester'
 ```
 
@@ -334,6 +340,7 @@ select * from "users" where not ("id" = '1' or not "id" > '10') or not "name" = 
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" where not "votes" > '100'
 ```
 
@@ -360,6 +367,7 @@ select * from "users" where not "votes" > '100'
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" where "id" in ('1', '2', '3') or "id" in ('4', '5', '6')
 ```
 
@@ -386,6 +394,7 @@ select * from "users" where "id" in ('1', '2', '3') or "id" in ('4', '5', '6')
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select "name" from "users" where "accountId" in (select "id" from "accounts")
 ```
 
@@ -415,6 +424,7 @@ select "name" from "users" where "accountId" in (select "id" from "accounts")
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" where "name" = 'John' or ("votes" > '100' and "title" not 'Admin')
 ```
 
@@ -440,6 +450,7 @@ select * from "users" where "name" = 'John' or ("votes" > '100' and "title" not 
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" where "id" not in ('1','2','3')
 ```
 
@@ -463,6 +474,7 @@ select * from "users" where "id" not in ('1','2','3')
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" where "name" like '%Test%' or "id" not in ('1','2','3')
 ```
 
@@ -484,6 +496,7 @@ select * from "users" where "name" like '%Test%' or "id" not in ('1','2','3')
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" where "updatedAt" is null
 ```
 
@@ -505,6 +518,7 @@ select * from "users" where "updatedAt" is null
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" where "updatedAt" is not null
 ```
 
@@ -540,6 +554,7 @@ This could be represented as less than and greater than.
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" where "votes" between '1' and '100'
 ```
 
@@ -570,6 +585,7 @@ object key name.
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" where id = '1'
 ```
 
@@ -601,6 +617,7 @@ Allows joins between collections to be specified.
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select "users"."id", "contacts"."phone" from "users" inner join "contacts" on "users"."id" = "contacts"."user_id"
 ```
 
@@ -634,6 +651,7 @@ select "users"."id", "contacts"."phone" from "users" inner join "contacts" on "u
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" inner join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"
 ```
 
@@ -661,6 +679,7 @@ If you need to use a literal value in the join you can use the `raw` syntax.
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" inner join "accounts" on "accounts"."type" = 'admin'
 ```
 
@@ -686,6 +705,7 @@ select * from "users" inner join "accounts" on "accounts"."type" = 'admin'
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" inner join "accounts" on "users"."id" = "accounts"."user_id"
 ```
 
@@ -717,6 +737,7 @@ select * from "users" inner join "accounts" on "users"."id" = "accounts"."user_i
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" inner join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"
 ```
 
@@ -742,6 +763,7 @@ select * from "users" inner join "accounts" on "accounts"."id" = "users"."accoun
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" left join "accounts" on "users"."id" = "accounts"."user_id"
 ```
 
@@ -773,6 +795,7 @@ select * from "users" left join "accounts" on "users"."id" = "accounts"."user_id
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" left join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"
 ```
 
@@ -798,6 +821,7 @@ select * from "users" left join "accounts" on "accounts"."id" = "users"."account
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" left outer join "accounts" on "users"."id" = "accounts"."user_id"
 ```
 
@@ -829,6 +853,7 @@ select * from "users" left outer join "accounts" on "users"."id" = "accounts"."u
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" left outer join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"
 ```
 
@@ -854,6 +879,7 @@ select * from "users" left outer join "accounts" on "accounts"."id" = "users"."a
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" right join "accounts" on "users"."id" = "accounts"."user_id"
 ```
 
@@ -885,6 +911,7 @@ select * from "users" right join "accounts" on "users"."id" = "accounts"."user_i
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" right join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"
 ```
 
@@ -910,6 +937,7 @@ select * from "users" right join "accounts" on "accounts"."id" = "users"."accoun
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" right outer join "accounts" on "users"."id" = "accounts"."user_id"
 ```
 
@@ -941,6 +969,7 @@ select * from "users" right outer join "accounts" on "users"."id" = "accounts"."
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" right outer join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"
 ```
 
@@ -966,6 +995,7 @@ select * from "users" right outer join "accounts" on "accounts"."id" = "users"."
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" outer join "accounts" on "users"."id" = "accounts"."user_id"
 ```
 
@@ -997,6 +1027,7 @@ select * from "users" outer join "accounts" on "users"."id" = "accounts"."user_i
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" outer join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"
 ```
 
@@ -1022,6 +1053,7 @@ select * from "users" outer join "accounts" on "accounts"."id" = "users"."accoun
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" full outer join "accounts" on "users"."id" = "accounts"."user_id"
 ```
 
@@ -1053,6 +1085,7 @@ select * from "users" full outer join "accounts" on "users"."id" = "accounts"."u
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" full outer join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"
 ```
 
@@ -1078,6 +1111,7 @@ select * from "users" full outer join "accounts" on "accounts"."id" = "users"."a
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" cross join "accounts" on "users"."id" = "accounts"."user_id"
 ```
 
@@ -1109,6 +1143,7 @@ select * from "users" cross join "accounts" on "users"."id" = "accounts"."user_i
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" cross join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"
 ```
 
@@ -1130,6 +1165,7 @@ Adds a `group by` clause to the query.
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" group by "count"
 ```
 
@@ -1149,6 +1185,7 @@ select * from "users" group by "count"
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select "year", SUM(profit) from "sales" group by year WITH ROLLUP
 ```
 
@@ -1170,6 +1207,7 @@ Adds an `order by` clause to the query.
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" order by "name" desc
 ```
 
@@ -1189,6 +1227,7 @@ select * from "users" order by "name" desc
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "table" order by col NULLS LAST DESC
 ```
 
@@ -1212,6 +1251,7 @@ Adds a `having` clause to the query.
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" group by "count" having "count" > '100' order by "name" desc
 ```
 
@@ -1233,6 +1273,7 @@ select * from "users" group by "count" having "count" > '100' order by "name" de
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select * from "users" group by "count" having count > '100' order by "name" desc
 ```
 
@@ -1251,6 +1292,7 @@ Adds an `offset` clause to the query.
 ```
 
 ```sql
+-- PostgreSQL
 select * from "users" offset '10'
 ```
 
@@ -1271,6 +1313,7 @@ Adds a `limit` clause to the query.
 ```
 
 ```sql
+-- PostgreSQL
 select * from "users" limit '10' offset '30'
 ```
 
@@ -1304,6 +1347,7 @@ representing a set of records that will be inserted in a single query.
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 insert into "books" ("title") values ('Slaughterhouse Five')
 ```
 
@@ -1320,6 +1364,7 @@ insert into "books" ("title") values ('Slaughterhouse Five')
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 insert into "coords" ("x", "y") values ('20', NULL), (NULL, '30'), ('10', '20')
 ```
 
@@ -1336,6 +1381,7 @@ insert into "coords" ("x", "y") values ('20', NULL), (NULL, '30'), ('10', '20')
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 insert into "coords" ("x", "y") values ('20', NULL), (NULL, '30'), ('10', '20')
 ```
 
@@ -1362,6 +1408,7 @@ in the query.
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 update "books" set "status" = 'archived' where "published_date" < '2000'
 ```
 
@@ -1386,6 +1433,7 @@ rows based on matching criteria.
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 delete from "accounts" where "activated" = 'false'
 ```
 
@@ -1408,6 +1456,7 @@ Performs a count on the specified attribute.
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select count("active") from "users"
 ```
 
@@ -1429,6 +1478,7 @@ Gets the minimum value for the specified attribute.
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select min("age") from "users"
 ```
 
@@ -1444,6 +1494,7 @@ select min("age") from "users"
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select min("age") as "a" from "users"
 ```
 
@@ -1466,6 +1517,7 @@ Gets the maximum value for the specified attribute.
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select max("age") from "users"
 ```
 
@@ -1481,6 +1533,7 @@ select max("age") from "users"
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select max("age") as "a" from "users"
 ```
 
@@ -1503,6 +1556,7 @@ Retrieve the sum of the values of a given attribute.
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select sum("products") from "users"
 ```
 
@@ -1518,6 +1572,7 @@ select sum("products") from "users"
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select sum("products") as "p" from "users"
 ```
 
@@ -1540,6 +1595,7 @@ Retrieve the average of the values of a given attribute.
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select avg("age") from "users"
 ```
 
@@ -1555,5 +1611,6 @@ select avg("age") from "users"
 **Outputs:**
 
 ```sql
+-- PostgreSQL
 select avg("age") as "a" from "users"
 ```
