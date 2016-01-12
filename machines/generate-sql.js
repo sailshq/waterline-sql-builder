@@ -153,8 +153,8 @@ module.exports = {
                       if(idx !== 0 && reservedFn === 'orWhere') { defaultFn = 'orWhere'; }
                       if(idx !== 0 && reservedFn === 'orWhereNot') { defaultFn = 'orWhereNot'; }
                       if(idx !== 0 && reservedFn === 'whereNot') { defaultFn = 'orWhereNot'; }
-                      if(!defaultFn) { defaultFn = 'where' }
-  
+                      if(!defaultFn) { defaultFn = 'where'; }
+
                       self[defaultFn].apply(self, opt);
                     });
                   });
@@ -175,7 +175,7 @@ module.exports = {
               // are processing.
               var objKey;
 
-              // If the key is `NOT` process but don't set a parent
+              // If the key is `NOT` process but don't set a new parent
               if(key === 'not') {
 
                 // If we are in OR grouping and using the default `orWhere` fn,
@@ -186,6 +186,12 @@ module.exports = {
                   reservedFn = 'whereNot';
                 }
 
+                objKey = undefined;
+              }
+
+              // If the key is 'IN' process but don't set a new parent
+              else if(key === 'in') {
+                reservedFn = 'whereIn';
                 objKey = undefined;
               }
 
