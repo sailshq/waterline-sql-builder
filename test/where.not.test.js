@@ -20,6 +20,23 @@ describe('Query Generation ::', function() {
       }, done);
     });
 
+    it('should generate a where not clause with operators', function(done) {
+      Test({
+        flavor: 'postgresql',
+        query: {
+          select: '*',
+          from: 'users',
+          where: {
+            not: {
+              votes: { '>': 100 }
+            }
+          }
+        },
+        outcome: 'select * from "users" where not "votes" > \'100\''
+      }, done);
+    });
+
+
     it('should work with a grouped clause using OR', function(done) {
       Test({
         flavor: 'postgresql',
