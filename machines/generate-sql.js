@@ -74,7 +74,17 @@ module.exports = {
     };
 
     // Process all of the keys in the query clause
-    _.each(_.keys(inputs.query), function(key) {
+
+    // Due to the way Knex works, find the "from" clause if available and run it
+    // first. This will set everything up correctly.
+    var clauseKeys = _.reject(_.keys(inputs.query), 'from');
+    var _from = inputs.query.from;
+
+    if(_from) {
+      processor.from(_from);
+    }
+
+    _.each(clauseKeys, function(key) {
       if(processor[key]) {
         processor[key](inputs.query[key]);
       }
