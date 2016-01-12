@@ -23,6 +23,11 @@
     "machineDir": "machines/",
     "machines": [
       "generate-sql"
-    ]
+    ],
+    "testsUrl": "https://travis-ci.org/particlebanana/waterline-query-builder"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:particlebanana/waterline-query-builder.git"
   }
 }
