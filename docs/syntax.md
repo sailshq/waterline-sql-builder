@@ -98,7 +98,7 @@ You can specify a schema to be used as a prefix of the table name.
 ```javascript
 {
   select: '*',
-  from: { identity: 'books', schema: 'public' }
+  from: { table: 'books', schema: 'public' }
 }
 ```
 

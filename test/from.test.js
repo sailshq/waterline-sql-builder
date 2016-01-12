@@ -19,7 +19,7 @@ describe('Query Generation ::', function() {
         flavor: 'postgresql',
         query: {
           select: ['title', 'author', 'year'],
-          from: { identity: 'books', schema: 'foo' }
+          from: { table: 'books', schema: 'foo' }
         },
         outcome: 'select "title", "author", "year" from "foo"."books"'
       }, done);

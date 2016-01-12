@@ -59,8 +59,8 @@ module.exports = {
             query.withSchema(value.schema);
           }
 
-          if(value.identity) {
-            query.from(value.identity);
+          if(value.table) {
+            query.from(value.table);
           }
         } else {
           query = query.from(value);
