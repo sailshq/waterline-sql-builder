@@ -734,13 +734,15 @@ Allows joins between collections to be specified.
 {
   select: ['users.id', 'contacts.phone'],
   from: 'users',
-  join: {
-    from: 'contacts',
-    using: {
-      users: 'id',
-      contacts: 'user_id'
+  join: [
+    {
+      from: 'contacts',
+      on: {
+        users: 'id',
+        contacts: 'user_id'
+      }
     }
-  }
+  ]
 }
 ```
 
@@ -760,20 +762,22 @@ select "users"."id", "contacts"."phone" from "users" inner join "contacts" on "u
 {
   select: '*',
   from: 'users',
-  join: {
-    from: 'accounts',
-    using: {
-      or: [
-        {
-          accounts: 'id',
-          users: 'account_id'
-        },
-        {
-          accounts: 'owner_id',
-          users: 'id'
-        }
-      ]
-    }
+  join: [
+    {
+      from: 'accounts',
+      on: {
+        or: [
+          {
+            accounts: 'id',
+            users: 'account_id'
+          },
+          {
+            accounts: 'owner_id',
+            users: 'id'
+          }
+        ]
+      }
+    ]
   }
 }
 ```
@@ -796,13 +800,15 @@ If you need to use a literal value in the join you can use the `raw` syntax.
 {
   select: '*',
   from: 'users',
-  join: {
-    from: 'accounts',
-    using: {
-      accounts: 'type',
-      raw: ['?', ['admin']]
+  join: [
+    {
+      from: 'accounts',
+      on: {
+        accounts: 'type',
+        raw: ['?', ['admin']]
+      }
     }
-  }
+  ]
 }
 ```
 
@@ -822,13 +828,15 @@ select * from "users" inner join "accounts" on "accounts"."type" = 'admin'
 {
   select: '*',
   from: 'users',
-  innerJoin: {
-    from: 'accounts',
-    using: {
-      users: 'id',
-      accounts: 'user_id'
+  innerJoin: [
+    {
+      from: 'accounts',
+      on: {
+        users: 'id',
+        accounts: 'user_id'
+      }
     }
-  }
+  ]
 }
 ```
 
@@ -845,13 +853,15 @@ select * from "users" inner join "accounts" on "users"."id" = "accounts"."user_i
 {
   select: '*',
   from: 'users',
-  innerJoin: {
-    from: 'accounts',
-    using: {
-      users: 'id',
-      accounts: 'user_id'
+  innerJoin: [
+    {
+      from: 'accounts',
+      on: {
+        users: 'id',
+        accounts: 'user_id'
+      }
     }
-  },
+  ],
   where: {
     accounts: {
       value: { '>': 1000 }
@@ -877,21 +887,23 @@ select * from "users" inner join "accounts" on "users"."id" = "accounts"."user_i
 {
   select: '*',
   from: 'users',
-  innerJoin: {
-    from: 'accounts',
-    using: {
-      or: [
-        {
-          accounts: 'id',
-          users: 'account_id'
-        },
-        {
-          accounts: 'owner_id',
-          users: 'id'
-        }
-      ]
+  innerJoin: [
+    {
+      from: 'accounts',
+      on: {
+        or: [
+          {
+            accounts: 'id',
+            users: 'account_id'
+          },
+          {
+            accounts: 'owner_id',
+            users: 'id'
+          }
+        ]
+      }
     }
-  }
+  ]
 }
 ```
 
@@ -911,13 +923,15 @@ select * from "users" inner join "accounts" on "accounts"."id" = "users"."accoun
 {
   select: '*',
   from: 'users',
-  leftJoin: {
-    from: 'accounts',
-    using: {
-      users: 'id',
-      accounts: 'user_id'
+  leftJoin: [
+    {
+      from: 'accounts',
+      on: {
+        users: 'id',
+        accounts: 'user_id'
+      }
     }
-  }
+  ]
 }
 ```
 
@@ -935,21 +949,23 @@ select * from "users" left join "accounts" on "users"."id" = "accounts"."user_id
 {
   select: '*',
   from: 'users',
-  leftJoin: {
-    from: 'accounts',
-    using: {
-      or: [
-        {
-          accounts: 'id',
-          users: 'account_id'
-        },
-        {
-          accounts: 'owner_id',
-          users: 'id'
-        }
-      ]
+  leftJoin: [
+    {
+      from: 'accounts',
+      on: {
+        or: [
+          {
+            accounts: 'id',
+            users: 'account_id'
+          },
+          {
+            accounts: 'owner_id',
+            users: 'id'
+          }
+        ]
+      }
     }
-  }
+  ]
 }
 ```
 
@@ -969,13 +985,15 @@ select * from "users" left join "accounts" on "accounts"."id" = "users"."account
 {
   select: '*',
   from: 'users',
-  leftOuterJoin: {
-    from: 'accounts',
-    using: {
-      users: 'id',
-      accounts: 'user_id'
+  leftOuterJoin: [
+    {
+      from: 'accounts',
+      on: {
+        users: 'id',
+        accounts: 'user_id'
+      }
     }
-  }
+  ]
 }
 ```
 
@@ -993,21 +1011,23 @@ select * from "users" left outer join "accounts" on "users"."id" = "accounts"."u
 {
   select: '*',
   from: 'users',
-  leftOuterJoin: {
-    from: 'accounts',
-    using: {
-      or: [
-        {
-          accounts: 'id',
-          users: 'account_id'
-        },
-        {
-          accounts: 'owner_id',
-          users: 'id'
-        }
-      ]
+  leftOuterJoin: [
+    {
+      from: 'accounts',
+      on: {
+        or: [
+          {
+            accounts: 'id',
+            users: 'account_id'
+          },
+          {
+            accounts: 'owner_id',
+            users: 'id'
+          }
+        ]
+      }
     }
-  }
+  ]
 }
 ```
 
@@ -1027,13 +1047,15 @@ select * from "users" left outer join "accounts" on "accounts"."id" = "users"."a
 {
   select: '*',
   from: 'users',
-  rightJoin: {
-    from: 'accounts',
-    using: {
-      users: 'id',
-      accounts: 'user_id'
+  rightJoin: [
+    {
+      from: 'accounts',
+      on: {
+        users: 'id',
+        accounts: 'user_id'
+      }
     }
-  }
+  ]
 }
 ```
 
@@ -1051,21 +1073,23 @@ select * from "users" right join "accounts" on "users"."id" = "accounts"."user_i
 {
   select: '*',
   from: 'users',
-  rightJoin: {
-    from: 'accounts',
-    using: {
-      or: [
-        {
-          accounts: 'id',
-          users: 'account_id'
-        },
-        {
-          accounts: 'owner_id',
-          users: 'id'
-        }
-      ]
+  rightJoin: [
+    {
+      from: 'accounts',
+      on: {
+        or: [
+          {
+            accounts: 'id',
+            users: 'account_id'
+          },
+          {
+            accounts: 'owner_id',
+            users: 'id'
+          }
+        ]
+      }
     }
-  }
+  ]
 }
 ```
 
@@ -1085,13 +1109,15 @@ select * from "users" right join "accounts" on "accounts"."id" = "users"."accoun
 {
   select: '*',
   from: 'users',
-  rightOuterJoin: {
-    from: 'accounts',
-    using: {
-      users: 'id',
-      accounts: 'user_id'
+  rightOuterJoin: [
+    {
+      from: 'accounts',
+      on: {
+        users: 'id',
+        accounts: 'user_id'
+      }
     }
-  }
+  ]
 }
 ```
 
@@ -1109,21 +1135,23 @@ select * from "users" right outer join "accounts" on "users"."id" = "accounts"."
 {
   select: '*',
   from: 'users',
-  rightOuterJoin: {
-    from: 'accounts',
-    using: {
-      or: [
-        {
-          accounts: 'id',
-          users: 'account_id'
-        },
-        {
-          accounts: 'owner_id',
-          users: 'id'
-        }
-      ]
+  rightOuterJoin: [
+    {
+      from: 'accounts',
+      on: {
+        or: [
+          {
+            accounts: 'id',
+            users: 'account_id'
+          },
+          {
+            accounts: 'owner_id',
+            users: 'id'
+          }
+        ]
+      }
     }
-  }
+  ]
 }
 ```
 
@@ -1143,13 +1171,15 @@ select * from "users" right outer join "accounts" on "accounts"."id" = "users"."
 {
   select: '*',
   from: 'users',
-  outerJoin: {
-    from: 'accounts',
-    using: {
-      users: 'id',
-      accounts: 'user_id'
+  outerJoin: [
+    {
+      from: 'accounts',
+      on: {
+        users: 'id',
+        accounts: 'user_id'
+      }
     }
-  }
+  ]
 }
 ```
 
@@ -1167,21 +1197,23 @@ select * from "users" outer join "accounts" on "users"."id" = "accounts"."user_i
 {
   select: '*',
   from: 'users',
-  outerJoin: {
-    from: 'accounts',
-    using: {
-      or: [
-        {
-          accounts: 'id',
-          users: 'account_id'
-        },
-        {
-          accounts: 'owner_id',
-          users: 'id'
-        }
-      ]
+  outerJoin: [
+    {
+      from: 'accounts',
+      on: {
+        or: [
+          {
+            accounts: 'id',
+            users: 'account_id'
+          },
+          {
+            accounts: 'owner_id',
+            users: 'id'
+          }
+        ]
+      }
     }
-  }
+  ]
 }
 ```
 
@@ -1201,13 +1233,15 @@ select * from "users" outer join "accounts" on "accounts"."id" = "users"."accoun
 {
   select: '*',
   from: 'users',
-  fullOuterJoin: {
-    from: 'accounts',
-    using: {
-      users: 'id',
-      accounts: 'user_id'
+  fullOuterJoin: [
+    {
+      from: 'accounts',
+      on: {
+        users: 'id',
+        accounts: 'user_id'
+      }
     }
-  }
+  ]
 }
 ```
 
@@ -1225,21 +1259,23 @@ select * from "users" full outer join "accounts" on "users"."id" = "accounts"."u
 {
   select: '*',
   from: 'users',
-  fullOuterJoin: {
-    from: 'accounts',
-    using: {
-      or: [
-        {
-          accounts: 'id',
-          users: 'account_id'
-        },
-        {
-          accounts: 'owner_id',
-          users: 'id'
-        }
-      ]
+  fullOuterJoin: [
+    {
+      from: 'accounts',
+      on: {
+        or: [
+          {
+            accounts: 'id',
+            users: 'account_id'
+          },
+          {
+            accounts: 'owner_id',
+            users: 'id'
+          }
+        ]
+      }
     }
-  }
+  ]
 }
 ```
 
@@ -1259,13 +1295,15 @@ select * from "users" full outer join "accounts" on "accounts"."id" = "users"."a
 {
   select: '*',
   from: 'users',
-  crossJoin: {
-    from: 'accounts',
-    using: {
-      users: 'id',
-      accounts: 'user_id'
+  crossJoin: [
+    {
+      from: 'accounts',
+      on: {
+        users: 'id',
+        accounts: 'user_id'
+      }
     }
-  }
+  ]
 }
 ```
 
@@ -1283,21 +1321,23 @@ select * from "users" cross join "accounts" on "users"."id" = "accounts"."user_i
 {
   select: '*',
   from: 'users',
-  crossJoin: {
-    from: 'accounts',
-    using: {
-      or: [
-        {
-          accounts: 'id',
-          users: 'account_id'
-        },
-        {
-          accounts: 'owner_id',
-          users: 'id'
-        }
-      ]
+  crossJoin: [
+    {
+      from: 'accounts',
+      on: {
+        or: [
+          {
+            accounts: 'id',
+            users: 'account_id'
+          },
+          {
+            accounts: 'owner_id',
+            users: 'id'
+          }
+        ]
+      }
     }
-  }
+  ]
 }
 ```
 
