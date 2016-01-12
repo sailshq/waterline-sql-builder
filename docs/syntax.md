@@ -129,7 +129,7 @@ Allows the ability to select `distinct` values.
 
 ```sql
 -- PostgreSQL
-select distinct "first_name", "last_name" from "customers"
+select distinct "firstName", "lastName" from "customers"
 ```
 
 ```javascript

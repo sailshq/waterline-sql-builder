@@ -46,7 +46,15 @@ module.exports = {
       // Generate a SELECT
       select: function(value) {
         query = query || knex;
-        query = query.select(value);
+
+        // Check if a distinct or other key is being used
+        if(_.isObject(value) && !_.isArray(value)) {
+          if(value.distinct) {
+            query.distinct(value.distinct).select();
+          }
+        } else {
+          query = query.select(value);
+        }
       },
 
       // Generate a FROM
