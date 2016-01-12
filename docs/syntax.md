@@ -153,7 +153,7 @@ as sub queries.
   where: {
     firstName: 'Test',
     lastName: 'User'
-  }
+  },
   from: 'users'
 }
 ```
@@ -162,7 +162,7 @@ as sub queries.
 
 ```sql
 -- PostgreSQL
-select "id" from "books" where "firstName" = 'Test' and "lastName" = 'User'
+select "id" from "users" where "firstName" = 'Test' and "lastName" = 'User'
 ```
 
 ```javascript
@@ -178,7 +178,7 @@ db.users.find({ firstName: 'Test', lastName: 'User' }, { _id: 1 });
   select: '*',
   where: {
     votes: { '>': 100 }
-  }
+  },
   from: 'users'
 }
 ```

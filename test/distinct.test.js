@@ -7,10 +7,10 @@ describe('Query Generation ::', function() {
       Test({
         flavor: 'postgresql',
         query: {
-          from: 'customers',
           select: {
             distinct: ['firstName', 'lastName']
           },
+          from: 'customers'
         },
         outcome: 'select distinct "firstName", "lastName" from "customers"'
       }, done);

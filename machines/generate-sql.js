@@ -75,8 +75,52 @@ module.exports = {
         }
       },
 
-      where: function() {
+      // Parse the WHERE clause
+      where: function(value) {
 
+        var reservedWords = ['or'];
+
+        // Recursively go through the values in the where clause and build up
+        // the appropriate Knex function.
+        function parseClause(val, parentKey) {
+
+          // For each key in the clause process the clause
+          _.each(_.keys(val), function(key) {
+
+            // Placeholder for generating logic
+            var obj = [];
+
+            // if the key is a reserved word process it differently
+            if(_.includes(reservedWords, key)) {
+
+            }
+
+            // Otherwise check if the value is an object
+            if(_.isPlainObject(val[key])) {
+              parseClause(val[key], key);
+              return;
+            }
+
+            // Add the primitive value as an array.
+            // ex: ['foo', 100] for { foo: 100 }
+            var lookupKey = parentKey ? parentKey : key;
+            obj.push(lookupKey);
+
+            // If there is a parentKey this a 3 part value.
+            // ex: ['foo', '>', 100]
+            if(parentKey) {
+              obj.push(key);
+            }
+            // Add in the value
+            obj.push(val[key]);
+
+            // Use .apply to pass in the array as arguments
+            // ex: .where('foo', '>', 100)
+            query.where.apply(query, obj);
+          });
+        }
+
+        parseClause(value);
       },
 
     };
