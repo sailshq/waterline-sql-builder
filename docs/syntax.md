@@ -248,6 +248,8 @@ db.users.find({$or: [
 You can also create subqueries. The following example will show you how to nest
 queries within a query as well as show a combination of AND and OR operators.
 
+TODO: Write parser for this.
+
 **Example**
 
 ```javascript
