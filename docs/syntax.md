@@ -33,7 +33,7 @@ single `'*'` value to represent all values.
 
 ```sql
 -- PostgreSQL
-select 'title', 'author', 'year' from 'books'
+select "title", "author", "year" from "books"
 ```
 
 ```javascript
@@ -54,7 +54,7 @@ db.books.find({}, { title: 1, author: 1, year: 1 })
 
 ```sql
 -- PostgreSQL
-select * from 'books'
+select * from "books"
 ```
 
 ```javascript
