@@ -84,7 +84,7 @@ module.exports = {
         // the appropriate Knex function.
         function parseClause(val, parentKey, reservedFn, context) {
 
-          // For each key in the clause process the clause
+          // For each key in the criteria process the clause
           _.each(_.keys(val), function(key) {
 
             // Placeholder for generating logic
@@ -103,10 +103,19 @@ module.exports = {
                 context = [];
 
                 // For each item in the array, parse the criteria
-                _.each(val[key], function(clause) {
+                _.each(val[key], function(clause, idx) {
 
-                  // Build up a base argument to send
-                  var args = [clause, undefined, 'orWhere'];
+                  // Build up a base argument to send. Use orWhere as a default
+                  // but depending on what is in the value it could be overriden.
+                  // ex. by using not which will make it `orWhereNot`. If a
+                  // reservedFn is already in use, use that above all else.
+                  var args;
+                  if(reservedFn) {
+                    args = [clause, undefined, reservedFn];
+                  } else {
+                    var defaultFn = idx === 0 ? 'where' : 'orWhere';
+                    args = [clause, undefined, defaultFn];
+                  }
 
                   // If we are already in a group, tested by checking if
                   // there is a `reservedFn` value set, then add the context
@@ -128,10 +137,25 @@ module.exports = {
 
                   // Use .apply to pass in the array as arguments
                   // ex: .where('foo', '>', 100)
-                  query.orWhere(function() {
+                  query[reservedFn].call(query, function() {
                     var self = this;
-                    _.each(context, function(opt) {
-                      self.orWhere.apply(self, opt);
+                    _.each(context, function(opt, idx) {
+
+                      // Some conditional logic to perform based on the index of
+                      // the statement. The first statement should use `where`
+                      // and further statements should use the actual reservedFn.
+                      var defaultFn;
+                      if(idx === 0 && reservedFn === 'where') { defaultFn = 'where'; }
+                      if(idx === 0 && reservedFn === 'orWhere') { defaultFn = 'where'; }
+                      if(idx === 0 && reservedFn === 'orWhereNot') { defaultFn = 'where'; }
+                      if(idx === 0 && reservedFn === 'whereNot') { defaultFn = 'where'; }
+                      if(idx !== 0 && reservedFn === 'where') { defaultFn = 'orWhere'; }
+                      if(idx !== 0 && reservedFn === 'orWhere') { defaultFn = 'orWhere'; }
+                      if(idx !== 0 && reservedFn === 'orWhereNot') { defaultFn = 'orWhereNot'; }
+                      if(idx !== 0 && reservedFn === 'whereNot') { defaultFn = 'orWhereNot'; }
+                      if(!defaultFn) { defaultFn = 'where' }
+  
+                      self[defaultFn].apply(self, opt);
                     });
                   });
                 }
@@ -144,9 +168,36 @@ module.exports = {
             // Otherwise check if the value is an object
             if(_.isPlainObject(val[key])) {
 
+              // objKey becomes the key we are currently at. In most cases
+              // it will be a value that is useful such as `firstName`. Occasionaly
+              // however it will have a special meaning such as `NOT`. In this
+              // case we want to be able to set it independent of the key we
+              // are processing.
+              var objKey;
+
+              // If the key is `NOT` process but don't set a parent
+              if(key === 'not') {
+
+                // If we are in OR grouping and using the default `orWhere` fn,
+                // change it to use the `orWhereNot` fn.
+                if(reservedFn === 'orWhere') {
+                  reservedFn = 'orWhereNot';
+                } else {
+                  reservedFn = 'whereNot';
+                }
+
+                objKey = undefined;
+              }
+
+              // Otherwise set the objKey to be the actual key we are at. It's
+              // not a special key.
+              else {
+                objKey = key;
+              }
+
               // Build up a dynamic argument list based on the availability of
               // arguments to the parent function
-              var args = [val[key], key];
+              var args = [val[key], objKey];
               if(reservedFn) { args.push(reservedFn); }
               if(context) { args.push(context); }
 
