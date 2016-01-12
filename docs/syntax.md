@@ -215,7 +215,7 @@ db.users.find({ votes: { $gt: 100 }});
         name: 'Tester'
       }
     ]
-  }
+  },
   from: 'users'
 }
 ```

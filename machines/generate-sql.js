@@ -82,7 +82,7 @@ module.exports = {
 
         // Recursively go through the values in the where clause and build up
         // the appropriate Knex function.
-        function parseClause(val, parentKey) {
+        function parseClause(val, parentKey, reservedFn, context) {
 
           // For each key in the clause process the clause
           _.each(_.keys(val), function(key) {
@@ -93,11 +93,64 @@ module.exports = {
             // if the key is a reserved word process it differently
             if(_.includes(reservedWords, key)) {
 
+              // Handle OR keys
+              if(key === 'or') {
+
+                // Validate that the OR key is an array
+                if(!_.isArray(val[key])) { throw new Error('Invalid OR syntax'); }
+
+                // Reset the context each time we enter a new grouping
+                context = [];
+
+                // For each item in the array, parse the criteria
+                _.each(val[key], function(clause) {
+
+                  // Build up a base argument to send
+                  var args = [clause, undefined, 'orWhere'];
+
+                  // If we are already in a group, tested by checking if
+                  // there is a `reservedFn` value set, then add the context
+                  // array because the arguments will need to be grouped a bit
+                  // different.
+                  if(reservedFn) { args.push(context || []); }
+                  parseClause.apply(this, args);
+                });
+
+                // If we are in a nested grouped clause, perform the top level
+                // `where` function here and wrap the children in a function.
+                // This is because of the way grouping works in Knex, in order
+                // to wrap groups in parenthesis they need to look like the
+                // following example:
+                // query.orWhere(function() {
+                //   this.where('foo', '>', 'bar').orWhere('age', '>', 20);
+                // })
+                if(reservedFn) {
+
+                  // Use .apply to pass in the array as arguments
+                  // ex: .where('foo', '>', 100)
+                  query.orWhere(function() {
+                    var self = this;
+                    _.each(context, function(opt) {
+                      self.orWhere.apply(self, opt);
+                    });
+                  });
+                }
+
+                return;
+              }
+
             }
 
             // Otherwise check if the value is an object
             if(_.isPlainObject(val[key])) {
-              parseClause(val[key], key);
+
+              // Build up a dynamic argument list based on the availability of
+              // arguments to the parent function
+              var args = [val[key], key];
+              if(reservedFn) { args.push(reservedFn); }
+              if(context) { args.push(context); }
+
+              parseClause.apply(this, args);
               return;
             }
 
@@ -114,9 +167,17 @@ module.exports = {
             // Add in the value
             obj.push(val[key]);
 
+            // If we are operating inside a grouped clause, don't do the apply
+            // here. Instead do it in the calling grouping function.
+            if(context) {
+              context.push(obj);
+              return;
+            }
+
             // Use .apply to pass in the array as arguments
             // ex: .where('foo', '>', 100)
-            query.where.apply(query, obj);
+            var fn = reservedFn || 'where';
+            query[fn].apply(query, obj);
           });
         }
 
