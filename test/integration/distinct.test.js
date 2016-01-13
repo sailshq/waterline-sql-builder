@@ -1,11 +1,11 @@
-var Test = require('./support/test-runner');
+var Test = require('../support/test-runner');
 
 describe('Query Generation ::', function() {
   describe('DISTINCT statements', function() {
 
     it('should generate a distinct query', function(done) {
       Test({
-        flavor: 'postgresql',
+        dialect: 'postgresql',
         query: {
           select: {
             distinct: ['firstName', 'lastName']

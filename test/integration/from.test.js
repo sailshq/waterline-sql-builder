@@ -1,11 +1,11 @@
-var Test = require('./support/test-runner');
+var Test = require('../support/test-runner');
 
 describe('Query Generation ::', function() {
   describe('FROM statements', function() {
 
     it('should generate a simple query with a FROM statement', function(done) {
       Test({
-        flavor: 'postgresql',
+        dialect: 'postgresql',
         query: {
           select: '*',
           from: 'books'
@@ -16,7 +16,7 @@ describe('Query Generation ::', function() {
 
     it('should support schemas in the FROM statement', function(done) {
       Test({
-        flavor: 'postgresql',
+        dialect: 'postgresql',
         query: {
           select: ['title', 'author', 'year'],
           from: { table: 'books', schema: 'foo' }

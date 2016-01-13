@@ -9,7 +9,7 @@ var Pack = require('../../index');
 module.exports = function(test, cb) {
 
   Pack.generateSql({
-    flavor: test.flavor,
+    dialect: test.flavor,
     query: test.query
   }).exec({
 
