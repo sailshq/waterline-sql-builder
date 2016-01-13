@@ -51,6 +51,7 @@ module.exports = {
       'not': 'NOT',
       'in': 'IN',
       'distinct': 'DISTINCT',
+      'where': 'WHERE',
       '>': 'OPERATOR',
       '<': 'OPERATOR',
       '<>': 'OPERATOR',
@@ -64,13 +65,13 @@ module.exports = {
       // Add the operator to the results
       results.push({
         type: 'OPERATOR',
-        value: key
+        value: operator
       });
 
       // Add the value to the results
       results.push({
         type: 'VALUE',
-        value: obj[key]
+        value: value
       });
     }
 
@@ -158,7 +159,20 @@ module.exports = {
         type: 'VALUE',
         value: value
       });
+    }
 
+    //  ╦ ╦╦ ╦╔═╗╦═╗╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
+    //  ║║║╠═╣║╣ ╠╦╝║╣   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
+    //  ╚╩╝╩ ╩╚═╝╩╚═╚═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+    function processWhere(value) {
+
+      // Tokenize the where and then call the tokenizer on the where values
+      results.push({
+        type: 'IDENTIFIER',
+        value: 'WHERE'
+      });
+
+      tokenizeObject(value);
     }
 
 
@@ -201,6 +215,12 @@ module.exports = {
           // If the identifier is a FROM, add it's token
           if(identifiers[key] === 'FROM') {
             processFrom(obj[key]);
+            return;
+          }
+
+          // If the identifier is a WHERE, add it's token and process it's values
+          if(identifiers[key] === 'WHERE') {
+            processWhere(obj[key]);
             return;
           }
 
