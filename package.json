@@ -27,6 +27,7 @@
       "generate-sql",
       "tokenizer",
       "analyzer",
+      "sequelizer"
     ],
     "testsUrl": "https://travis-ci.org/particlebanana/waterline-query-builder"
   },
