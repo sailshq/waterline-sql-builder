@@ -24,7 +24,8 @@
     "friendlyName": "SQL Builder",
     "machineDir": "machines/",
     "machines": [
-      "generate-sql"
+      "generate-sql",
+      "tokenizer",
     ],
     "testsUrl": "https://travis-ci.org/particlebanana/waterline-query-builder"
   },
