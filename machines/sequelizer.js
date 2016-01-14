@@ -141,6 +141,33 @@ module.exports = {
       });
     }
 
+    //  ╦╔╗╔╔═╗╔═╗╦═╗╔╦╗  ╔╗ ╦ ╦╦╦  ╔╦╗╔═╗╦═╗
+    //  ║║║║╚═╗║╣ ╠╦╝ ║   ╠╩╗║ ║║║   ║║║╣ ╠╦╝
+    //  ╩╝╚╝╚═╝╚═╝╩╚═ ╩   ╚═╝╚═╝╩╩═╝═╩╝╚═╝╩╚═
+    //
+    // Builds an array of KEY/VALUE pairs to use as the insert clause.
+    function insertBuilder(expr, expression) {
+      var obj = {};
+
+      // Handle KEY/VALUE pairs
+      if(expr.type === 'KEY') {
+        obj[expr.value] = undefined;
+        expression.push(obj);
+
+        return expression;
+      }
+
+      // Set the VALUE pair
+      if(expr.type === 'VALUE') {
+        obj = _.last(expression);
+        var key = _.first(_.keys(obj));
+        obj[key] = expr.value;
+
+        return expression;
+      }
+
+    }
+
 
     //  ████████╗ ██████╗ ██╗  ██╗███████╗███╗   ██╗    ██████╗  █████╗ ██████╗ ███████╗███████╗██████╗
     //  ╚══██╔══╝██╔═══██╗██║ ██╔╝██╔════╝████╗  ██║    ██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔════╝██╔══██╗
@@ -163,8 +190,13 @@ module.exports = {
           return;
         }
 
+        // Handle sets of values being inserted
+        if(identifier === 'INSERT' && (expr.type === 'KEY' || expr.type === 'VALUE')) {
+          expression = insertBuilder(expr, expression);
+        }
+
         // Handle clauses in the WHERE value
-        if(identifier === 'WHERE' && expr.type === 'KEY' || expr.type === 'OPERATOR' || expr.type === 'VALUE') {
+        if(identifier === 'WHERE' && (expr.type === 'KEY' || expr.type === 'OPERATOR' || expr.type === 'VALUE')) {
           expression = whereBuilder(expr, expression);
         }
 
@@ -187,6 +219,14 @@ module.exports = {
 
             case 'DISTINCT':
               query.distinct(expr.value);
+              break;
+
+            case 'INTO':
+              query.into(expr.value);
+              break;
+
+            case 'INSERT':
+              query.insert(expression);
               break;
 
             case 'WHERE':

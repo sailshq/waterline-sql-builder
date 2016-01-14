@@ -194,6 +194,41 @@ module.exports = {
     // Next find the DISTINCT statements and group those
     indentifierSearch('DISTINCT');
 
+    //  ╦╔╗╔╔╦╗╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
+    //  ║║║║ ║ ║ ║  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
+    //  ╩╝╚╝ ╩ ╚═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+    //
+    // Next find the INTO statements and group those
+    indentifierSearch('INTO');
+
+    //  ╦╔╗╔╔═╗╔═╗╦═╗╔╦╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
+    //  ║║║║╚═╗║╣ ╠╦╝ ║   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
+    //  ╩╝╚╝╚═╝╚═╝╩╚═ ╩   ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+    //
+    // Next find the INSERT statements and group those
+    (function() {
+
+      // Check for an INSERT statement
+      var idx = _.findIndex(tokens, { type: 'IDENTIFIER', value: 'INSERT' });
+      if(idx < 0) { return; }
+
+      // Find the next Identifier so we know the scope of the INSERT.
+      // To do this slice the array at the INSERT index, pull off the values, then
+      // see if there are any remaining Identifiers.
+      var slice = _.slice(tokens, idx);
+      var identifier = _.first(_.pullAt(slice, 0));
+
+      var endIdx = _.findIndex(slice, { type: 'IDENTIFIER' });
+      if(endIdx < 0) { endIdx = undefined; }
+
+      // Limit the tokens to only those needed to fufill the INSERT clause
+      var insertTokens = _.slice(slice, idx, endIdx);
+      insertTokens.unshift({ type: 'IDENTIFIER', value: 'INSERT' });
+
+      // Add the tokens to the results
+      results.push(insertTokens);
+    })();
+
     //  ╦ ╦╦ ╦╔═╗╦═╗╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
     //  ║║║╠═╣║╣ ╠╦╝║╣   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
     //  ╚╩╝╩ ╩╚═╝╩╚═╚═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
@@ -223,7 +258,7 @@ module.exports = {
 
       // Add the WHERE identifier back in
       groupedTokens.unshift(whereIdentifier);
-      
+
       results.push(groupedTokens);
     })();
 

@@ -52,6 +52,8 @@ module.exports = {
       'in': 'IN',
       'distinct': 'DISTINCT',
       'where': 'WHERE',
+      'insert': 'INSERT',
+      'into': 'INTO',
       '>': 'OPERATOR',
       '<': 'OPERATOR',
       '<>': 'OPERATOR',
@@ -161,6 +163,51 @@ module.exports = {
       });
     }
 
+    //  ╦╔╗╔╔═╗╔═╗╦═╗╔╦╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
+    //  ║║║║╚═╗║╣ ╠╦╝ ║   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
+    //  ╩╝╚╝╚═╝╚═╝╩╚═ ╩   ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+    function processInsert(value) {
+
+      // Add the insert statment
+      results.push({
+        type: 'IDENTIFIER',
+        value: 'INSERT'
+      });
+
+      // Check if a value is being used
+      if(_.isObject(value)) {
+
+        _.each(_.keys(value), function(key) {
+          results.push({
+            type: 'KEY',
+            value: key
+          });
+
+          results.push({
+            type: 'VALUE',
+            value: value[key]
+          });
+        });
+
+        return;
+      }
+    }
+
+    //  ╦╔╗╔╔╦╗╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
+    //  ║║║║ ║ ║ ║  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
+    //  ╩╝╚╝ ╩ ╚═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+    function processInto(value) {
+      results.push({
+        type: 'IDENTIFIER',
+        value: 'INTO'
+      });
+
+      results.push({
+        type: 'VALUE',
+        value: value
+      });
+    }
+
     //  ╦ ╦╦ ╦╔═╗╦═╗╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
     //  ║║║╠═╣║╣ ╠╦╝║╣   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
     //  ╚╩╝╩ ╩╚═╝╩╚═╚═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
@@ -246,6 +293,18 @@ module.exports = {
           // If the identifier is a FROM, add it's token
           if(identifiers[key] === 'FROM') {
             processFrom(obj[key]);
+            return;
+          }
+
+          // If the identifier is an INSERT, add it's token
+          if(identifiers[key] === 'INSERT') {
+            processInsert(obj[key]);
+            return;
+          }
+
+          // If the identifier is an INTO, add it's token
+          if(identifiers[key] === 'INTO') {
+            processInto(obj[key]);
             return;
           }
 
