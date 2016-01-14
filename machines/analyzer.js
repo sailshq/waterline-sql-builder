@@ -56,12 +56,110 @@ module.exports = {
         statement.push(tokens[idx+1]);
 
         // Remove the values
-        _.pullAt(tokens, idx, idx+1);
+        // Do it in two steps because of a weird bug in Lodash that I need to
+        // look into.
+        // TODO: Look into why lodash treats this array differently
+        _.pullAt(tokens, idx);
+        _.pullAt(tokens, idx);
 
         // TODO: Update when we add sub-queries
         results.push(statement);
       }
     }
+
+    //  ╔═╗╔═╗╔╗╔╔╦╗╦╔╦╗╦╔═╗╔╗╔  ╦ ╦╔═╗╔╗╔╔╦╗╦  ╦╔╗╔╔═╗
+    //  ║  ║ ║║║║ ║║║ ║ ║║ ║║║║  ╠═╣╠═╣║║║ ║║║  ║║║║║ ╦
+    //  ╚═╝╚═╝╝╚╝═╩╝╩ ╩ ╩╚═╝╝╚╝  ╩ ╩╩ ╩╝╚╝═╩╝╩═╝╩╝╚╝╚═╝
+    //
+    // Handles SQL conditions such as OR and creates logical groups for each
+    // part of the condition.
+    //
+    // The nested option here is a flag that decides if the results should be
+    // wrapped in an array or not.
+    function conditionHandler(tokens, nested) {
+
+      // Search for an OR condition in the tokens
+      var conditionIdx = _.findIndex(tokens, { type: 'CONDITION', value: 'OR' });
+
+      // If there are no conditions, check for any grouping needed and return
+      // the data.
+      if(conditionIdx < 0) {
+        return processConditionGroup(tokens);
+      }
+
+      // If there are nested conditions, work from the inner most condition outwards.
+      // This gives us capture groups for nesting starting with the deepest
+      // nesting and working our way outwards.
+
+      // Find the limits of this condition by looking for the last ENDCONDITION
+      // token.
+      var outerIdx = _.findLastIndex(tokens, { type: 'ENDCONDITION' });
+
+      // Create a set of tokens that excludes the current OR condition
+      var data = _.slice(tokens, conditionIdx+1, outerIdx);
+
+      // If we are in a nested condition, wrap the results in an array.
+      var results;
+      var nestedResults = conditionHandler(data, true);
+      if(nested) {
+        results = [nestedResults];
+      } else {
+        results = nestedResults;
+      }
+
+      // Reset the tokens to exclude the pulled values
+      tokens = _.concat(_.slice(tokens, 1, conditionIdx), _.slice(tokens, outerIdx+2));
+
+      // If we have more results, add them to the results array
+      var sets = processConditionGroup(tokens);
+      if(_.isArray(sets)) {
+        results.push(sets);
+      }
+
+      return results;
+    }
+
+
+    // Given a set of tokens, check for nested conditions and then group the
+    // pieces of the current condition into logical groups.
+    function processConditionGroup(tokens) {
+
+      // Hold the capture groups
+      var groups = [];
+
+      // Run through the tokens and create arrays for everything in between
+      // GROUP/ENDGROUP tokens.
+      (function groupedCondition(_tokens) {
+
+        // Find the end of this group
+        var startIdx = _.findIndex(_tokens, { type: 'GROUP' });
+        var endIdx = _.findIndex(_tokens, { type: 'ENDGROUP' });
+        if(endIdx < 0) { return; }
+
+        // Add the data between the GROUP/ENDGROUP to the groups array
+        groups.push(_.slice(_tokens, startIdx+1, endIdx));
+
+        // If we are not on the last item in the condition, continue grouping
+        if(_tokens.length > endIdx + 1) {
+          groupedCondition(_.slice(_tokens, endIdx+1));
+        }
+      })(tokens);
+
+      // If there is only one group don't return an array of arrays
+      if(groups.length === 1) {
+        groups = _.first(groups);
+      }
+
+      // If we have capture groups, return those. Otherwise just send the
+      // original tokens back.
+      var results = groups.length ? groups : tokens;
+      if(!results.length) {
+        results = undefined;
+      }
+
+      return results;
+    }
+
 
     //  ╔═╗╦═╗╔═╗╔╦╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
     //  ╠╣ ╠╦╝║ ║║║║  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
@@ -118,9 +216,15 @@ module.exports = {
 
       // Limit the tokens to only those needed to fufill the WHERE clause
       var whereTokens = _.slice(slice, idx, endIdx);
-      whereTokens.unshift(whereIdentifier);
 
-      results.push(whereTokens);
+      // Process and group and conditions.
+      // ex: OR
+      var groupedTokens = conditionHandler(whereTokens);
+
+      // Add the WHERE identifier back in
+      groupedTokens.unshift(whereIdentifier);
+      
+      results.push(groupedTokens);
     })();
 
 

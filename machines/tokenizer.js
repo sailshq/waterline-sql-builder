@@ -175,6 +175,44 @@ module.exports = {
       tokenizeObject(value);
     }
 
+    //  ╔═╗╦═╗  ╔═╗╦═╗╔═╗╦ ╦╔═╗╦╔╗╔╔═╗
+    //  ║ ║╠╦╝  ║ ╦╠╦╝║ ║║ ║╠═╝║║║║║ ╦
+    //  ╚═╝╩╚═  ╚═╝╩╚═╚═╝╚═╝╩  ╩╝╚╝╚═╝
+    function processOr(value) {
+
+      // Add the Or token
+      results.push({
+        type: 'CONDITION',
+        value: 'OR'
+      });
+
+      // For each condition in the OR, add a group token and process the criteria.
+      _.forEach(value, function(criteria, idx) {
+
+        // Start a group
+        results.push({
+          type: 'GROUP',
+          value: idx
+        });
+
+        tokenizeObject(criteria);
+
+        // End a group
+        results.push({
+          type: 'ENDGROUP',
+          value: idx
+        });
+
+      });
+
+      // Close the condition
+      results.push({
+        type: 'ENDCONDITION',
+        value: 'OR'
+      });
+    }
+
+
 
     //  ████████╗ ██████╗ ██╗  ██╗███████╗███╗   ██╗██╗███████╗███████╗██████╗
     //  ╚══██╔══╝██╔═══██╗██║ ██╔╝██╔════╝████╗  ██║██║╚══███╔╝██╔════╝██╔══██╗
@@ -183,14 +221,7 @@ module.exports = {
     //     ██║   ╚██████╔╝██║  ██╗███████╗██║ ╚████║██║███████╗███████╗██║  ██║
     //     ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝╚═╝╚══════╝╚══════╝╚═╝  ╚═╝
     //
-    function tokenizeObject(obj, level) {
-
-      // Add a new level to the results if needed
-      if(level) {
-        results.push({
-          type: 'LEVEL'
-        });
-      }
+    function tokenizeObject(obj) {
 
       _.each(_.keys(obj), function(key) {
 
@@ -221,6 +252,12 @@ module.exports = {
           // If the identifier is a WHERE, add it's token and process it's values
           if(identifiers[key] === 'WHERE') {
             processWhere(obj[key]);
+            return;
+          }
+
+          // If the identifier is an OR, start a group and add each token.
+          if(identifiers[key] === 'OR') {
+            processOr(obj[key]);
             return;
           }
 
