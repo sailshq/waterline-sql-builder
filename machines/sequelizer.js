@@ -51,6 +51,7 @@ module.exports = {
     // Loop through each token group in the tree and add to the query
     _.forEach(tree, function(tokenGroup, key) {
       var identifier;
+      var expression = [];
 
       // Loop through each item in the group and build up the expression
       _.each(tokenGroup, function(expr) {
@@ -59,6 +60,24 @@ module.exports = {
         if(expr.type === 'IDENTIFIER') {
           identifier = expr.value;
           return;
+        }
+
+        // Handle KEY/VALUE pairs
+        if(expr.type === 'KEY') {
+          // Reset the expression for each new key
+          expression = [];
+          expression.push(expr.value);
+        }
+
+        if(expr.type === 'OPERATOR') {
+
+          // Clear the second and third items in the array to remove any
+          // previous expression values for the key
+          _.pullAt(expression, 1);
+          _.pullAt(expression, 2);
+
+          // Set the second item in the array to the operator
+          expression[1] = expr.value;
         }
 
         // Process value and use the appropriate Knex function
@@ -80,6 +99,13 @@ module.exports = {
 
             case 'DISTINCT':
               query.distinct(expr.value);
+              break;
+
+            case 'WHERE':
+              // Set the second or third item in the array to the value
+
+              expression.push(expr.value);
+              query.where.apply(query, expression);
               break;
           }
 

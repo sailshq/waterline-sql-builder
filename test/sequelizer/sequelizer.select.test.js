@@ -5,7 +5,7 @@ var assert = require('assert');
 describe('Sequelizer ::', function() {
   describe('SELECT statements', function() {
 
-    it('should generate a valid group for select "*"', function(done) {
+    it('should generate a query for select "*"', function(done) {
       var tree = analyze({
         select: '*',
         from: 'books'
@@ -22,7 +22,7 @@ describe('Sequelizer ::', function() {
       });
     });
 
-    it('should generate a valid group for select when defined columns are used', function(done) {
+    it('should generate a query when defined columns are used', function(done) {
       var tree = analyze({
         select: ['title', 'author', 'year'],
         from: 'books'
