@@ -147,21 +147,20 @@ module.exports = {
     //
     // Builds an array of KEY/VALUE pairs to use as the insert clause.
     function insertBuilder(expr, expression) {
-      var obj = {};
+      var arr = [];
 
       // Handle KEY/VALUE pairs
       if(expr.type === 'KEY') {
-        obj[expr.value] = undefined;
-        expression.push(obj);
+        arr.push(expr.value);
+        expression.push(arr);
 
         return expression;
       }
 
       // Set the VALUE pair
       if(expr.type === 'VALUE') {
-        obj = _.last(expression);
-        var key = _.first(_.keys(obj));
-        obj[key] = expr.value;
+        arr = _.last(expression);
+        arr.push(expr.value);
 
         return expression;
       }
@@ -182,7 +181,7 @@ module.exports = {
       var expression = [];
 
       // Loop through each item in the group and build up the expression
-      _.each(tokenGroup, function(expr) {
+      _.each(tokenGroup, function(expr, idx) {
 
         // Handle identifiers by storing them on the fn
         if(expr.type === 'IDENTIFIER') {
@@ -226,7 +225,16 @@ module.exports = {
               break;
 
             case 'INSERT':
-              query.insert(expression);
+
+              // Look ahead and see if the next expression is an Identifier.
+              // If so or if there is no next identifier, add the insert statments.
+              var nextExpr = tokenGroup[idx+1];
+              if(!nextExpr || nextExpr.type === 'IDENTIFIER') {
+
+                // Flatten the expression
+                expression = _.fromPairs(expression);
+                query.insert(expression);
+              }
               break;
 
             case 'WHERE':
