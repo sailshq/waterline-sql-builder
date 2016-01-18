@@ -208,6 +208,23 @@ module.exports = {
       });
     }
 
+    //  ╔╗╔╔═╗╔╦╗  ╔═╗╔═╗╔╗╔╔╦╗╦╔╦╗╦╔═╗╔╗╔
+    //  ║║║║ ║ ║   ║  ║ ║║║║ ║║║ ║ ║║ ║║║║
+    //  ╝╚╝╚═╝ ╩   ╚═╝╚═╝╝╚╝═╩╝╩ ╩ ╩╚═╝╝╚╝
+    function processNot(value) {
+
+      // Add a condition
+      var condition = {
+        type: 'CONDITION',
+        value: 'NOT'
+      };
+
+      results.push(condition);
+
+      // Tokenize the values within the condition
+      tokenizeObject(value, condition);
+    }
+
     //  ╦ ╦╦ ╦╔═╗╦═╗╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
     //  ║║║╠═╣║╣ ╠╦╝║╣   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
     //  ╚╩╝╩ ╩╚═╝╩╚═╚═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
@@ -268,9 +285,11 @@ module.exports = {
     //     ██║   ╚██████╔╝██║  ██╗███████╗██║ ╚████║██║███████╗███████╗██║  ██║
     //     ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝╚═╝╚══════╝╚══════╝╚═╝  ╚═╝
     //
-    function tokenizeObject(obj) {
+    // @obj {Object} - the token obj being processed
+    // @processor {Object} - a value to insert between each key in the array
+    function tokenizeObject(obj, processor) {
 
-      _.each(_.keys(obj), function(key) {
+      _.each(_.keys(obj), function(key, idx) {
 
         // Check if the key is a known identifier
         var isIdentitifier = identifiers[key];
@@ -320,6 +339,11 @@ module.exports = {
             return;
           }
 
+          if(identifiers[key] === 'NOT') {
+            processNot(obj[key]);
+            return;
+          }
+
           // Add the identifier
           results.push({
             type: identifiers[key],
@@ -362,6 +386,19 @@ module.exports = {
           type: 'VALUE',
           value: obj[key]
         });
+
+        // If there is a processor and we are not on the last key, add it as well.
+        // This is used for things like:
+        // {
+        //   not: {
+        //     firstName: 'foo',
+        //     lastName: 'bar'
+        //   }
+        // }
+        // Where we need to insert a NOT statement between each key
+        if(processor && (_.keys(obj).length > idx+1)) {
+          results.push(processor);
+        }
       });
     }
 
