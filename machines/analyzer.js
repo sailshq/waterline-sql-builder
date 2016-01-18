@@ -79,11 +79,11 @@ module.exports = {
     function conditionHandler(tokens, nested) {
 
       // Search for an OR condition in the tokens
-      var conditionIdx = _.findIndex(tokens, { type: 'CONDITION', value: 'OR' });
+      var orConditionIdx = _.findIndex(tokens, { type: 'CONDITION', value: 'OR' });
 
-      // If there are no conditions, check for any grouping needed and return
+      // If there are no OR conditions, check for any grouping needed and return
       // the data.
-      if(conditionIdx < 0) {
+      if(orConditionIdx < 0) {
         return processConditionGroup(tokens);
       }
 
@@ -93,10 +93,10 @@ module.exports = {
 
       // Find the limits of this condition by looking for the last ENDCONDITION
       // token.
-      var outerIdx = _.findLastIndex(tokens, { type: 'ENDCONDITION' });
+      var outerIdx = _.findLastIndex(tokens, { type: 'ENDCONDITION', value: 'OR' });
 
       // Create a set of tokens that excludes the current OR condition
-      var data = _.slice(tokens, conditionIdx+1, outerIdx);
+      var data = _.slice(tokens, orConditionIdx+1, outerIdx);
 
       // If we are in a nested condition, wrap the results in an array.
       var results;
@@ -107,8 +107,36 @@ module.exports = {
         results = nestedResults;
       }
 
-      // Reset the tokens to exclude the pulled values
-      tokens = _.concat(_.slice(tokens, 1, conditionIdx), _.slice(tokens, outerIdx+2));
+      // Store the boundaries of the data we used, this way was can pull out data
+      // that has already been processed and continue working our way outward.
+      var front = _.slice(tokens, 1, orConditionIdx);
+      var rear = _.slice(tokens, outerIdx+2);
+
+      // If there is anything left on the front of the array, prepend it to the
+      // result set. These usually include things like "NOT", etc.
+      if(front.length) {
+
+        // If there is only a single item, it shouldn't be wrapped in an array
+        if(front.length === 1) {
+          front = _.first(front);
+        }
+
+        // Check if the first result is an array, this represents a nested OR
+        // statement. In this case, stick out values on the front of the first
+        // item. A good example of when this comes into play is the nested
+        // WHERE NOT example in the tests file.
+        if(_.isArray(results) && _.isArray(_.first(results))) {
+          _.first(results).unshift(front);
+        }
+
+        // Otherwise stick it on the front of the result set
+        else if(_.isArray(results)) {
+          results.unshift(front);
+        }
+      }
+
+      // Set the tokens to the remaining values
+      tokens = rear;
 
       // If we have more results, add them to the results array
       var sets = processConditionGroup(tokens);
@@ -120,8 +148,8 @@ module.exports = {
     }
 
 
-    // Given a set of tokens, check for nested conditions and then group the
-    // pieces of the current condition into logical groups.
+    // Given a set of tokens, create an array of grouped elements that make up
+    // a logical set of the query.
     function processConditionGroup(tokens) {
 
       // Hold the capture groups
@@ -129,7 +157,7 @@ module.exports = {
 
       // Run through the tokens and create arrays for everything in between
       // GROUP/ENDGROUP tokens.
-      (function groupedCondition(_tokens) {
+      function groupedCondition(_tokens) {
 
         // Find the end of this group
         var startIdx = _.findIndex(_tokens, { type: 'GROUP' });
@@ -137,19 +165,25 @@ module.exports = {
         if(endIdx < 0) { return; }
 
         // Add the data between the GROUP/ENDGROUP to the groups array
-        groups.push(_.slice(_tokens, startIdx+1, endIdx));
+        var data = _.slice(_tokens, startIdx+1, endIdx);
+        if(!data.length) { return; }
+
+        groups.push(data);
 
         // If we are not on the last item in the condition, continue grouping
         if(_tokens.length > endIdx + 1) {
-          groupedCondition(_.slice(_tokens, endIdx+1));
+          var nextIteration = _.slice(_tokens, endIdx+1);
+          groupedCondition(nextIteration);
         }
-      })(tokens);
+      }
+
+      // Kick off the recursive parsing
+      groupedCondition(tokens);
 
       // If there is only one group don't return an array of arrays
       if(groups.length === 1) {
         groups = _.first(groups);
       }
-
       // If we have capture groups, return those. Otherwise just send the
       // original tokens back.
       var results = groups.length ? groups : tokens;
@@ -261,10 +295,6 @@ module.exports = {
 
       results.push(groupedTokens);
     })();
-
-
-    // Find any LEVEL statements and group them together
-    // TODO
 
 
     return exits.success(results);
