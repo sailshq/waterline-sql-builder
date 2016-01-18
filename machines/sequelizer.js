@@ -55,7 +55,7 @@ module.exports = {
     //
     // Builds up an array of values that can be passed into the .where or .orWhere
     // functions of Knex.
-    function whereBuilder(expr, expression) {
+    function whereBuilder(expr, expression, modifier) {
 
       // Handle KEY/VALUE pairs
       if(expr.type === 'KEY') {
@@ -94,25 +94,33 @@ module.exports = {
     //
     // Process a group of values that make up a conditional.
     // Such as an OR statement.
-    function processGroup(tokens, nested, expression) {
+    function processGroup(tokens, nested, expression, modifier) {
 
       // Hold values that make up a nested expression group.
       var expressionGroup = [];
 
+      // Hold a function value to use
+      var fn;
+
       // Loop through each expression in the group
       _.each(tokens, function(groupedExpr, idx) {
+
+        if(groupedExpr.type === 'CONDITION' && groupedExpr.value === 'NOT') {
+          modifier = groupedExpr.value;
+          return;
+        }
 
         // If the grouped expression is a nested array, this represents a nested
         // OR statement. So instead of building the query outright, we want to
         // collect all the pieces that make it up and call the Knex grouping
         // function at the end.
         if(_.isArray(groupedExpr)) {
-          expressionGroup.push(processGroup(groupedExpr, true, expression));
+          expressionGroup.push(processGroup(groupedExpr, true, expression, modifier));
           return;
         }
 
         if(groupedExpr.type === 'KEY' || groupedExpr.type === 'OPERATOR' || groupedExpr.type === 'VALUE') {
-          expression = whereBuilder(groupedExpr, expression);
+          expression = whereBuilder(groupedExpr, expression, modifier);
         }
 
         // If the expression's type is value, after we process it we can add
@@ -122,7 +130,19 @@ module.exports = {
           if(nested) {
             expressionGroup = expressionGroup.concat(expression);
           } else {
-            query.orWhere.apply(query, expression);
+
+            // If we have a modifier, take that into account when building the
+            // expression.
+            if(modifier) {
+              if(modifier === 'NOT') fn = 'orWhereNot';
+            }
+
+            // otherwise default to orWhere
+            else {
+              fn = 'orWhere';
+            }
+
+            query[fn].apply(query, expression);
           }
         }
       });
@@ -133,10 +153,26 @@ module.exports = {
 
       // If there is an expression group and no nesting, create a grouped function
       // on the query.
-      query.orWhere.call(query, function() {
+      // If we have a modifier, take that into account when building the
+      // expression.
+      if(modifier) {
+        if(modifier === 'NOT') {
+          fn = 'orWhereNot';
+        }
+      }
+
+      // otherwise default to orWhere
+      else {
+        fn = 'orWhere';
+      }
+
+      query[fn].call(query, function() {
         var self = this;
-        _.each(expressionGroup, function(expr) {
-          self.orWhere.apply(self, expr);
+        _.each(expressionGroup, function(expr, idx) {
+
+          // If the first item in the array, always force the fn to be orWhere
+          var _fn = idx === 0 ? 'orWhere' : fn;
+          self[_fn].apply(self, expr);
         });
       });
     }
@@ -178,6 +214,8 @@ module.exports = {
     // Loop through each token group in the tree and add to the query
     _.forEach(tree, function(tokenGroup, key) {
       var identifier;
+      var modifier;
+      var fn;
       var expression = [];
 
       // Loop through each item in the group and build up the expression
@@ -189,6 +227,12 @@ module.exports = {
           return;
         }
 
+        // Modifiers
+        if(expr.type === 'CONDITION' && expr.value === 'NOT') {
+          modifier = expr.value;
+          return;
+        }
+
         // Handle sets of values being inserted
         if(identifier === 'INSERT' && (expr.type === 'KEY' || expr.type === 'VALUE')) {
           expression = insertBuilder(expr, expression);
@@ -196,7 +240,7 @@ module.exports = {
 
         // Handle clauses in the WHERE value
         if(identifier === 'WHERE' && (expr.type === 'KEY' || expr.type === 'OPERATOR' || expr.type === 'VALUE')) {
-          expression = whereBuilder(expr, expression);
+          expression = whereBuilder(expr, expression, modifier);
         }
 
         // Process value and use the appropriate Knex function
@@ -238,8 +282,23 @@ module.exports = {
               break;
 
             case 'WHERE':
+
+              // Check the modifier to see if a different function other than
+              // WHERE should be used. The most common is NOT.
+              if(modifier) {
+                if(modifier === 'NOT') fn = 'whereNot';
+              }
+
+              // Otherwise use the where fn
+              else {
+                fn = 'where';
+              }
+
               // Set the second or third item in the array to the value
-              query.where.apply(query, expression);
+              query[fn].apply(query, expression);
+
+              // Clear the modifier
+              modifier = undefined;
               break;
           }
 
