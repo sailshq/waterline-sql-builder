@@ -216,6 +216,10 @@ module.exports = {
           fn = 'orWhereNot';
         }
 
+        if(modifiers.modifier && modifiers.modifier === 'IN') {
+          fn = 'orWhereIn';
+        }
+
         buildQueryPiece(fn, queryExpression);
         return;
       }
@@ -247,6 +251,14 @@ module.exports = {
         // always put the NOT condition before an expression set.
         if(groupedExpr.type === 'CONDITION' && groupedExpr.value === 'NOT') {
           expression = [];
+          expression.unshift(groupedExpr.value);
+          return;
+        }
+
+        // If there is a IN condition, add the condition as the first item in
+        // the expression.
+        if(groupedExpr.type === 'CONDITION' && groupedExpr.value === 'IN') {
+          // expression = [];
           expression.unshift(groupedExpr.value);
           return;
         }
@@ -335,13 +347,25 @@ module.exports = {
 
       // Check for any modifiers added to the beginning of the expression.
       // These represent things like NOT. Pull the value from the expression
-      var mIdx = _.indexOf(expr, 'NOT');
-      if(mIdx > -1) {
-        modifier = 'NOT';
-        if(options.strip) {
-          _.pullAt(expr, mIdx);
+      (function() {
+        var mIdx = _.indexOf(expr, 'NOT');
+        if(mIdx > -1) {
+          modifier = 'NOT';
+          if(options.strip) {
+            _.pullAt(expr, mIdx);
+          }
         }
-      }
+      })();
+
+      (function() {
+        var mIdx = _.indexOf(expr, 'IN');
+        if(mIdx > -1) {
+          modifier = 'IN';
+          if(options.strip) {
+            _.pullAt(expr, mIdx);
+          }
+        }
+      })();
 
       return {
         combinator: combinator,
@@ -406,6 +430,11 @@ module.exports = {
           return;
         }
 
+        if(expr.type === 'CONDITION' && expr.value === 'IN') {
+          modifier = expr.value;
+          return;
+        }
+
         // Handle sets of values being inserted
         if(identifier === 'INSERT' && (expr.type === 'KEY' || expr.type === 'VALUE')) {
           expression = insertBuilder(expr, expression);
@@ -460,6 +489,7 @@ module.exports = {
               // WHERE should be used. The most common is NOT.
               if(modifier) {
                 if(modifier === 'NOT') fn = 'whereNot';
+                if(modifier === 'IN') fn = 'whereIn';
               }
 
               // Otherwise use the where fn

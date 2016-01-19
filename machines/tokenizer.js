@@ -234,6 +234,23 @@ module.exports = {
       });
     }
 
+    //  ╦╔╗╔  ╔═╗╔═╗╔╗╔╔╦╗╦╔╦╗╦╔═╗╔╗╔
+    //  ║║║║  ║  ║ ║║║║ ║║║ ║ ║║ ║║║║
+    //  ╩╝╚╝  ╚═╝╚═╝╝╚╝═╩╝╩ ╩ ╩╚═╝╝╚╝
+    function processIn(value) {
+
+      // Add a condition
+      results.push({
+        type: 'CONDITION',
+        value: 'IN'
+      });
+
+      results.push({
+        type: 'VALUE',
+        value: value
+      });
+    }
+
     //  ╦ ╦╦ ╦╔═╗╦═╗╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
     //  ║║║╠═╣║╣ ╠╦╝║╣   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
     //  ╚╩╝╩ ╩╚═╝╩╚═╚═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
@@ -360,6 +377,11 @@ module.exports = {
 
           if(identifiers[key] === 'NOT') {
             processNot(obj[key]);
+            return;
+          }
+
+          if(identifiers[key] === 'IN') {
+            processIn(obj[key]);
             return;
           }
 
