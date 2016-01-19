@@ -21,5 +21,25 @@ describe('Query Generation ::', function() {
 
     });
 
+    describe('IS NOT NULL ::', function() {
+
+      it('should generate a query when a NOT NULL value is used', function(done) {
+        Test({
+          dialect: 'postgresql',
+          query: {
+            select: '*',
+            from: 'users',
+            where: {
+              not: {
+                updatedAt: null
+              }
+            }
+          },
+          outcome: 'select * from "users" where "updatedAt" is not null'
+        }, done);
+      });
+
+    });
+
   });
 });

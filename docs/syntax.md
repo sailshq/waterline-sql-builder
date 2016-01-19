@@ -656,7 +656,9 @@ db.users.find({ updatedAt: { $exists: false } });
   select: '*',
   from: 'users',
   where: {
-    updatedAt: { not: 'NULL' }
+    not: {
+      updatedAt: null
+    }
   }
 }
 ```
