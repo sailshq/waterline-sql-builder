@@ -587,8 +587,18 @@ db.users.find({ _id: { $nin: [1,2,3] } });
   from: 'users',
   where: {
     or: [
-      { name: { like: '%Test%' } },
-      { id: { not: [1,2,3] } }
+      {
+        name: {
+          like: '%Test%'
+        }
+      },
+      {
+        not: {
+          id: {
+            in: [1,2,3]
+          }
+        }
+      }
     ]
   }
 }
