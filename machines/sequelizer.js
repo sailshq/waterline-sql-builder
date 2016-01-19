@@ -76,20 +76,44 @@ module.exports = {
     // query.whereNot(function() {
     //   this.where('id', 1).orWhereNot('id', '>', 10)
     // })
+    //
+    // This is probably the piece that needs the most work. I would really like
+    // to have the parent function figured out before it get's here so I don't
+    // need to mess around with all this modifiers stuff so much. It feels
+    // very brittle.
     function buildKnexGroupingFn(expressionGroup) {
 
       // Figure out what the function should be by examining the first item
       // in the expression group. If it has any modifiers or combinators, grab
       // them. We do this so we know if the grouping should be negated or not.
       // ex: orWhereNot vs orWhere
-      var modifiers = checkForModifiers(_.first(expressionGroup), { strip: false });
+      var modifiers = checkForModifiers(_.first(expressionGroup), {
+        strip: ['NOT', 'AND']
+      });
 
       // Default the fn value to `orWhere`
       var fn = 'orWhere';
 
-      // If there is a negation modifier, use orWhereNot
-      if(modifiers.modifier && modifiers.modifier === 'NOT') {
-        fn = 'orWhereNot';
+      // Check the modifier to see if a different function other than
+      // WHERE should be used. The most common is NOT.
+      if(modifiers && modifiers.modifier.length) {
+        if(modifiers.modifier.length === 1) {
+          if(_.first(modifiers.modifier) === 'NOT') fn = 'whereNot';
+          if(_.first(modifiers.modifier) === 'IN') fn = 'whereIn';
+        }
+
+        // If there are more than 1 modifier then we need to checkout
+        // the combo. Usually it's a [NOT,IN] situation.
+        // For now let's assume it will only ever be 2 items.
+        if(modifiers.modifier.length > 1) {
+          var first = _.first(_.pullAt(modifiers.modifier, 0));
+          var second = _.first(_.pullAt(modifiers.modifier, 0));
+
+          if(first === 'NOT' && second === 'IN') {
+            // Push the NOT back on to the first expression
+            _.first(expressionGroup).unshift('NOT');
+          }
+        }
       }
 
       // Build a function that when called, creates a nested grouping of statements.
@@ -105,16 +129,38 @@ module.exports = {
           // Check for any modifiers and combinators in this expression piece
           var modifiers = checkForModifiers(expr);
 
-          // Handle when to use `orWhereNot` vs `whereNot`
-          if(modifiers.modifier === 'NOT') {
-            if(modifiers.combinator === 'AND') {
-              _fn = 'whereNot';
+          // Check the modifier to see what fn to use
+          if(modifiers.modifier.length) {
+            if(modifiers.modifier.length === 1) {
+
+              if(_.first(modifiers.modifier) === 'NOT') {
+
+                // Handle WHERE NOT
+                if(modifiers.combinator === 'AND') {
+                  _fn = 'whereNot';
+                }
+
+                // Defaults to OR when grouping
+                if(modifiers.combinator === 'OR' || !modifiers.combinator) {
+                  _fn = 'orWhereNot';
+                  modifiers.combinator = 'OR';
+                }
+              }
             }
 
-            // Defaults to OR when grouping
-            if(modifiers.combinator === 'OR' || !modifiers.combinator) {
-              _fn = 'orWhereNot';
-              modifiers.combinator = 'OR';
+            // If we end up with something like [AND, NOT, IN].
+            // Throw out the AND.
+            if(modifiers.modifier.length > 1) {
+              if(_.first(modifiers.modifier) === 'AND') {
+                _.pullAt(modifiers.modifier, 0);
+              }
+
+              var first = _.first(_.pullAt(modifiers.modifier, 0));
+              var second = _.first(_.pullAt(modifiers.modifier, 0));
+
+              if(first === 'NOT' && second === 'IN') {
+                _fn = 'orWhereNotIn';
+              }
             }
           }
 
@@ -127,9 +173,24 @@ module.exports = {
           }
 
           // If the first item in the array, always force the fn to be
-          // where. This is part of the way Knex works.
+          // where or whereIn or whereNotIn. This is part of the way Knex works.
           if(idx === 0) {
-            _fn = 'where';
+
+            if(_fn === 'orWhereNotIn') {
+              _fn = 'whereNotIn';
+            }
+
+            else if(_fn === 'orWhereIn') {
+              _fn = 'whereIn';
+            }
+
+            else if(_fn === 'orWhereNot') {
+              _fn = 'whereNot';
+            }
+
+            else {
+              _fn = 'where';
+            }
           }
 
           self[_fn].apply(self, expr);
@@ -178,12 +239,6 @@ module.exports = {
     // Such as an OR statement.
     function processGroup(tokens, nested, expression, modifier) {
 
-      // Hold a function value to use
-      var fn;
-
-      // Hold the result of processing modifiers
-      var modifiers;
-
       // Loop through each expression in the group
       var expressionGroup = processConditionalSet(tokens, nested, expression, modifier);
 
@@ -205,19 +260,31 @@ module.exports = {
         // Check for any modifiers added to the beginning of the expression.
         // These represent things like NOT. Pull the value from the expression.
         var queryExpression = _.first(expressionGroup);
-        modifiers = checkForModifiers(queryExpression);
+        var modifiers = checkForModifiers(queryExpression);
 
         // Default the fn value to `orWhere`
-        fn = 'orWhere';
+        var fn = 'orWhere';
 
-        // If we have a modifier, take that into account when building the
-        // expression.
-        if(modifiers.modifier && modifiers.modifier === 'NOT') {
-          fn = 'orWhereNot';
-        }
+        // Check the modifier to see if a different function other than
+        // OR WHERE should be used. The most common is OR WHERE NOT IN.
+        if(modifiers.modifier.length) {
 
-        if(modifiers.modifier && modifiers.modifier === 'IN') {
-          fn = 'orWhereIn';
+          if(modifiers.modifier.length === 1) {
+            if(_.first(modifiers.modifier) === 'NOT') fn = 'orWhereNot';
+            if(_.first(modifiers.modifier) === 'IN') fn = 'orWhereIn';
+          }
+
+          // If there are more than 1 modifier then we need to checkout
+          // the combo. Usually it's a [NOT,IN] situation.
+          // For now let's assume it will only ever be 2 items.
+          if(modifiers.modifier.length > 1) {
+            var first = _.first(_.pullAt(modifiers.modifier, 0));
+            var second = _.first(_.pullAt(modifiers.modifier, 0));
+
+            if(first === 'NOT' && second === 'IN') {
+              fn = 'orWhereNotIn';
+            }
+          }
         }
 
         buildQueryPiece(fn, queryExpression);
@@ -330,17 +397,22 @@ module.exports = {
     // expression set.
     function checkForModifiers(expr, options) {
       var combinator;
-      var modifier;
+      var modifiers = [];
 
       // Default to removing the values from the array
       // var strip = options && options.strip ? options.strip : true;
       options = _.defaults(options, { strip: true });
 
+      // Normalize strip attibutes
+      if(options.strip === true) {
+        options.strip = '*';
+      }
+
       // Check for any encoded combinators and remove them
       var cIdx = _.indexOf(expr, 'AND');
       if(cIdx > -1) {
         combinator = 'AND';
-        if(options.strip) {
+        if(options.strip && (options.strip === '*' || _.indexOf(options.strip, 'AND') > -1)) {
           _.pullAt(expr, cIdx);
         }
       }
@@ -350,8 +422,8 @@ module.exports = {
       (function() {
         var mIdx = _.indexOf(expr, 'NOT');
         if(mIdx > -1) {
-          modifier = 'NOT';
-          if(options.strip) {
+          modifiers.push('NOT');
+          if(options.strip && (options.strip === '*' || _.indexOf(options.strip, 'NOT') > -1)) {
             _.pullAt(expr, mIdx);
           }
         }
@@ -360,8 +432,8 @@ module.exports = {
       (function() {
         var mIdx = _.indexOf(expr, 'IN');
         if(mIdx > -1) {
-          modifier = 'IN';
-          if(options.strip) {
+          modifiers.push('IN');
+          if(options.strip && (options.strip === '*' || _.indexOf(options.strip, 'IN') > -1)) {
             _.pullAt(expr, mIdx);
           }
         }
@@ -369,7 +441,7 @@ module.exports = {
 
       return {
         combinator: combinator,
-        modifier: modifier
+        modifier: modifiers
       };
     }
 
@@ -411,7 +483,7 @@ module.exports = {
     // Loop through each token group in the tree and add to the query
     _.forEach(tree, function(tokenGroup, key) {
       var identifier;
-      var modifier;
+      var modifier = [];
       var fn;
       var expression = [];
 
@@ -426,12 +498,14 @@ module.exports = {
 
         // Modifiers
         if(expr.type === 'CONDITION' && expr.value === 'NOT') {
-          modifier = expr.value;
+          modifier = modifier || [];
+          modifier.push(expr.value);
           return;
         }
 
         if(expr.type === 'CONDITION' && expr.value === 'IN') {
-          modifier = expr.value;
+          modifier = modifier || [];
+          modifier.push(expr.value);
           return;
         }
 
@@ -487,9 +561,23 @@ module.exports = {
 
               // Check the modifier to see if a different function other than
               // WHERE should be used. The most common is NOT.
-              if(modifier) {
-                if(modifier === 'NOT') fn = 'whereNot';
-                if(modifier === 'IN') fn = 'whereIn';
+              if(modifier && modifier.length) {
+                if(modifier.length === 1) {
+                  if(_.first(modifier) === 'NOT') fn = 'whereNot';
+                  if(_.first(modifier) === 'IN') fn = 'whereIn';
+                }
+
+                // If there are more than 1 modifier then we need to checkout
+                // the combo. Usually it's a [NOT,IN] situation.
+                // For now let's assume it will only ever be 2 items.
+                if(modifier.length > 1) {
+                  var first = _.first(_.pullAt(modifier, 0));
+                  var second = _.first(_.pullAt(modifier, 0));
+
+                  if(first === 'NOT' && second === 'IN') {
+                    fn = 'whereNotIn';
+                  }
+                }
               }
 
               // Otherwise use the where fn
@@ -501,7 +589,7 @@ module.exports = {
               buildQueryPiece(fn, expression);
 
               // Clear the modifier
-              modifier = undefined;
+              modifier = [];
               break;
           }
 

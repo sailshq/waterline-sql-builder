@@ -556,8 +556,10 @@ db.users.find({ accountId: { $in: accountIds } }, { name: 1 });
   select: '*',
   from: 'users',
   where: {
-    id: {
-      not: [1,2,3]
+    not: {
+      id: {
+        in: [1,2,3]
+      }
     }
   }
 }
