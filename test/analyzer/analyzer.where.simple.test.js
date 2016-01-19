@@ -108,6 +108,7 @@ describe('Analyzer ::', function() {
             { type: 'KEY', value: 'votes' },
             { type: 'OPERATOR', value: '>' },
             { type: 'VALUE', value: 100 },
+            { type: 'KEY', value: 'votes' },
             { type: 'OPERATOR', value: '<' },
             { type: 'VALUE', value: 200 }
           ]

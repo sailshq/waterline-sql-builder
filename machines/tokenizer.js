@@ -222,7 +222,16 @@ module.exports = {
       results.push(condition);
 
       // Tokenize the values within the condition
-      tokenizeObject(value, condition);
+      if(_.isPlainObject(value)) {
+        tokenizeObject(value, condition);
+        return;
+      }
+
+      // Otherwise just add the value
+      results.push({
+        type: 'VALUE',
+        value: value
+      });
     }
 
     //  ╦ ╦╦ ╦╔═╗╦═╗╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
@@ -287,10 +296,9 @@ module.exports = {
     //
     // @obj {Object} - the token obj being processed
     // @processor {Object} - a value to insert between each key in the array
-    function tokenizeObject(obj, processor) {
+    function tokenizeObject(obj, processor, parent) {
 
       _.each(_.keys(obj), function(key, idx) {
-
         // Check if the key is a known identifier
         var isIdentitifier = identifiers[key];
 
@@ -299,6 +307,17 @@ module.exports = {
 
           // If the identifier is an OPERATOR, add it's tokens
           if(identifiers[key] === 'OPERATOR') {
+
+            // If there is a parent and the previous key in the results isn't
+            // a KEY add it's key first. This is used when a key has multiple
+            // criteria. EX: { values: { '>': 100, '<': 200 }}
+            if(parent && _.last(results).type !== 'KEY') {
+              results.push({
+                type: 'KEY',
+                value: parent
+              });
+            }
+
             processOperator(key, obj[key]);
             return;
           }
@@ -361,7 +380,7 @@ module.exports = {
 
           // If the identifier is an object, continue tokenizing it
           if(_.isPlainObject(obj[key])) {
-            tokenizeObject(obj[key]);
+            tokenizeObject(obj[key], undefined, key);
             return;
           }
 
@@ -377,7 +396,7 @@ module.exports = {
 
         // If the value is an object, recursively parse it
         if(_.isPlainObject(obj[key])) {
-          tokenizeObject(obj[key]);
+          tokenizeObject(obj[key], undefined, key);
           return;
         }
 

@@ -82,6 +82,7 @@ describe('Tokenizer ::', function() {
           { type: 'KEY', value: 'votes' },
           { type: 'OPERATOR', value: '>' },
           { type: 'VALUE', value: 100 },
+          { type: 'KEY', value: 'votes' },
           { type: 'OPERATOR', value: '<' },
           { type: 'VALUE', value: 200 },
           { type: 'IDENTIFIER', value: 'FROM' },
