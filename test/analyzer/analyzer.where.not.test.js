@@ -160,6 +160,59 @@ describe('Analyzer ::', function() {
       });
     });
 
+    it('should generate a valid group when multiple conditionals are used', function(done) {
+      var tokens = tokenize({
+        select: '*',
+        from: 'users',
+        where: {
+          or: [
+            { name: 'John' },
+            {
+              votes: { '>': 100 },
+              not: {
+                title: 'Admin'
+              }
+            }
+          ]
+        }
+      });
+
+      Analyzer({
+        tokens: tokens
+      })
+      .exec(function(err, result) {
+        assert(!err);
+
+        assert.deepEqual(result, [
+          [
+            { type: 'IDENTIFIER', value: 'FROM' },
+            { type: 'VALUE', value: 'users' }
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'SELECT' },
+            { type: 'VALUE', value: '*' }
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'WHERE' },
+            [
+              { type: 'KEY', value: 'name' },
+              { type: 'VALUE', value: 'John' }
+            ],
+            [
+              { type: 'KEY', value: 'votes' },
+              { type: 'OPERATOR', value: '>' },
+              { type: 'VALUE', value: 100 },
+              { type: 'CONDITION', value: 'NOT' },
+              { type: 'KEY', value: 'title' },
+              { type: 'VALUE', value: 'Admin' }
+            ]
+          ]
+        ]);
+
+        return done();
+      });
+    });
+
 
   });
 });

@@ -107,7 +107,7 @@ describe('Tokenizer ::', function() {
       });
     });
 
-    it('should generate a valid token array when conditionals are used', function(done) {
+    it('should generate a valid token array when operators are used', function(done) {
       Tokenizer({
         expression: {
           select: '*',
@@ -132,6 +132,53 @@ describe('Tokenizer ::', function() {
           { type: 'KEY', value: 'votes' },
           { type: 'OPERATOR', value: '>' },
           { type: 'VALUE', value: 100 }
+        ]);
+
+        return done();
+      });
+    });
+
+    it('should generate a valid token array when multiple operators are used', function(done) {
+      Tokenizer({
+        expression: {
+          select: '*',
+          from: 'users',
+          where: {
+            or: [
+              { name: 'John' },
+              {
+                votes: { '>': 100 },
+                not: {
+                  title: 'Admin'
+                }
+              }
+            ]
+          }
+        }
+      })
+      .exec(function(err, result) {
+        assert(!err);
+
+        assert.deepEqual(result, [
+          { type: 'IDENTIFIER', value: 'SELECT' },
+          { type: 'VALUE', value: '*' },
+          { type: 'IDENTIFIER', value: 'FROM' },
+          { type: 'VALUE', value: 'users' },
+          { type: 'IDENTIFIER', value: 'WHERE' },
+          { type: 'CONDITION', value: 'OR' },
+          { type: 'GROUP', value: 0 },
+          { type: 'KEY', value: 'name' },
+          { type: 'VALUE', value: 'John' },
+          { type: 'ENDGROUP', value: 0 },
+          { type: 'GROUP', value: 1 },
+          { type: 'KEY', value: 'votes' },
+          { type: 'OPERATOR', value: '>' },
+          { type: 'VALUE', value: 100 },
+          { type: 'CONDITION', value: 'NOT' },
+          { type: 'KEY', value: 'title' },
+          { type: 'VALUE', value: 'Admin' },
+          { type: 'ENDGROUP', value: 1 },
+          { type: 'ENDCONDITION', value: 'OR' }
         ]);
 
         return done();

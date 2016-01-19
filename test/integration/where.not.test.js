@@ -72,5 +72,27 @@ describe('Query Generation ::', function() {
       }, done);
     });
 
+    it('should generate a query when multiple operators are used', function(done) {
+      Test({
+        dialect: 'postgresql',
+        query: {
+          select: '*',
+          from: 'users',
+          where: {
+            or: [
+              { name: 'John' },
+              {
+                votes: { '>': 100 },
+                not: {
+                  title: 'Admin'
+                }
+              }
+            ]
+          }
+        },
+        outcome: 'select * from "users" where "name" = \'John\' or ("votes" > \'100\' and not "title" = \'Admin\')'
+      }, done);
+    });
+
   });
 });

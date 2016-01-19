@@ -55,31 +55,24 @@ module.exports = {
     //
     // Builds up an array of values that can be passed into the .where or .orWhere
     // functions of Knex.
-    function whereBuilder(expr, expression, modifier) {
+    function whereBuilder(expr, expression) {
 
       // Handle KEY/VALUE pairs
       if(expr.type === 'KEY') {
-        // Reset the expression for each new key
-        expression = [];
+        // Reset the expression for each new key, unless there was already a
+        // modifier present.
+        expression = expression.length > 1 ? [] : expression;
         expression.push(expr.value);
         return expression;
       }
 
       // Handle OPERATORS such as '>' and '<'
       if(expr.type === 'OPERATOR') {
-
-        // Clear the second and third items in the array to remove any
-        // previous expression values for the key
-        _.pullAt(expression, 1);
-        _.pullAt(expression, 2);
-
-        // Set the second item in the array to the operator
-        expression[1] = expr.value;
-
+        expression.push(expr.value);
         return expression;
       }
 
-      // Set the second or third item in the array to the value
+      // Set the value
       if(expr.type === 'VALUE') {
         expression.push(expr.value);
         return expression;
@@ -105,8 +98,12 @@ module.exports = {
       // Loop through each expression in the group
       _.each(tokens, function(groupedExpr, idx) {
 
+        // If there is a NOT condition, reset the expression and add the NOT
+        // condition as the first item in the expression. The analyzer will
+        // always put the NOT condition before an expression set.
         if(groupedExpr.type === 'CONDITION' && groupedExpr.value === 'NOT') {
-          modifier = groupedExpr.value;
+          expression = [];
+          expression.unshift(groupedExpr.value);
           return;
         }
 
@@ -119,63 +116,168 @@ module.exports = {
           return;
         }
 
+        // If there is a KEY/OPERATOR/VALUE token, process it using the where builder
         if(groupedExpr.type === 'KEY' || groupedExpr.type === 'OPERATOR' || groupedExpr.type === 'VALUE') {
-          expression = whereBuilder(groupedExpr, expression, modifier);
+          expression = whereBuilder(groupedExpr, expression);
         }
 
-        // If the expression's type is value, after we process it we can add
-        // it to the query. Unless we are in a nested statement in which case
-        // just add it to the expression group.
+        // If the expression's type is value after we are done processing it we
+        // can add it to the query. Unless we are in a nested statement in
+        // which case just add it to the expression group.
         if(groupedExpr.type === 'VALUE') {
+
+          // Look ahead in the tokens and see if there are any more VALUE
+          // expressions. If so, this will need to be an expression group so
+          // that we get parenthesis around it. This is commonly used where you
+          // have a criteria like the following:
+          // {
+          //   or: [
+          //     { name: 'foo' },
+          //     { age: 21, username: 'bar' }
+          //   ]
+          // }
+          // Here we need to wrap the `age` and `username` part of the
+          // expression in parenthesis.
+          var hasMoreValues = _.filter(tokens, { type: 'VALUE' });
+
+          // If there are more values, add the current expression to the group.
+          // Prepend an AND statement to the beginning to show that the will
+          // end up as (age = 21 and username = bar). If this was an OR statement
+          // it would be processed differently because the tokens would be
+          // nested arrays.
+          if(hasMoreValues.length > 1) {
+            expression.unshift('AND');
+            expressionGroup.push(expression);
+            return;
+          }
+
+          // If this is a nested expression, just update the expression group
           if(nested) {
             expressionGroup = expressionGroup.concat(expression);
-          } else {
-
-            // If we have a modifier, take that into account when building the
-            // expression.
-            if(modifier) {
-              if(modifier === 'NOT') fn = 'orWhereNot';
-            }
-
-            // otherwise default to orWhere
-            else {
-              fn = 'orWhere';
-            }
-
-            query[fn].apply(query, expression);
+            return;
           }
+
+          // Otherwise we can go ahead and write the expression to the query.
+
+          // Check for any modifiers added to the beginning of the expression.
+          // These represent things like NOT. Pull the value from the expression.
+          var modifiers = checkForModifiers(expression);
+
+          // Default the fn value to `orWhere`
+          fn = 'orWhere';
+
+          // If we have a modifier, take that into account when building the
+          // expression.
+          if(modifiers.modifier && modifiers.modifier === 'NOT') {
+            fn = 'orWhereNot';
+          }
+
+          query[fn].apply(query, expression);
         }
       });
 
+      // If we are inside of a nested expression, return the group after we are
+      // done processing all the tokens.
       if(nested) {
         return expressionGroup;
       }
 
       // If there is an expression group and no nesting, create a grouped function
       // on the query.
-      // If we have a modifier, take that into account when building the
-      // expression.
-      if(modifier) {
-        if(modifier === 'NOT') {
-          fn = 'orWhereNot';
-        }
+
+      // Figure out what the function should be by examining the first item
+      // in the expression group. If it has any modifiers or combinators, grab
+      // them. We do this so we know if the grouping should be negated or not.
+      // ex: orWhereNot vs orWhere
+      var modifiers = checkForModifiers(_.first(expressionGroup), { strip: false });
+
+      // Default the fn value to `orWhere`
+      fn = 'orWhere';
+
+      if(modifiers.modifier && modifiers.modifier === 'NOT') {
+        fn = 'orWhereNot';
       }
 
-      // otherwise default to orWhere
-      else {
-        fn = 'orWhere';
-      }
-
+      // Build a function that when called, creates a nested grouping of statements.
       query[fn].call(query, function() {
         var self = this;
+
+        // Process each expression in the group, building up a query as it goes.
         _.each(expressionGroup, function(expr, idx) {
 
-          // If the first item in the array, always force the fn to be orWhere
-          var _fn = idx === 0 ? 'orWhere' : fn;
+          // default the _fn to `orWhere`
+          var _fn = 'orWhere';
+
+          // Check for any modifiers and combinators
+          var modifiers = checkForModifiers(expr);
+
+          // Handle when to use `orWhereNot` vs `whereNot`
+          if(modifiers.modifier === 'NOT') {
+            if(modifiers.combinator === 'AND') {
+              _fn = 'whereNot';
+            }
+
+            // Defaults to OR when grouping
+            if(modifiers.combinator === 'OR' || !modifiers.combinator) {
+              _fn = 'orWhereNot';
+              modifiers.combinator = 'OR';
+            }
+          }
+
+          // Handle empty modifiers. Use this when not negating. Defaulting to
+          // use the `orWhere` statement already set.
+          else {
+            if(modifiers.combinator === 'AND') {
+              _fn = 'where';
+            }
+          }
+
+          // If the first item in the array, always force the fn to be
+          // where. This is part of the way Knex works.
+          if(idx === 0) {
+            _fn = 'where';
+          }
+
           self[_fn].apply(self, expr);
         });
       });
     }
+
+    // Check for any embedded combinators (OR) or modifiers (NOT) in a single
+    // expression set.
+    function checkForModifiers(expr, options) {
+      var combinator;
+      var modifier;
+
+      // Default to removing the values from the array
+      // var strip = options && options.strip ? options.strip : true;
+      options = _.defaults(options, { strip: true });
+
+      // Check for any encoded combinators and remove them
+      var cIdx = _.indexOf(expr, 'AND');
+      if(cIdx > -1) {
+        combinator = 'AND';
+        if(options.strip) {
+          _.pullAt(expr, cIdx);
+        }
+      }
+
+      // Check for any modifiers added to the beginning of the expression.
+      // These represent things like NOT. Pull the value from the expression
+      var mIdx = _.indexOf(expr, 'NOT');
+      if(mIdx > -1) {
+        modifier = 'NOT';
+        if(options.strip) {
+          _.pullAt(expr, mIdx);
+        }
+      }
+
+      return {
+        combinator: combinator,
+        modifier: modifier
+      };
+    }
+
 
     //  ╦╔╗╔╔═╗╔═╗╦═╗╔╦╗  ╔╗ ╦ ╦╦╦  ╔╦╗╔═╗╦═╗
     //  ║║║║╚═╗║╣ ╠╦╝ ║   ╠╩╗║ ║║║   ║║║╣ ╠╦╝

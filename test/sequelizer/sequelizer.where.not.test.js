@@ -70,7 +70,7 @@ describe('Sequelizer ::', function() {
       });
     });
 
-    it('should generate a query when conditionals are used', function(done) {
+    it('should generate a query when operators are used', function(done) {
       var tree = analyze({
         select: '*',
         from: 'users',
@@ -91,6 +91,35 @@ describe('Sequelizer ::', function() {
         return done();
       });
     });
+
+    it('should generate a query when multiple operators are used', function(done) {
+      var tree = analyze({
+        select: '*',
+        from: 'users',
+        where: {
+          or: [
+            { name: 'John' },
+            {
+              votes: { '>': 100 },
+              not: {
+                title: 'Admin'
+              }
+            }
+          ]
+        }
+      });
+
+      Sequelizer({
+        dialect: 'postgresql',
+        tree: tree
+      })
+      .exec(function(err, result) {
+        assert(!err);
+        assert.equal(result, 'select * from "users" where "name" = \'John\' or ("votes" > \'100\' and not "title" = \'Admin\')');
+        return done();
+      });
+    });
+
 
 
   });
