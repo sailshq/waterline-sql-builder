@@ -3,7 +3,7 @@ var analyze = require('../support/analyze');
 var assert = require('assert');
 
 describe('Sequelizer ::', function() {
-  describe('SELECT statements', function() {
+  describe('WHERE Simple statements', function() {
 
     it('should generate a query with a simple WHERE statement', function(done) {
       var tree = analyze({
@@ -50,7 +50,10 @@ describe('Sequelizer ::', function() {
       var tree = analyze({
         select: '*',
         where: {
-          votes: { '>': 100, '<': 200 }
+          votes: {
+            '>': 100,
+            '<': 200
+          }
         },
         from: 'users'
       });
