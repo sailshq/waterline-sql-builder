@@ -62,6 +62,82 @@ module.exports = {
 
       query[fn].apply(query, expression);
     }
+
+
+    //  ╔╗ ╦ ╦╦╦  ╔╦╗  ╦╔═╔╗╔╔═╗═╗ ╦
+    //  ╠╩╗║ ║║║   ║║  ╠╩╗║║║║╣ ╔╩╦╝
+    //  ╚═╝╚═╝╩╩═╝═╩╝  ╩ ╩╝╚╝╚═╝╩ ╚═
+    //  ╔═╗╦═╗╔═╗╦ ╦╔═╗╦╔╗╔╔═╗  ╔═╗╦ ╦╔╗╔╔═╗╔╦╗╦╔═╗╔╗╔
+    //  ║ ╦╠╦╝║ ║║ ║╠═╝║║║║║ ╦  ╠╣ ║ ║║║║║   ║ ║║ ║║║║
+    //  ╚═╝╩╚═╚═╝╚═╝╩  ╩╝╚╝╚═╝  ╚  ╚═╝╝╚╝╚═╝ ╩ ╩╚═╝╝╚╝
+    //
+    // Given a set of expressions, create a Knex grouping statement.
+    // ex:
+    // query.whereNot(function() {
+    //   this.where('id', 1).orWhereNot('id', '>', 10)
+    // })
+    function buildKnexGroupingFn(expressionGroup) {
+
+      // Figure out what the function should be by examining the first item
+      // in the expression group. If it has any modifiers or combinators, grab
+      // them. We do this so we know if the grouping should be negated or not.
+      // ex: orWhereNot vs orWhere
+      var modifiers = checkForModifiers(_.first(expressionGroup), { strip: false });
+
+      // Default the fn value to `orWhere`
+      var fn = 'orWhere';
+
+      // If there is a negation modifier, use orWhereNot
+      if(modifiers.modifier && modifiers.modifier === 'NOT') {
+        fn = 'orWhereNot';
+      }
+
+      // Build a function that when called, creates a nested grouping of statements.
+      query[fn].call(query, function() {
+        var self = this;
+
+        // Process each expression in the group, building up a query as it goes.
+        _.each(expressionGroup, function(expr, idx) {
+
+          // default the _fn to `orWhere`
+          var _fn = 'orWhere';
+
+          // Check for any modifiers and combinators in this expression piece
+          var modifiers = checkForModifiers(expr);
+
+          // Handle when to use `orWhereNot` vs `whereNot`
+          if(modifiers.modifier === 'NOT') {
+            if(modifiers.combinator === 'AND') {
+              _fn = 'whereNot';
+            }
+
+            // Defaults to OR when grouping
+            if(modifiers.combinator === 'OR' || !modifiers.combinator) {
+              _fn = 'orWhereNot';
+              modifiers.combinator = 'OR';
+            }
+          }
+
+          // Handle empty modifiers. Use this when not negating. Defaulting to
+          // use the `orWhere` statement already set.
+          else {
+            if(modifiers.combinator === 'AND') {
+              _fn = 'where';
+            }
+          }
+
+          // If the first item in the array, always force the fn to be
+          // where. This is part of the way Knex works.
+          if(idx === 0) {
+            _fn = 'where';
+          }
+
+          self[_fn].apply(self, expr);
+        });
+      });
+    }
+
+
     //  ╦ ╦╦ ╦╔═╗╦═╗╔═╗  ╔═╗═╗ ╦╔═╗╦═╗╔═╗╔═╗╔═╗╦╔═╗╔╗╔  ╔╗ ╦ ╦╦╦  ╔╦╗╔═╗╦═╗
     //  ║║║╠═╣║╣ ╠╦╝║╣   ║╣ ╔╩╦╝╠═╝╠╦╝║╣ ╚═╗╚═╗║║ ║║║║  ╠╩╗║ ║║║   ║║║╣ ╠╦╝
     //  ╚╩╝╩ ╩╚═╝╩╚═╚═╝  ╚═╝╩ ╚═╩  ╩╚═╚═╝╚═╝╚═╝╩╚═╝╝╚╝  ╚═╝╚═╝╩╩═╝═╩╝╚═╝╩╚═
@@ -102,11 +178,66 @@ module.exports = {
     // Such as an OR statement.
     function processGroup(tokens, nested, expression, modifier) {
 
-      // Hold values that make up a nested expression group.
-      var expressionGroup = [];
-
       // Hold a function value to use
       var fn;
+
+      // Hold the result of processing modifiers
+      var modifiers;
+
+      // Loop through each expression in the group
+      var expressionGroup = processConditionalSet(tokens, nested, expression, modifier);
+
+      // If we are inside of a nested expression, return the group after we are
+      // done processing all the tokens.
+      if(nested) {
+        return expressionGroup;
+      }
+
+      // Now the Knex functions need to be called. We can examine the group and
+      // if there is only a single item, go ahead and just build a normal Knex
+      // grouping query.
+      // ex. query().orWhere([name, 'foo'])
+      //
+      // If there are multiple items in the set, we need to create a knex grouping
+      // function.
+      if(expressionGroup.length === 1) {
+
+        // Check for any modifiers added to the beginning of the expression.
+        // These represent things like NOT. Pull the value from the expression.
+        var queryExpression = _.first(expressionGroup);
+        modifiers = checkForModifiers(queryExpression);
+
+        // Default the fn value to `orWhere`
+        fn = 'orWhere';
+
+        // If we have a modifier, take that into account when building the
+        // expression.
+        if(modifiers.modifier && modifiers.modifier === 'NOT') {
+          fn = 'orWhereNot';
+        }
+
+        buildQueryPiece(fn, queryExpression);
+        return;
+      }
+
+      // Otherwise build the grouping function
+      buildKnexGroupingFn(expressionGroup);
+    }
+
+
+    //  ╔═╗╦═╗╔═╗╔═╗╔═╗╔═╗╔═╗  ╔═╗╔═╗╔╗╔╔╦╗╦╔╦╗╦╔═╗╔╗╔╔═╗╦
+    //  ╠═╝╠╦╝║ ║║  ║╣ ╚═╗╚═╗  ║  ║ ║║║║ ║║║ ║ ║║ ║║║║╠═╣║
+    //  ╩  ╩╚═╚═╝╚═╝╚═╝╚═╝╚═╝  ╚═╝╚═╝╝╚╝═╩╝╩ ╩ ╩╚═╝╝╚╝╩ ╩╩═╝
+    //  ╔═╗╦═╗╔═╗╦ ╦╔═╗╦╔╗╔╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔╦╗╔═╗╔╗╔╔╦╗
+    //  ║ ╦╠╦╝║ ║║ ║╠═╝║║║║║ ╦  ╚═╗ ║ ╠═╣ ║ ║║║║╣ ║║║ ║
+    //  ╚═╝╩╚═╚═╝╚═╝╩  ╩╝╚╝╚═╝  ╚═╝ ╩ ╩ ╩ ╩ ╩ ╩╚═╝╝╚╝ ╩
+    //
+    // Conditional statements are grouped into sets. This function processes
+    // the tokens in a single one of those sets.
+    function processConditionalSet(tokens, nested, expression, modifier) {
+
+      // Hold values that make up a nested expression group.
+      var expressionGroup = [];
 
       // Loop through each expression in the group
       _.each(tokens, function(groupedExpr, idx) {
@@ -170,92 +301,19 @@ module.exports = {
             return;
           }
 
-          // Otherwise we can go ahead and write the expression to the query.
-
-          // Check for any modifiers added to the beginning of the expression.
-          // These represent things like NOT. Pull the value from the expression.
-          var modifiers = checkForModifiers(expression);
-
-          // Default the fn value to `orWhere`
-          fn = 'orWhere';
-
-          // If we have a modifier, take that into account when building the
-          // expression.
-          if(modifiers.modifier && modifiers.modifier === 'NOT') {
-            fn = 'orWhereNot';
-          }
-
-          query[fn].apply(query, expression);
+          expressionGroup.push(expression);
         }
       });
 
-      // If we are inside of a nested expression, return the group after we are
-      // done processing all the tokens.
-      if(nested) {
-        return expressionGroup;
-      }
-
-      // If there is an expression group and no nesting, create a grouped function
-      // on the query.
-
-      // Figure out what the function should be by examining the first item
-      // in the expression group. If it has any modifiers or combinators, grab
-      // them. We do this so we know if the grouping should be negated or not.
-      // ex: orWhereNot vs orWhere
-      var modifiers = checkForModifiers(_.first(expressionGroup), { strip: false });
-
-      // Default the fn value to `orWhere`
-      fn = 'orWhere';
-
-      if(modifiers.modifier && modifiers.modifier === 'NOT') {
-        fn = 'orWhereNot';
-      }
-
-      // Build a function that when called, creates a nested grouping of statements.
-      query[fn].call(query, function() {
-        var self = this;
-
-        // Process each expression in the group, building up a query as it goes.
-        _.each(expressionGroup, function(expr, idx) {
-
-          // default the _fn to `orWhere`
-          var _fn = 'orWhere';
-
-          // Check for any modifiers and combinators
-          var modifiers = checkForModifiers(expr);
-
-          // Handle when to use `orWhereNot` vs `whereNot`
-          if(modifiers.modifier === 'NOT') {
-            if(modifiers.combinator === 'AND') {
-              _fn = 'whereNot';
-            }
-
-            // Defaults to OR when grouping
-            if(modifiers.combinator === 'OR' || !modifiers.combinator) {
-              _fn = 'orWhereNot';
-              modifiers.combinator = 'OR';
-            }
-          }
-
-          // Handle empty modifiers. Use this when not negating. Defaulting to
-          // use the `orWhere` statement already set.
-          else {
-            if(modifiers.combinator === 'AND') {
-              _fn = 'where';
-            }
-          }
-
-          // If the first item in the array, always force the fn to be
-          // where. This is part of the way Knex works.
-          if(idx === 0) {
-            _fn = 'where';
-          }
-
-          self[_fn].apply(self, expr);
-        });
-      });
+      // Return the expression group
+      return expressionGroup;
     }
 
+
+    //  ╔═╗╦ ╦╔═╗╔═╗╦╔═  ╔═╗╔═╗╦═╗  ╔╦╗╔═╗╔╦╗╦╔═╗╦╔═╗╦═╗╔═╗
+    //  ║  ╠═╣║╣ ║  ╠╩╗  ╠╣ ║ ║╠╦╝  ║║║║ ║ ║║║╠╣ ║║╣ ╠╦╝╚═╗
+    //  ╚═╝╩ ╩╚═╝╚═╝╩ ╩  ╚  ╚═╝╩╚═  ╩ ╩╚═╝═╩╝╩╚  ╩╚═╝╩╚═╚═╝
+    //
     // Check for any embedded combinators (OR) or modifiers (NOT) in a single
     // expression set.
     function checkForModifiers(expr, options) {
