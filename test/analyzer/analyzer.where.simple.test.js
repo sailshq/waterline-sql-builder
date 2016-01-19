@@ -21,7 +21,6 @@ describe('Analyzer ::', function() {
       .exec(function(err, result) {
         assert(!err);
 
-        assert.equal(result.length, 3);
         assert.deepEqual(result,  [
           [
             { type: 'IDENTIFIER', value: 'FROM' },
@@ -59,7 +58,6 @@ describe('Analyzer ::', function() {
       .exec(function(err, result) {
         assert(!err);
 
-        assert.equal(result.length, 3);
         assert.deepEqual(result,  [
           [
             { type: 'IDENTIFIER', value: 'FROM' },
@@ -96,7 +94,6 @@ describe('Analyzer ::', function() {
       .exec(function(err, result) {
         assert(!err);
 
-        assert.equal(result.length, 3);
         assert.deepEqual(result,  [
           [
             { type: 'IDENTIFIER', value: 'FROM' },
@@ -136,7 +133,6 @@ describe('Analyzer ::', function() {
       .exec(function(err, result) {
         assert(!err);
 
-        assert.equal(result.length, 3);
         assert.deepEqual(result,  [
           [
             { type: 'IDENTIFIER', value: 'FROM' },

@@ -19,7 +19,6 @@ describe('Analyzer ::', function() {
       .exec(function(err, result) {
         assert(!err);
 
-        assert.equal(result.length, 2);
         assert.deepEqual(result,  [
           [
             { type: 'IDENTIFIER', value: 'FROM' },

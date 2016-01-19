@@ -16,7 +16,6 @@ describe('Tokenizer ::', function() {
       .exec(function(err, result) {
         assert(!err);
 
-        assert.equal(result.length, 4);
         assert.deepEqual(result,  [
           { type: 'IDENTIFIER', value: 'DISTINCT' },
           { type: 'VALUE', value: [ 'firstName', 'lastName' ] },

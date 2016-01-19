@@ -14,7 +14,6 @@ describe('Tokenizer ::', function() {
       .exec(function(err, result) {
         assert(!err);
 
-        assert.equal(result.length, 4);
         assert.deepEqual(result, [
           { type: 'IDENTIFIER', value: 'SELECT' },
           { type: 'VALUE', value: '*' },
@@ -36,7 +35,6 @@ describe('Tokenizer ::', function() {
       .exec(function(err, result) {
         assert(!err);
 
-        assert.equal(result.length, 4);
         assert.deepEqual(result, [
           { type: 'IDENTIFIER', value: 'SELECT' },
           { type: 'VALUE', value: [ 'title', 'author', 'year' ] },

@@ -18,7 +18,6 @@ describe('Tokenizer ::', function() {
       .exec(function(err, result) {
         assert(!err);
 
-        assert.equal(result.length, 9);
         assert.deepEqual(result, [
           { type: 'IDENTIFIER', value: 'SELECT' },
           { type: 'VALUE', value: [ 'id' ] },
@@ -48,7 +47,6 @@ describe('Tokenizer ::', function() {
       .exec(function(err, result) {
         assert(!err);
 
-        assert.equal(result.length, 8);
         assert.deepEqual(result,  [
           { type: 'IDENTIFIER', value: 'SELECT' },
           { type: 'VALUE', value: '*' },
@@ -77,7 +75,6 @@ describe('Tokenizer ::', function() {
       .exec(function(err, result) {
         assert(!err);
 
-        assert.equal(result.length, 10);
         assert.deepEqual(result,  [
           { type: 'IDENTIFIER', value: 'SELECT' },
           { type: 'VALUE', value: '*' },
@@ -109,7 +106,6 @@ describe('Tokenizer ::', function() {
       .exec(function(err, result) {
         assert(!err);
 
-        assert.equal(result.length, 11);
         assert.deepEqual(result,  [
           { type: 'IDENTIFIER', value: 'SELECT' },
           { type: 'VALUE', value: '*' },
