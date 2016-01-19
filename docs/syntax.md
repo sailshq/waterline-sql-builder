@@ -630,7 +630,7 @@ db.users.find({
   select: '*',
   from: 'users',
   where: {
-    updatedAt: 'NULL'
+    updatedAt: null
   }
 }
 ```
