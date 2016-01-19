@@ -718,6 +718,41 @@ select * from "users" where "votes" between '1' and '100'
 db.users.find({ votes: { $gt: 1, $lt: 100 } });
 ```
 
+## Where NOT Between (proposed syntax)
+
+// TODO
+
+**NOTE:** Note sure if this is needed if we support the `>` and `<` operators.
+This could be represented as less than and greater than.
+
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  where: {
+    not: {
+      votes: {
+        between: [1, 100]
+      }
+    }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+-- PostgreSQL
+select * from "users" where "votes" not between '1' and '100'
+```
+
+```javascript
+// MongoDB
+// db.users.find({ votes: { $gt: 1, $lt: 100 } });
+```
+
 ## Where Raw (proposed syntax)
 
 // TODO
