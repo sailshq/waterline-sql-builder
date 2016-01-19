@@ -49,6 +49,19 @@ module.exports = {
     var query = knex.queryBuilder();
 
 
+    //  ╔╗ ╦ ╦╦╦  ╔╦╗  ╔═╗ ╦ ╦╔═╗╦═╗╦ ╦  ╔═╗╦╔═╗╔═╗╔═╗
+    //  ╠╩╗║ ║║║   ║║  ║═╬╗║ ║║╣ ╠╦╝╚╦╝  ╠═╝║║╣ ║  ║╣
+    //  ╚═╝╚═╝╩╩═╝═╩╝  ╚═╝╚╚═╝╚═╝╩╚═ ╩   ╩  ╩╚═╝╚═╝╚═╝
+    //
+    // Applys a function to the Knex query builder.
+    function buildQueryPiece(fn, expression) {
+      // Ensure the value is always an array
+      if(!_.isArray(expression)) {
+        expression = [expression];
+      }
+
+      query[fn].apply(query, expression);
+    }
     //  ╦ ╦╦ ╦╔═╗╦═╗╔═╗  ╔═╗═╗ ╦╔═╗╦═╗╔═╗╔═╗╔═╗╦╔═╗╔╗╔  ╔╗ ╦ ╦╦╦  ╔╦╗╔═╗╦═╗
     //  ║║║╠═╣║╣ ╠╦╝║╣   ║╣ ╔╩╦╝╠═╝╠╦╝║╣ ╚═╗╚═╗║║ ║║║║  ╠╩╗║ ║║║   ║║║╣ ╠╦╝
     //  ╚╩╝╩ ╩╚═╝╩╚═╚═╝  ╚═╝╩ ╚═╩  ╩╚═╚═╝╚═╝╚═╝╩╚═╝╝╚╝  ╚═╝╚═╝╩╩═╝═╩╝╚═╝╩╚═
@@ -351,23 +364,23 @@ module.exports = {
           // Examine the identifier value
           switch(identifier) {
             case 'SELECT':
-              query.select(expr.value);
+              buildQueryPiece('select', expr.value);
               break;
 
             case 'FROM':
-              query.from(expr.value);
+              buildQueryPiece('from', expr.value);
               break;
 
             case 'SCHEMA':
-              query.withSchema(expr.value);
+              buildQueryPiece('withSchema', expr.value);
               break;
 
             case 'DISTINCT':
-              query.distinct(expr.value);
+              buildQueryPiece('distinct', expr.value);
               break;
 
             case 'INTO':
-              query.into(expr.value);
+              buildQueryPiece('into', expr.value);
               break;
 
             case 'INSERT':
@@ -379,7 +392,7 @@ module.exports = {
 
                 // Flatten the expression
                 expression = _.fromPairs(expression);
-                query.insert(expression);
+                buildQueryPiece('insert', expression);
               }
               break;
 
@@ -397,7 +410,7 @@ module.exports = {
               }
 
               // Set the second or third item in the array to the value
-              query[fn].apply(query, expression);
+              buildQueryPiece(fn, expression);
 
               // Clear the modifier
               modifier = undefined;
