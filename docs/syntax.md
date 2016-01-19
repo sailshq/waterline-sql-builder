@@ -687,6 +687,8 @@ db.users.find({ updatedAt: { $exists: true } });
 
 ## Where Between (proposed syntax)
 
+// TODO
+
 **NOTE:** Note sure if this is needed if we support the `>` and `<` operators.
 This could be represented as less than and greater than.
 
@@ -717,6 +719,8 @@ db.users.find({ votes: { $gt: 1, $lt: 100 } });
 ```
 
 ## Where Raw (proposed syntax)
+
+// TODO
 
 Sometimes you can't express the query needed using the defined query language. For
 these rare cases a `raw` key is provided that allows you to pass in a string value
