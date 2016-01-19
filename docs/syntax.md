@@ -427,6 +427,48 @@ db.users.find({
 });
 ```
 
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  where: {
+    or: [
+      { name: 'John' },
+      {
+        votes: { '>': 100 },
+        not: {
+          title: 'Admin'
+        }
+      }
+    ]
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+-- PostgreSQL
+select * from "users" where "name" = 'John' or ("votes" > '100' and not "title" = 'Admin')
+```
+
+```javascript
+// MongoDB
+db.users.find({
+  $or: [
+    { name: 'John' },
+    {
+      $and: [
+        { votes: { $gt: 100 } },
+        { title: { $ne: 'Admin' } }
+      ]
+    }
+  ]
+});
+```
+
 ## Where In
 
 #### Key Value
@@ -501,50 +543,6 @@ select "name" from "users" where "accountId" in (select "id" from "accounts")
 // MongoDB
 var accountIds = db.accounts.find({}, { _id: 1 });
 db.users.find({ accountId: { $in: accountIds } }, { name: 1 });
-```
-
-#### Operators
-
-**Example:**
-
-```javascript
-{
-  select: '*',
-  from: 'users',
-  where: {
-    or: [
-      { name: 'John' },
-      {
-        votes: { '>': 100 },
-        title: {
-          not: 'Admin'
-        }
-      }
-    ]
-  }
-}
-```
-
-**Outputs:**
-
-```sql
--- PostgreSQL
-select * from "users" where "name" = 'John' or ("votes" > '100' and "title" not 'Admin')
-```
-
-```javascript
-// MongoDB
-db.users.find({
-  $or: [
-    { name: 'John' },
-    {
-      $and: [
-        { votes: { $gt: 100 } },
-        { title: { $ne: 'Admin' } }
-      ]
-    }
-  ]
-});
 ```
 
 ## Where Not In
