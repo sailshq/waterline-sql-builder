@@ -1,18 +1,18 @@
 var Test = require('../support/test-runner');
 
 describe('Query Generation ::', function() {
-  describe('COUNT statements', function() {
+  describe('MIN statements', function() {
 
-    it('should generate a count query', function(done) {
+    it('should generate a min query', function(done) {
       Test({
         dialect: 'postgresql',
         query: {
-          count: [
+          min: [
             'active'
           ],
           from: 'users'
         },
-        outcome: 'select count("active") from "users"'
+        outcome: 'select min("active") from "users"'
       }, done);
     });
 

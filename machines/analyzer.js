@@ -282,9 +282,19 @@ module.exports = {
     //  ║  ║ ║║ ║║║║ ║   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
     //  ╚═╝╚═╝╚═╝╝╚╝ ╩   ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
     //
-    // Next find the DISTINCT statements and group those
+    // Next find the COUNT statements and group those
     indentifierSearch('COUNT');
 
+
+    //  ╔═╗╔═╗╔═╗╦═╗╔═╗╔═╗╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
+    //  ╠═╣║ ╦║ ╦╠╦╝║╣ ║ ╦╠═╣ ║ ║║ ║║║║╚═╗
+    //  ╩ ╩╚═╝╚═╝╩╚═╚═╝╚═╝╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
+    //
+    // Next find the aggregation statements and group those
+    indentifierSearch('MIN');
+    indentifierSearch('MAX');
+    indentifierSearch('SUM');
+    indentifierSearch('AVG');
 
     //  ╔═╗╦═╗╔═╗╦ ╦╔═╗  ╔╗ ╦ ╦  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
     //  ║ ╦╠╦╝║ ║║ ║╠═╝  ╠╩╗╚╦╝  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║

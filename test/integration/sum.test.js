@@ -1,18 +1,18 @@
 var Test = require('../support/test-runner');
 
 describe('Query Generation ::', function() {
-  describe('COUNT statements', function() {
+  describe('SUM statements', function() {
 
-    it('should generate a count query', function(done) {
+    it('should generate a sum query', function(done) {
       Test({
         dialect: 'postgresql',
         query: {
-          count: [
+          sum: [
             'active'
           ],
           from: 'users'
         },
-        outcome: 'select count("active") from "users"'
+        outcome: 'select sum("active") from "users"'
       }, done);
     });
 

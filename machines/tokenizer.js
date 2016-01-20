@@ -52,6 +52,10 @@ module.exports = {
       'in': 'IN',
       'distinct': 'DISTINCT',
       'count': 'COUNT',
+      'min': 'MIN',
+      'max': 'MAX',
+      'sum': 'SUM',
+      'avg': 'AVG',
       'groupBy': 'GROUPBY',
       'where': 'WHERE',
       'insert': 'INSERT',
@@ -458,13 +462,13 @@ module.exports = {
       });
     }
 
-    //  ╔═╗╔═╗╦ ╦╔╗╔╔╦╗
-    //  ║  ║ ║║ ║║║║ ║
-    //  ╚═╝╚═╝╚═╝╝╚╝ ╩
-    function processCount(value) {
+    //  ╔═╗╔═╗╔═╗╦═╗╔═╗╔═╗╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
+    //  ╠═╣║ ╦║ ╦╠╦╝║╣ ║ ╦╠═╣ ║ ║║ ║║║║╚═╗
+    //  ╩ ╩╚═╝╚═╝╩╚═╚═╝╚═╝╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
+    function processAggregations(value, aggregation) {
       results.push({
         type: 'IDENTIFIER',
-        value: 'COUNT'
+        value: aggregation
       });
 
       results.push({
@@ -546,7 +550,31 @@ module.exports = {
 
           // If the identifier is a COUNT
           if(identifiers[key] === 'COUNT') {
-            processCount(obj[key]);
+            processAggregations(obj[key], 'COUNT');
+            return;
+          }
+
+          // If the identifier is a MIN
+          if(identifiers[key] === 'MIN') {
+            processAggregations(obj[key], 'MIN');
+            return;
+          }
+
+          // If the identifier is a MAX
+          if(identifiers[key] === 'MAX') {
+            processAggregations(obj[key], 'MAX');
+            return;
+          }
+
+          // If the identifier is a SUM
+          if(identifiers[key] === 'SUM') {
+            processAggregations(obj[key], 'SUM');
+            return;
+          }
+
+          // If the identifier is a AVG
+          if(identifiers[key] === 'AVG') {
+            processAggregations(obj[key], 'AVG');
             return;
           }
 

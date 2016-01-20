@@ -726,12 +726,16 @@ module.exports = {
               break;
 
             case 'COUNT':
+            case 'MIN':
+            case 'MAX':
+            case 'SUM':
+            case 'AVG':
               if(!_.isArray(expr.value)) {
                 expr.value = [expr.value];
               }
 
-              _.each(expr.value, function(count) {
-                buildQueryPiece('count', count);
+              _.each(expr.value, function(val) {
+                buildQueryPiece(identifier.toLowerCase(), val);
               });
               break;
 
