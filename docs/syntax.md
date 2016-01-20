@@ -1755,9 +1755,9 @@ Performs a count on the specified attribute.
 
 ```javascript
 {
-  select: {
-    count: 'active'
-  },
+  count: [
+    'active'
+  ],
   from: 'users'
 }
 ```

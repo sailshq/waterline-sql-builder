@@ -725,6 +725,16 @@ module.exports = {
               buildQueryPiece('distinct', expr.value);
               break;
 
+            case 'COUNT':
+              if(!_.isArray(expr.value)) {
+                expr.value = [expr.value];
+              }
+
+              _.each(expr.value, function(count) {
+                buildQueryPiece('count', count);
+              });
+              break;
+
             case 'GROUPBY':
               buildQueryPiece('groupBy', expr.value);
               break;

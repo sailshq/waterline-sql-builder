@@ -51,6 +51,7 @@ module.exports = {
       'not': 'NOT',
       'in': 'IN',
       'distinct': 'DISTINCT',
+      'count': 'COUNT',
       'groupBy': 'GROUPBY',
       'where': 'WHERE',
       'insert': 'INSERT',
@@ -457,6 +458,21 @@ module.exports = {
       });
     }
 
+    //  ╔═╗╔═╗╦ ╦╔╗╔╔╦╗
+    //  ║  ║ ║║ ║║║║ ║
+    //  ╚═╝╚═╝╚═╝╝╚╝ ╩
+    function processCount(value) {
+      results.push({
+        type: 'IDENTIFIER',
+        value: 'COUNT'
+      });
+
+      results.push({
+        type: 'VALUE',
+        value: value
+      });
+    }
+
     //  ████████╗ ██████╗ ██╗  ██╗███████╗███╗   ██╗██╗███████╗███████╗██████╗
     //  ╚══██╔══╝██╔═══██╗██║ ██╔╝██╔════╝████╗  ██║██║╚══███╔╝██╔════╝██╔══██╗
     //     ██║   ██║   ██║█████╔╝ █████╗  ██╔██╗ ██║██║  ███╔╝ █████╗  ██████╔╝
@@ -525,6 +541,12 @@ module.exports = {
           // If the identifier is a GROUP BY aggregation
           if(identifiers[key] === 'GROUPBY') {
             processGroupBy(obj[key]);
+            return;
+          }
+
+          // If the identifier is a COUNT
+          if(identifiers[key] === 'COUNT') {
+            processCount(obj[key]);
             return;
           }
 
