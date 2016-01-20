@@ -56,6 +56,8 @@ module.exports = {
       'max': 'MAX',
       'sum': 'SUM',
       'avg': 'AVG',
+      'limit': 'LIMIT',
+      'offset': 'OFFSET',
       'groupBy': 'GROUPBY',
       'orderBy': 'ORDERBY',
       'where': 'WHERE',
@@ -497,6 +499,21 @@ module.exports = {
       });
     }
 
+    //  ╔═╗╔═╗╔═╗╦╔╗╔╔═╗╔╦╗╦╔═╗╔╗╔
+    //  ╠═╝╠═╣║ ╦║║║║╠═╣ ║ ║║ ║║║║
+    //  ╩  ╩ ╩╚═╝╩╝╚╝╩ ╩ ╩ ╩╚═╝╝╚╝
+    function processPagination(value, operator) {
+      results.push({
+        type: 'IDENTIFIER',
+        value: operator
+      });
+
+      results.push({
+        type: 'VALUE',
+        value: value
+      });
+    }
+
     //  ████████╗ ██████╗ ██╗  ██╗███████╗███╗   ██╗██╗███████╗███████╗██████╗
     //  ╚══██╔══╝██╔═══██╗██║ ██╔╝██╔════╝████╗  ██║██║╚══███╔╝██╔════╝██╔══██╗
     //     ██║   ██║   ██║█████╔╝ █████╗  ██╔██╗ ██║██║  ███╔╝ █████╗  ██████╔╝
@@ -617,6 +634,16 @@ module.exports = {
 
           if(identifiers[key] === 'IN') {
             processIn(obj[key]);
+            return;
+          }
+
+          if(identifiers[key] === 'LIMIT') {
+            processPagination(obj[key], 'LIMIT');
+            return;
+          }
+
+          if(identifiers[key] === 'OFFSET') {
+            processPagination(obj[key], 'OFFSET');
             return;
           }
 

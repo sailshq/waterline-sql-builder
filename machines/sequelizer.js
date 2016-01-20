@@ -779,6 +779,14 @@ module.exports = {
               buildQueryPiece('into', expr.value);
               break;
 
+            case 'LIMIT':
+              buildQueryPiece('limit', expr.value);
+              break;
+
+            case 'OFFSET':
+              buildQueryPiece('offset', expr.value);
+              break;
+
             case 'ORDERBY':
 
               // Look ahead and see if the next expression is an Identifier.
