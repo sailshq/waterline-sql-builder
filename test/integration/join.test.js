@@ -50,5 +50,33 @@ describe('Query Generation ::', function() {
       }, done);
     });
 
+    it('should be able to group joins', function(done) {
+      Test({
+        dialect: 'postgresql',
+        query: {
+          select: '*',
+          from: 'users',
+          join: [
+            {
+              from: 'accounts',
+              on: {
+                or: [
+                  {
+                    accounts: 'id',
+                    users: 'account_id'
+                  },
+                  {
+                    accounts: 'owner_id',
+                    users: 'id'
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        outcome: 'select * from "users" inner join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"'
+      }, done);
+    });
+
   });
 });

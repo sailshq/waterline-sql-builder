@@ -453,31 +453,31 @@ module.exports = {
     // Takes an array of join tokens and builds various SQL joins.
     function processJoinGroup(tokens, joinType) {
 
-      // A JOIN token array assumes the following structure
-      // { type: 'KEY', value: 'TABLE' },
-      // { type: 'VALUE', value: 'contacts' },
-      // { type: 'KEY', value: 'TABLE_KEY' },
-      // { type: 'VALUE', value: 'users' },
-      // { type: 'KEY', value: 'COLUMN_KEY' },
-      // { type: 'VALUE', value: 'id' },
-      // { type: 'KEY', value: 'TABLE_KEY' },
-      // { type: 'VALUE', value: 'contacts' },
-      // { type: 'KEY', value: 'COLUMN_KEY' },
-      // { type: 'VALUE', value: 'user_id' }
+      // Check if there is a COMBINATOR token
+      var hasCombinator = _.findIndex(tokens, { type: 'COMBINATOR' });
 
-      // Hold the values that make up the join expression
-      var JOIN_TABLE = tokens[1] && tokens[1].value;
-      var PARENT_TABLE = tokens[3] && tokens[3].value;
-      var CHILD_TABLE = tokens[7] && tokens[7].value;
-      var PARENT_COLUMN = tokens[5] && tokens[5].value;
-      var CHILD_COLUMN = tokens[9] && tokens[9].value;
+      // If not, process the flat join
+      if(hasCombinator < 0) {
+        processFlatJoin(tokens, joinType);
+        return;
+      }
 
-      // Hold the actual expression we will pass to Knex
-      var joinExpr = [JOIN_TABLE, PARENT_TABLE+'.'+PARENT_COLUMN, '=', CHILD_TABLE+'.'+CHILD_COLUMN];
+      // Otherwise process the grouped join
+      processGroupedJoin(tokens, joinType);
+    }
 
-      // Build the query
+
+    //  ╔╦╗╔═╗╔╦╗╔═╗╦═╗╔╦╗╦╔╗╔╔═╗   ╦╔═╗╦╔╗╔
+    //   ║║║╣  ║ ║╣ ╠╦╝║║║║║║║║╣    ║║ ║║║║║
+    //  ═╩╝╚═╝ ╩ ╚═╝╩╚═╩ ╩╩╝╚╝╚═╝  ╚╝╚═╝╩╝╚╝
+    //  ╔═╗╦ ╦╔╗╔╔═╗╔╦╗╦╔═╗╔╗╔  ╔═╗╦═╗╔═╗╔╦╗  ╦╔═╔═╗╦ ╦
+    //  ╠╣ ║ ║║║║║   ║ ║║ ║║║║  ╠╣ ╠╦╝║ ║║║║  ╠╩╗║╣ ╚╦╝
+    //  ╚  ╚═╝╝╚╝╚═╝ ╩ ╩╚═╝╝╚╝  ╚  ╩╚═╚═╝╩ ╩  ╩ ╩╚═╝ ╩
+    //
+    // Given a KEY value, find what join expression to use.
+    function findJoinFunction(key) {
       var fn;
-      switch(joinType) {
+      switch(key) {
         case 'JOIN':
           fn = 'join';
           break;
@@ -507,7 +507,127 @@ module.exports = {
           break;
       }
 
+      return fn;
+    }
+
+
+    //  ╔═╗╦═╗╔═╗╔═╗╔═╗╔═╗╔═╗  ╔═╗╦  ╔═╗╔╦╗   ╦╔═╗╦╔╗╔
+    //  ╠═╝╠╦╝║ ║║  ║╣ ╚═╗╚═╗  ╠╣ ║  ╠═╣ ║    ║║ ║║║║║
+    //  ╩  ╩╚═╚═╝╚═╝╚═╝╚═╝╚═╝  ╚  ╩═╝╩ ╩ ╩   ╚╝╚═╝╩╝╚╝
+    //
+    // Process a flat join. This is a join that doesn't need to be wrapped in
+    // parenthesis.
+    function processFlatJoin(tokens, joinType) {
+
+      // A JOIN token array assumes the following structure
+      // { type: 'KEY', value: 'TABLE' },
+      // { type: 'VALUE', value: 'contacts' },
+      // { type: 'KEY', value: 'TABLE_KEY' },
+      // { type: 'VALUE', value: 'users' },
+      // { type: 'KEY', value: 'COLUMN_KEY' },
+      // { type: 'VALUE', value: 'id' },
+      // { type: 'KEY', value: 'TABLE_KEY' },
+      // { type: 'VALUE', value: 'contacts' },
+      // { type: 'KEY', value: 'COLUMN_KEY' },
+      // { type: 'VALUE', value: 'user_id' }
+
+      // Hold the values that make up the join expression
+      var JOIN_TABLE = tokens[1] && tokens[1].value;
+      var PARENT_TABLE = tokens[3] && tokens[3].value;
+      var CHILD_TABLE = tokens[7] && tokens[7].value;
+      var PARENT_COLUMN = tokens[5] && tokens[5].value;
+      var CHILD_COLUMN = tokens[9] && tokens[9].value;
+
+      // Hold the actual expression we will pass to Knex
+      var joinExpr = [JOIN_TABLE, PARENT_TABLE+'.'+PARENT_COLUMN, '=', CHILD_TABLE+'.'+CHILD_COLUMN];
+
+      // Find out which function to use
+      var fn = findJoinFunction(joinType);
+
       buildQueryPiece(fn, joinExpr);
+    }
+
+
+    //  ╔═╗╦═╗╔═╗╔═╗╔═╗╔═╗╔═╗  ╔═╗╦═╗╔═╗╦ ╦╔═╗╔═╗╔╦╗   ╦╔═╗╦╔╗╔
+    //  ╠═╝╠╦╝║ ║║  ║╣ ╚═╗╚═╗  ║ ╦╠╦╝║ ║║ ║╠═╝║╣  ║║   ║║ ║║║║║
+    //  ╩  ╩╚═╚═╝╚═╝╚═╝╚═╝╚═╝  ╚═╝╩╚═╚═╝╚═╝╩  ╚═╝═╩╝  ╚╝╚═╝╩╝╚╝
+    //
+    // Process a grouped join. This is a join that should be wrapped in parenthesis.
+    function processGroupedJoin(tokens, joinType) {
+
+      var pieces = [];
+      var JOIN_TABLE = tokens[1] && tokens[1].value;
+
+      // Remove the table name from the token set
+      tokens = _.slice(tokens, 2);
+
+      // Recurse through the tokens building up the pieces of the grouped fn
+      function buildJoinPieces(_tokens) {
+
+        var piece = {};
+
+        // Find the start and end of the expression. To find the end, check if
+        // there is another combinator value in the set.
+        var start = _.findIndex(_tokens, { type: 'COMBINATOR' });
+        var end = _.findIndex(_.slice(_tokens, start+1), { type: 'COMBINATOR' });
+
+        // Build the expression by grabbing the array items
+        var expr;
+        if(end > -1) {
+          expr = _.slice(_tokens, start, end+1);
+        } else {
+          expr = _.slice(_tokens, start);
+        }
+
+        // Figure out what combinator was used
+        var combinator = _tokens[start].value;
+        piece.combinator = combinator;
+
+        // Build up the join expression
+        var PARENT_TABLE = _tokens[2] && _tokens[2].value;
+        var CHILD_TABLE = _tokens[6] && _tokens[6].value;
+        var PARENT_COLUMN = _tokens[4] && _tokens[4].value;
+        var CHILD_COLUMN = _tokens[8] && _tokens[8].value;
+
+        // Hold the actual expression we will pass to Knex
+        piece.expr = [PARENT_TABLE+'.'+PARENT_COLUMN, '=', CHILD_TABLE+'.'+CHILD_COLUMN];
+
+        // Add the piece to group of expressions
+        pieces.push(piece);
+
+        // If there are no more groups, return
+        if(end < 0) {
+          return;
+        }
+
+        // Set the _tokens to remove the process join piece and call again
+        _tokens = _.slice(_tokens, end+1);
+        buildJoinPieces(_tokens);
+      }
+
+      // Kickoff the recursive parsing
+      buildJoinPieces(tokens);
+
+      // Now that all the pieces are built, build the function for passing into
+      // Knex that will perform the actual grouping
+      var groupFn = function() {
+        var self = this;
+        _.each(pieces, function(piece, idx) {
+          var _fn = 'andOn';
+
+          // The first item always uses the .on functions
+          if(idx === 0) _fn = 'on';
+          else if(piece.combinator === 'OR') _fn = 'orOn';
+
+          self[_fn].apply(self, piece.expr);
+        });
+      };
+
+      // Find out which function to use
+      var joinFn = findJoinFunction(joinType);
+
+      // Build the grouped join query
+      buildQueryPiece(joinFn, [JOIN_TABLE, groupFn]);
     }
 
 

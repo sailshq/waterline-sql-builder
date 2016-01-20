@@ -115,5 +115,120 @@ describe('Sequelizer ::', function() {
         return done();
       });
     });
+
+    it('should generate a query when grouped OR joins are added', function(done) {
+      var tree = analyze({
+        select: '*',
+        from: 'users',
+        join: [
+          {
+            from: 'accounts',
+            on: {
+              or: [
+                {
+                  accounts: 'id',
+                  users: 'account_id'
+                },
+                {
+                  accounts: 'owner_id',
+                  users: 'id'
+                }
+              ]
+            }
+          }
+        ]
+      });
+
+      Sequelizer({
+        dialect: 'postgresql',
+        tree: tree
+      })
+      .exec(function(err, result) {
+        assert(!err);
+        assert.equal(result, 'select * from "users" inner join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"');
+        return done();
+      });
+    });
+
+    it('should generate a query when grouped AND joins are added', function(done) {
+      var tree = analyze({
+        select: '*',
+        from: 'users',
+        join: [
+          {
+            from: 'accounts',
+            on: [
+              {
+                accounts: 'id',
+                users: 'account_id'
+              },
+              {
+                accounts: 'owner_id',
+                users: 'id'
+              }
+            ]
+          }
+        ]
+      });
+
+      Sequelizer({
+        dialect: 'postgresql',
+        tree: tree
+      })
+      .exec(function(err, result) {
+        assert(!err);
+        assert.equal(result, 'select * from "users" inner join "accounts" on "accounts"."id" = "users"."account_id" and "accounts"."owner_id" = "users"."id"');
+        return done();
+      });
+    });
+
+    it('should generate a query when multiple grouped OR joins are added', function(done) {
+      var tree = analyze({
+        select: '*',
+        from: 'users',
+        join: [
+          {
+            from: 'accounts',
+            on: {
+              or: [
+                {
+                  accounts: 'id',
+                  users: 'account_id'
+                },
+                {
+                  accounts: 'owner_id',
+                  users: 'id'
+                }
+              ]
+            }
+          },
+          {
+            from: 'carriers',
+            on: {
+              or: [
+                {
+                  carriers: 'id',
+                  users: 'account_id'
+                },
+                {
+                  carriers: 'owner_id',
+                  users: 'id'
+                }
+              ]
+            }
+          }
+        ]
+      });
+
+      Sequelizer({
+        dialect: 'postgresql',
+        tree: tree
+      })
+      .exec(function(err, result) {
+        assert(!err);
+        assert.equal(result, 'select * from "users" inner join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id" inner join "carriers" on "carriers"."id" = "users"."account_id" or "carriers"."owner_id" = "users"."id"');
+        return done();
+      });
+    });
   });
 });
