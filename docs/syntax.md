@@ -1543,6 +1543,7 @@ select * from "table" order by col NULLS LAST DESC
 
 ## Having
 
+// TODO: (do we actually need this right now?)
 Adds a `having` clause to the query.
 
 **Example:**
