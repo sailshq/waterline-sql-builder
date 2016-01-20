@@ -65,6 +65,7 @@ module.exports = {
       'into': 'INTO',
       'update': 'UPDATE',
       'using': 'USING',
+      'del': 'DELETE',
       'join': 'JOIN',
       'innerJoin': 'JOIN',
       'outerJoin': 'JOIN',
@@ -269,6 +270,16 @@ module.exports = {
       results.push({
         type: 'VALUE',
         value: value
+      });
+    }
+
+    //  ╔╦╗╔═╗╦  ╔═╗╔╦╗╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
+    //   ║║║╣ ║  ║╣  ║ ║╣   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
+    //  ═╩╝╚═╝╩═╝╚═╝ ╩ ╚═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+    function processDelete() {
+      results.push({
+        type: 'IDENTIFIER',
+        value: 'DELETE'
       });
     }
 
@@ -629,6 +640,12 @@ module.exports = {
           // If the identifier is an USING, add it's token
           if(identifiers[key] === 'USING') {
             processUsing(obj[key]);
+            return;
+          }
+
+          // If the identifier is a DELETE, add it's token
+          if(identifiers[key] === 'DELETE') {
+            processDelete(obj[key]);
             return;
           }
 

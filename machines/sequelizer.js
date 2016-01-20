@@ -730,6 +730,12 @@ module.exports = {
         // Handle identifiers by storing them on the fn
         if(expr.type === 'IDENTIFIER') {
           identifier = expr.value;
+
+          // If the identifier is the DELETE key, we can go ahead and process it
+          if(identifier === 'DELETE') {
+            query.del();
+          }
+
           return;
         }
 

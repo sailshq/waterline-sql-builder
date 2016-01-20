@@ -337,6 +337,25 @@ module.exports = {
     indentifierSearch('OFFSET');
 
 
+    //  ╔╦╗╔═╗╦  ╔═╗╔╦╗╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
+    //   ║║║╣ ║  ║╣  ║ ║╣   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
+    //  ═╩╝╚═╝╩═╝╚═╝ ╩ ╚═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+    //
+    // Next find the DELETE statements
+    (function() {
+      var idx = _.findIndex(tokens, { type: 'IDENTIFIER', value: 'DELETE' });
+      if(idx > -1) {
+
+        var statement = [];
+        statement.push(tokens[idx]);
+
+        // Remove the value
+        _.pullAt(tokens, idx);
+
+        results.push(statement);
+      }
+    })();
+
     //  ╔═╗╦═╗╔╦╗╔═╗╦═╗  ╔╗ ╦ ╦  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗╔═╗
     //  ║ ║╠╦╝ ║║║╣ ╠╦╝  ╠╩╗╚╦╝  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║ ╚═╗
     //  ╚═╝╩╚══╩╝╚═╝╩╚═  ╚═╝ ╩   ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩ ╚═╝
@@ -470,7 +489,7 @@ module.exports = {
     //
     // Process the values contained in the WHERE statement.
     (function() {
-  
+
       // Check for a WHERE statement
       var idx = _.findIndex(tokens, { type: 'IDENTIFIER', value: 'WHERE' });
       if(idx < 0) { return; }
