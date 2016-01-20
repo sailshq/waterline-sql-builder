@@ -57,6 +57,7 @@ module.exports = {
       'sum': 'SUM',
       'avg': 'AVG',
       'groupBy': 'GROUPBY',
+      'orderBy': 'ORDERBY',
       'where': 'WHERE',
       'insert': 'INSERT',
       'into': 'INTO',
@@ -462,6 +463,25 @@ module.exports = {
       });
     }
 
+    //  ╔═╗╦═╗╔╦╗╔═╗╦═╗  ╔╗ ╦ ╦
+    //  ║ ║╠╦╝ ║║║╣ ╠╦╝  ╠╩╗╚╦╝
+    //  ╚═╝╩╚══╩╝╚═╝╩╚═  ╚═╝ ╩
+    function processOrderBy(values) {
+      // Tokenize the order by and then call the tokenizer on the values
+      results.push({
+        type: 'IDENTIFIER',
+        value: 'ORDERBY'
+      });
+
+      if(!_.isArray(values)) {
+        values = [values];
+      }
+
+      _.each(values, function(tokenSet) {
+        tokenizeObject(tokenSet);
+      });
+    }
+
     //  ╔═╗╔═╗╔═╗╦═╗╔═╗╔═╗╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
     //  ╠═╣║ ╦║ ╦╠╦╝║╣ ║ ╦╠═╣ ║ ║║ ║║║║╚═╗
     //  ╩ ╩╚═╝╚═╝╩╚═╚═╝╚═╝╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
@@ -545,6 +565,12 @@ module.exports = {
           // If the identifier is a GROUP BY aggregation
           if(identifiers[key] === 'GROUPBY') {
             processGroupBy(obj[key]);
+            return;
+          }
+
+          // If the identifier is an ORDER BY, add the sort options
+          if(identifiers[key] === 'ORDERBY') {
+            processOrderBy(obj[key]);
             return;
           }
 

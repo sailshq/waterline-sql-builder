@@ -296,6 +296,7 @@ module.exports = {
     indentifierSearch('SUM');
     indentifierSearch('AVG');
 
+
     //  ╔═╗╦═╗╔═╗╦ ╦╔═╗  ╔╗ ╦ ╦  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
     //  ║ ╦╠╦╝║ ║║ ║╠═╝  ╠╩╗╚╦╝  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
     //  ╚═╝╩╚═╚═╝╚═╝╩    ╚═╝ ╩   ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
@@ -312,6 +313,35 @@ module.exports = {
     indentifierSearch('INTO');
 
 
+    //  ╔═╗╦═╗╔╦╗╔═╗╦═╗  ╔╗ ╦ ╦  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗╔═╗
+    //  ║ ║╠╦╝ ║║║╣ ╠╦╝  ╠╩╗╚╦╝  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║ ╚═╗
+    //  ╚═╝╩╚══╩╝╚═╝╩╚═  ╚═╝ ╩   ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩ ╚═╝
+    //
+    // Next find all the ordering statements and group them
+    (function() {
+
+      // Check for an ORDER BY statement
+      var idx = _.findIndex(tokens, { type: 'IDENTIFIER', value: 'ORDERBY' });
+      if(idx < 0) { return; }
+
+      // Find the next Identifier so we know the scope of the Order statements.
+      // To do this slice the array at the ORDERBY index, pull off the values, then
+      // see if there are any remaining Identifiers.
+      var slice = _.slice(tokens, idx);
+      var identifier = _.first(_.pullAt(slice, 0));
+
+      var endIdx = _.findIndex(slice, { type: 'IDENTIFIER' });
+      if(endIdx < 0) { endIdx = undefined; }
+
+      // Limit the tokens to only those needed to fufill the ORDER clause
+      var orderTokens = _.slice(slice, idx, endIdx);
+      orderTokens.unshift({ type: 'IDENTIFIER', value: 'ORDERBY' });
+
+      // Add the tokens to the results
+      results.push(orderTokens);
+    })();
+
+    
     //  ╦╔╗╔╔═╗╔═╗╦═╗╔╦╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
     //  ║║║║╚═╗║╣ ╠╦╝ ║   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
     //  ╩╝╚╝╚═╝╚═╝╩╚═ ╩   ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩

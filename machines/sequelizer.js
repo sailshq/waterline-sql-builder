@@ -631,6 +631,32 @@ module.exports = {
     }
 
 
+    //  ╔═╗╦═╗╔╦╗╔═╗╦═╗  ╔╗ ╦ ╦  ╔╗ ╦ ╦╦╦  ╔╦╗╔═╗╦═╗
+    //  ║ ║╠╦╝ ║║║╣ ╠╦╝  ╠╩╗╚╦╝  ╠╩╗║ ║║║   ║║║╣ ╠╦╝
+    //  ╚═╝╩╚══╩╝╚═╝╩╚═  ╚═╝ ╩   ╚═╝╚═╝╩╩═╝═╩╝╚═╝╩╚═
+    //
+    // Process ORDER BY expressions
+    function orderByBuilder(expr, expression) {
+      var arr = [];
+
+      // Handle KEY/VALUE pairs
+      if(expr.type === 'KEY') {
+        arr.push(expr.value);
+        expression.push(arr);
+
+        return expression;
+      }
+
+      // Set the VALUE pair
+      if(expr.type === 'VALUE') {
+        arr = _.last(expression);
+        arr.push(expr.value);
+
+        return expression;
+      }
+    }
+
+
     //  ╦╔╗╔╔═╗╔═╗╦═╗╔╦╗  ╔╗ ╦ ╦╦╦  ╔╦╗╔═╗╦═╗
     //  ║║║║╚═╗║╣ ╠╦╝ ║   ╠╩╗║ ║║║   ║║║╣ ╠╦╝
     //  ╩╝╚╝╚═╝╚═╝╩╚═ ╩   ╚═╝╚═╝╩╩═╝═╩╝╚═╝╩╚═
@@ -670,6 +696,7 @@ module.exports = {
       var identifier;
       var modifier = [];
       var fn;
+      var nextExpr;
       var expression = [];
 
       // Loop through each item in the group and build up the expression
@@ -702,6 +729,11 @@ module.exports = {
         // Handle clauses in the WHERE value
         if(identifier === 'WHERE' && (expr.type === 'KEY' || expr.type === 'OPERATOR' || expr.type === 'VALUE')) {
           expression = whereBuilder(expr, expression, modifier);
+        }
+
+        // Handle ORDER BY statements
+        if(identifier === 'ORDERBY' && (expr.type === 'KEY' || expr.type === 'VALUE')) {
+          expression = orderByBuilder(expr, expression);
         }
 
         // Process value and use the appropriate Knex function
@@ -747,11 +779,25 @@ module.exports = {
               buildQueryPiece('into', expr.value);
               break;
 
+            case 'ORDERBY':
+
+              // Look ahead and see if the next expression is an Identifier.
+              // If so or if there is no next identifier, add the insert statments.
+              nextExpr = undefined;
+              nextExpr = tokenGroup[idx+1];
+              if(!nextExpr || nextExpr.type === 'IDENTIFIER') {
+                _.each(expression, function(ordering) {
+                  buildQueryPiece('orderBy', ordering);
+                });
+              }
+              break;
+
             case 'INSERT':
 
               // Look ahead and see if the next expression is an Identifier.
               // If so or if there is no next identifier, add the insert statments.
-              var nextExpr = tokenGroup[idx+1];
+              nextExpr = undefined;
+              nextExpr = tokenGroup[idx+1];
               if(!nextExpr || nextExpr.type === 'IDENTIFIER') {
 
                 // Flatten the expression
