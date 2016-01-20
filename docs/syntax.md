@@ -1777,9 +1777,9 @@ Gets the minimum value for the specified attribute.
 
 ```javascript
 {
-  select: {
-    min: 'age'
-  },
+  min: [
+    'age'
+  ],
   from: 'users'
 }
 ```
@@ -1816,9 +1816,9 @@ Gets the maximum value for the specified attribute.
 
 ```javascript
 {
-  select: {
-    max: 'age'
-  },
+  max: [
+    'age'
+  ],
   from: 'users'
 }
 ```
@@ -1855,9 +1855,9 @@ Retrieve the sum of the values of a given attribute.
 
 ```javascript
 {
-  select: {
-    sum: 'products'
-  },
+  sum: [
+    'products'
+  ],
   from: 'users'
 }
 ```
@@ -1894,9 +1894,9 @@ Retrieve the average of the values of a given attribute.
 
 ```javascript
 {
-  select: {
-    avg: 'age'
-  },
+  avg: [
+    'age'
+  ],
   from: 'users'
 }
 ```
