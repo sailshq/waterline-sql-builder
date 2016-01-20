@@ -51,6 +51,7 @@ module.exports = {
       'not': 'NOT',
       'in': 'IN',
       'distinct': 'DISTINCT',
+      'groupBy': 'GROUPBY',
       'where': 'WHERE',
       'insert': 'INSERT',
       'into': 'INTO',
@@ -441,6 +442,20 @@ module.exports = {
       });
     }
 
+    //  ╔═╗╦═╗╔═╗╦ ╦╔═╗  ╔╗ ╦ ╦
+    //  ║ ╦╠╦╝║ ║║ ║╠═╝  ╠╩╗╚╦╝
+    //  ╚═╝╩╚═╚═╝╚═╝╩    ╚═╝ ╩
+    function processGroupBy(value) {
+      results.push({
+        type: 'IDENTIFIER',
+        value: 'GROUPBY'
+      });
+
+      results.push({
+        type: 'VALUE',
+        value: value
+      });
+    }
 
     //  ████████╗ ██████╗ ██╗  ██╗███████╗███╗   ██╗██╗███████╗███████╗██████╗
     //  ╚══██╔══╝██╔═══██╗██║ ██╔╝██╔════╝████╗  ██║██║╚══███╔╝██╔════╝██╔══██╗
@@ -504,6 +519,12 @@ module.exports = {
           // If the identifier is a WHERE, add it's token and process it's values
           if(identifiers[key] === 'WHERE') {
             processWhere(obj[key]);
+            return;
+          }
+
+          // If the identifier is a GROUP BY aggregation
+          if(identifiers[key] === 'GROUPBY') {
+            processGroupBy(obj[key]);
             return;
           }
 

@@ -725,6 +725,10 @@ module.exports = {
               buildQueryPiece('distinct', expr.value);
               break;
 
+            case 'GROUPBY':
+              buildQueryPiece('groupBy', expr.value);
+              break;
+
             case 'INTO':
               buildQueryPiece('into', expr.value);
               break;
