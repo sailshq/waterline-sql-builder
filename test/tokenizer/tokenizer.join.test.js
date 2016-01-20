@@ -45,6 +45,65 @@ describe('Tokenizer ::', function() {
       });
     });
 
+    it('should generate a valid token array when multiple JOIN operations is used', function(done) {
+      Tokenizer({
+        expression: {
+          select: ['users.id', 'contacts.phone'],
+          from: 'users',
+          join: [
+            {
+              from: 'contacts',
+              on: {
+                users: 'id',
+                contacts: 'user_id'
+              }
+            },
+            {
+              from: 'carriers',
+              on: {
+                users: 'id',
+                carriers: 'user_id'
+              }
+            }
+          ]
+        }
+      })
+      .exec(function(err, result) {
+        assert(!err);
+
+        assert.deepEqual(result, [
+          { type: 'IDENTIFIER', value: 'SELECT' },
+          { type: 'VALUE', value: [ 'users.id', 'contacts.phone' ] },
+          { type: 'IDENTIFIER', value: 'FROM' },
+          { type: 'VALUE', value: 'users' },
+          { type: 'IDENTIFIER', value: 'JOIN' },
+          { type: 'KEY', value: 'TABLE' },
+          { type: 'VALUE', value: 'contacts' },
+          { type: 'KEY', value: 'TABLE_KEY' },
+          { type: 'VALUE', value: 'users' },
+          { type: 'KEY', value: 'COLUMN_KEY' },
+          { type: 'VALUE', value: 'id' },
+          { type: 'KEY', value: 'TABLE_KEY' },
+          { type: 'VALUE', value: 'contacts' },
+          { type: 'KEY', value: 'COLUMN_KEY' },
+          { type: 'VALUE', value: 'user_id' },
+          { type: 'IDENTIFIER', value: 'JOIN' },
+          { type: 'KEY', value: 'TABLE' },
+          { type: 'VALUE', value: 'carriers' },
+          { type: 'KEY', value: 'TABLE_KEY' },
+          { type: 'VALUE', value: 'users' },
+          { type: 'KEY', value: 'COLUMN_KEY' },
+          { type: 'VALUE', value: 'id' },
+          { type: 'KEY', value: 'TABLE_KEY' },
+          { type: 'VALUE', value: 'carriers' },
+          { type: 'KEY', value: 'COLUMN_KEY' },
+          { type: 'VALUE', value: 'user_id' }
+        ]);
+
+        return done();
+      });
+    });
+
     it('should generate a valid token array when an INNERJOIN operation is used', function(done) {
       Tokenizer({
         expression: {
@@ -80,6 +139,122 @@ describe('Tokenizer ::', function() {
           { type: 'VALUE', value: 'contacts' },
           { type: 'KEY', value: 'COLUMN_KEY' },
           { type: 'VALUE', value: 'user_id' }
+        ]);
+
+        return done();
+      });
+    });
+
+    it('should generate a valid token array when a grouped OR JOIN operation is used', function(done) {
+      Tokenizer({
+        expression: {
+          select: '*',
+          from: 'users',
+          join: [
+            {
+              from: 'accounts',
+              on: {
+                or: [
+                  {
+                    accounts: 'id',
+                    users: 'account_id'
+                  },
+                  {
+                    accounts: 'owner_id',
+                    users: 'id'
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      })
+      .exec(function(err, result) {
+        assert(!err);
+
+        assert.deepEqual(result, [
+          { type: 'IDENTIFIER', value: 'SELECT' },
+          { type: 'VALUE', value: '*' },
+          { type: 'IDENTIFIER', value: 'FROM' },
+          { type: 'VALUE', value: 'users' },
+          { type: 'IDENTIFIER', value: 'JOIN' },
+          { type: 'KEY', value: 'TABLE' },
+          { type: 'VALUE', value: 'accounts' },
+          { type: 'COMBINATOR', value: 'OR' },
+          { type: 'KEY', value: 'TABLE_KEY' },
+          { type: 'VALUE', value: 'accounts' },
+          { type: 'KEY', value: 'COLUMN_KEY' },
+          { type: 'VALUE', value: 'id' },
+          { type: 'KEY', value: 'TABLE_KEY' },
+          { type: 'VALUE', value: 'users' },
+          { type: 'KEY', value: 'COLUMN_KEY' },
+          { type: 'VALUE', value: 'account_id' },
+          { type: 'COMBINATOR', value: 'OR' },
+          { type: 'KEY', value: 'TABLE_KEY' },
+          { type: 'VALUE', value: 'accounts' },
+          { type: 'KEY', value: 'COLUMN_KEY' },
+          { type: 'VALUE', value: 'owner_id' },
+          { type: 'KEY', value: 'TABLE_KEY' },
+          { type: 'VALUE', value: 'users' },
+          { type: 'KEY', value: 'COLUMN_KEY' },
+          { type: 'VALUE', value: 'id' }
+        ]);
+
+        return done();
+      });
+    });
+
+    it('should generate a valid token array when a grouped AND JOIN operation is used', function(done) {
+      Tokenizer({
+        expression: {
+          select: '*',
+          from: 'users',
+          join: [
+            {
+              from: 'accounts',
+              on: [
+                {
+                  accounts: 'id',
+                  users: 'account_id'
+                },
+                {
+                  accounts: 'owner_id',
+                  users: 'id'
+                }
+              ]
+            }
+          ]
+        }
+      })
+      .exec(function(err, result) {
+        assert(!err);
+
+        assert.deepEqual(result, [
+          { type: 'IDENTIFIER', value: 'SELECT' },
+          { type: 'VALUE', value: '*' },
+          { type: 'IDENTIFIER', value: 'FROM' },
+          { type: 'VALUE', value: 'users' },
+          { type: 'IDENTIFIER', value: 'JOIN' },
+          { type: 'KEY', value: 'TABLE' },
+          { type: 'VALUE', value: 'accounts' },
+          { type: 'COMBINATOR', value: 'AND' },
+          { type: 'KEY', value: 'TABLE_KEY' },
+          { type: 'VALUE', value: 'accounts' },
+          { type: 'KEY', value: 'COLUMN_KEY' },
+          { type: 'VALUE', value: 'id' },
+          { type: 'KEY', value: 'TABLE_KEY' },
+          { type: 'VALUE', value: 'users' },
+          { type: 'KEY', value: 'COLUMN_KEY' },
+          { type: 'VALUE', value: 'account_id' },
+          { type: 'COMBINATOR', value: 'AND' },
+          { type: 'KEY', value: 'TABLE_KEY' },
+          { type: 'VALUE', value: 'accounts' },
+          { type: 'KEY', value: 'COLUMN_KEY' },
+          { type: 'VALUE', value: 'owner_id' },
+          { type: 'KEY', value: 'TABLE_KEY' },
+          { type: 'VALUE', value: 'users' },
+          { type: 'KEY', value: 'COLUMN_KEY' },
+          { type: 'VALUE', value: 'id' }
         ]);
 
         return done();

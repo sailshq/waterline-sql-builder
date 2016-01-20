@@ -330,35 +330,117 @@ module.exports = {
 
         // Ensure the instructions include a FROM and an ON and that the ON
         // is made up of two table keys.
-        if(!_.has(joinInstructions, 'from') ||
-          !_.has(joinInstructions, 'on') ||
-          !_.isPlainObject(joinInstructions.on) ||
-          _.keys(joinInstructions.on).length !== 2) {
-            throw new Error('Invalid join instructions');
-          }
+        if(!_.has(joinInstructions, 'from') || !_.has(joinInstructions, 'on')) {
+          throw new Error('Invalid join instructions');
+        }
 
-        var JOIN_TABLE = joinInstructions.from;
-        var PARENT_TABLE = _.first(_.keys(joinInstructions.on));
-        var CHILD_TABLE = _.keys(joinInstructions.on)[1];
-        var PARENT_COLUMN = joinInstructions.on[_.first(_.keys(joinInstructions.on))];
-        var CHILD_COLUMN = joinInstructions.on[_.keys(joinInstructions.on)[1]];
+        // Check if this is an AND or an OR join statement. An AND statement will
+        // just be an array of conditions and an OR statement will have a single
+        // OR key as the value.
 
-        var joinResults = [
-          { type: 'KEY', value: 'TABLE' },
-          { type: 'VALUE', value: JOIN_TABLE },
-          { type: 'KEY', value: 'TABLE_KEY' },
-          { type: 'VALUE', value: PARENT_TABLE },
-          { type: 'KEY', value: 'COLUMN_KEY' },
-          { type: 'VALUE', value: PARENT_COLUMN },
-          { type: 'KEY', value: 'TABLE_KEY' },
-          { type: 'VALUE', value: CHILD_TABLE },
-          { type: 'KEY', value: 'COLUMN_KEY' },
-          { type: 'VALUE', value: CHILD_COLUMN }
-        ];
+        // Process AND
+        if(_.isArray(joinInstructions.on)) {
+          (function() {
+            var JOIN_TABLE = joinInstructions.from;
+            var joinResults = [
+              { type: 'KEY', value: 'TABLE' },
+              { type: 'VALUE', value: JOIN_TABLE }
+            ];
 
-        results = results.concat(joinResults);
+            _.each(joinInstructions.on, function(set, idx) {
+              var PARENT_TABLE = _.first(_.keys(set));
+              var CHILD_TABLE = _.keys(set)[1];
+              var PARENT_COLUMN = set[_.first(_.keys(set))];
+              var CHILD_COLUMN = set[_.keys(set)[1]];
+
+              var setKeys = [
+                { type: 'COMBINATOR', value: 'AND' },
+                { type: 'KEY', value: 'TABLE_KEY' },
+                { type: 'VALUE', value: PARENT_TABLE },
+                { type: 'KEY', value: 'COLUMN_KEY' },
+                { type: 'VALUE', value: PARENT_COLUMN },
+                { type: 'KEY', value: 'TABLE_KEY' },
+                { type: 'VALUE', value: CHILD_TABLE },
+                { type: 'KEY', value: 'COLUMN_KEY' },
+                { type: 'VALUE', value: CHILD_COLUMN }
+              ];
+
+              joinResults = joinResults.concat(setKeys);
+            });
+
+            // Add the join results to the token set
+            results = results.concat(joinResults);
+          })();
+        }
+
+        // Process OR
+        else if(_.isArray(joinInstructions.on.or)) {
+          (function() {
+            var JOIN_TABLE = joinInstructions.from;
+            var joinResults = [
+              { type: 'KEY', value: 'TABLE' },
+              { type: 'VALUE', value: JOIN_TABLE }
+            ];
+
+            _.each(joinInstructions.on.or, function(set, idx) {
+              var PARENT_TABLE = _.first(_.keys(set));
+              var CHILD_TABLE = _.keys(set)[1];
+              var PARENT_COLUMN = set[_.first(_.keys(set))];
+              var CHILD_COLUMN = set[_.keys(set)[1]];
+
+              var setKeys = [
+                { type: 'COMBINATOR', value: 'OR' },
+                { type: 'KEY', value: 'TABLE_KEY' },
+                { type: 'VALUE', value: PARENT_TABLE },
+                { type: 'KEY', value: 'COLUMN_KEY' },
+                { type: 'VALUE', value: PARENT_COLUMN },
+                { type: 'KEY', value: 'TABLE_KEY' },
+                { type: 'VALUE', value: CHILD_TABLE },
+                { type: 'KEY', value: 'COLUMN_KEY' },
+                { type: 'VALUE', value: CHILD_COLUMN }
+              ];
+
+              joinResults = joinResults.concat(setKeys);
+            });
+
+            // Add the join results to the token set
+            results = results.concat(joinResults);
+          })();
+        }
+
+        // Otherwise ensure that the ON key has two keys
+        else if(!_.isPlainObject(joinInstructions.on) || _.keys(joinInstructions.on).length !== 2) {
+          throw new Error('Invalid join instructions');
+        }
+
+        // Handle normal, single level joins
+        else {
+          (function() {
+            var JOIN_TABLE = joinInstructions.from;
+            var PARENT_TABLE = _.first(_.keys(joinInstructions.on));
+            var CHILD_TABLE = _.keys(joinInstructions.on)[1];
+            var PARENT_COLUMN = joinInstructions.on[_.first(_.keys(joinInstructions.on))];
+            var CHILD_COLUMN = joinInstructions.on[_.keys(joinInstructions.on)[1]];
+
+            var joinResults = [
+              { type: 'KEY', value: 'TABLE' },
+              { type: 'VALUE', value: JOIN_TABLE },
+              { type: 'KEY', value: 'TABLE_KEY' },
+              { type: 'VALUE', value: PARENT_TABLE },
+              { type: 'KEY', value: 'COLUMN_KEY' },
+              { type: 'VALUE', value: PARENT_COLUMN },
+              { type: 'KEY', value: 'TABLE_KEY' },
+              { type: 'VALUE', value: CHILD_TABLE },
+              { type: 'KEY', value: 'COLUMN_KEY' },
+              { type: 'VALUE', value: CHILD_COLUMN }
+            ];
+
+            results = results.concat(joinResults);
+          })();
+        }
       });
     }
+
 
     //  ████████╗ ██████╗ ██╗  ██╗███████╗███╗   ██╗██╗███████╗███████╗██████╗
     //  ╚══██╔══╝██╔═══██╗██║ ██╔╝██╔════╝████╗  ██║██║╚══███╔╝██╔════╝██╔══██╗

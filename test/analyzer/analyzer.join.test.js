@@ -177,5 +177,174 @@ describe('Analyzer ::', function() {
       });
     });
 
+    it('should generate a valid group when grouped JOINs are used', function(done) {
+      var tokens = tokenize({
+        select: '*',
+        from: 'users',
+        join: [
+          {
+            from: 'accounts',
+            on: [
+              {
+                accounts: 'id',
+                users: 'account_id'
+              },
+              {
+                accounts: 'owner_id',
+                users: 'id'
+              }
+            ]
+          }
+        ]
+      });
+
+      Analyzer({
+        tokens: tokens
+      })
+      .exec(function(err, result) {
+        assert(!err);
+
+        assert.deepEqual(result, [
+          [
+            { type: 'IDENTIFIER', value: 'FROM' },
+            { type: 'VALUE', value: 'users' }
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'SELECT' },
+            { type: 'VALUE', value: '*' }
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'JOIN' },
+            [
+              { type: 'KEY', value: 'TABLE' },
+              { type: 'VALUE', value: 'accounts' },
+              { type: 'COMBINATOR', value: 'AND' },
+              { type: 'KEY', value: 'TABLE_KEY' },
+              { type: 'VALUE', value: 'accounts' },
+              { type: 'KEY', value: 'COLUMN_KEY' },
+              { type: 'VALUE', value: 'id' },
+              { type: 'KEY', value: 'TABLE_KEY' },
+              { type: 'VALUE', value: 'users' },
+              { type: 'KEY', value: 'COLUMN_KEY' },
+              { type: 'VALUE', value: 'account_id' },
+              { type: 'COMBINATOR', value: 'AND' },
+              { type: 'KEY', value: 'TABLE_KEY' },
+              { type: 'VALUE', value: 'accounts' },
+              { type: 'KEY', value: 'COLUMN_KEY' },
+              { type: 'VALUE', value: 'owner_id' },
+              { type: 'KEY', value: 'TABLE_KEY' },
+              { type: 'VALUE', value: 'users' },
+              { type: 'KEY', value: 'COLUMN_KEY' },
+              { type: 'VALUE', value: 'id' }
+            ]
+          ]
+        ]);
+
+        return done();
+      });
+    });
+
+    it('should generate a valid group when multiple grouped JOINs are used', function(done) {
+      var tokens = tokenize({
+        select: '*',
+        from: 'users',
+        join: [
+          {
+            from: 'accounts',
+            on: [
+              {
+                accounts: 'id',
+                users: 'account_id'
+              },
+              {
+                accounts: 'owner_id',
+                users: 'id'
+              }
+            ]
+          },
+          {
+            from: 'contacts',
+            on: [
+              {
+                accounts: 'id',
+                contacts: 'account_id'
+              },
+              {
+                accounts: 'owner_id',
+                contacts: 'id'
+              }
+            ]
+          }
+        ]
+      });
+
+      Analyzer({
+        tokens: tokens
+      })
+      .exec(function(err, result) {
+        assert(!err);
+
+        assert.deepEqual(result, [
+          [
+            { type: 'IDENTIFIER', value: 'FROM' },
+            { type: 'VALUE', value: 'users' }
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'SELECT' },
+            { type: 'VALUE', value: '*' }
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'JOIN' },
+            [
+              { type: 'KEY', value: 'TABLE' },
+              { type: 'VALUE', value: 'accounts' },
+              { type: 'COMBINATOR', value: 'AND' },
+              { type: 'KEY', value: 'TABLE_KEY' },
+              { type: 'VALUE', value: 'accounts' },
+              { type: 'KEY', value: 'COLUMN_KEY' },
+              { type: 'VALUE', value: 'id' },
+              { type: 'KEY', value: 'TABLE_KEY' },
+              { type: 'VALUE', value: 'users' },
+              { type: 'KEY', value: 'COLUMN_KEY' },
+              { type: 'VALUE', value: 'account_id' },
+              { type: 'COMBINATOR', value: 'AND' },
+              { type: 'KEY', value: 'TABLE_KEY' },
+              { type: 'VALUE', value: 'accounts' },
+              { type: 'KEY', value: 'COLUMN_KEY' },
+              { type: 'VALUE', value: 'owner_id' },
+              { type: 'KEY', value: 'TABLE_KEY' },
+              { type: 'VALUE', value: 'users' },
+              { type: 'KEY', value: 'COLUMN_KEY' },
+              { type: 'VALUE', value: 'id' }
+            ],
+            [
+              { type: 'KEY', value: 'TABLE' },
+              { type: 'VALUE', value: 'contacts' },
+              { type: 'COMBINATOR', value: 'AND' },
+              { type: 'KEY', value: 'TABLE_KEY' },
+              { type: 'VALUE', value: 'accounts' },
+              { type: 'KEY', value: 'COLUMN_KEY' },
+              { type: 'VALUE', value: 'id' },
+              { type: 'KEY', value: 'TABLE_KEY' },
+              { type: 'VALUE', value: 'contacts' },
+              { type: 'KEY', value: 'COLUMN_KEY' },
+              { type: 'VALUE', value: 'account_id' },
+              { type: 'COMBINATOR', value: 'AND' },
+              { type: 'KEY', value: 'TABLE_KEY' },
+              { type: 'VALUE', value: 'accounts' },
+              { type: 'KEY', value: 'COLUMN_KEY' },
+              { type: 'VALUE', value: 'owner_id' },
+              { type: 'KEY', value: 'TABLE_KEY' },
+              { type: 'VALUE', value: 'contacts' },
+              { type: 'KEY', value: 'COLUMN_KEY' },
+              { type: 'VALUE', value: 'id' }
+            ]
+          ]
+        ]);
+
+        return done();
+      });
+    });
+
   });
 });
