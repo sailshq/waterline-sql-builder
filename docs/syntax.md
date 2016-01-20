@@ -1664,6 +1664,7 @@ insert into "books" ("title") values ('Slaughterhouse Five')
 
 **Example:**
 
+// TODO
 ```javascript
 {
   insert: [{x: 20}, {y: 30},  {x: 10, y: 20}],
