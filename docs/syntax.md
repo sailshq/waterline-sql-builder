@@ -846,8 +846,8 @@ select "users"."id", "contacts"."phone" from "users" inner join "contacts" on "u
           }
         ]
       }
-    ]
-  }
+    }
+  ]
 }
 ```
 
@@ -856,6 +856,37 @@ select "users"."id", "contacts"."phone" from "users" inner join "contacts" on "u
 ```sql
 -- PostgreSQL
 select * from "users" inner join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"
+```
+
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  join: [
+    {
+      from: 'accounts',
+      on: [
+        {
+          accounts: 'id',
+          users: 'account_id'
+        },
+        {
+          accounts: 'owner_id',
+          users: 'id'
+        }
+      ]
+    }
+  ]
+}
+```
+
+**Outputs:**
+
+```sql
+-- PostgreSQL
+select * from "users" inner join "accounts" on "accounts"."id" = "users"."account_id" and "accounts"."owner_id" = "users"."id"
 ```
 
 
