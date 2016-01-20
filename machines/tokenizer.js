@@ -54,6 +54,7 @@ module.exports = {
       'where': 'WHERE',
       'insert': 'INSERT',
       'into': 'INTO',
+      'join': 'JOIN',
       '>': 'OPERATOR',
       '<': 'OPERATOR',
       '<>': 'OPERATOR',
@@ -77,7 +78,6 @@ module.exports = {
         value: value
       });
     }
-
 
     //  ╔═╗╔═╗╦  ╔═╗╔═╗╔╦╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
     //  ╚═╗║╣ ║  ║╣ ║   ║   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
@@ -116,7 +116,6 @@ module.exports = {
         value: value
       });
     }
-
 
     //  ╔═╗╦═╗╔═╗╔╦╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
     //  ╠╣ ╠╦╝║ ║║║║  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
@@ -303,7 +302,55 @@ module.exports = {
       });
     }
 
+    //   ╦╔═╗╦╔╗╔  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗╔═╗
+    //   ║║ ║║║║║  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║ ╚═╗
+    //  ╚╝╚═╝╩╝╚╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩ ╚═╝
+    function processJoin(value) {
 
+      // Ensure we have an array value
+      if(!_.isArray(value)) {
+        value = [value];
+      }
+
+      _.each(value, function(joinInstructions) {
+
+        // Add a JOIN token
+        results.push({
+          type: 'IDENTIFIER',
+          value: 'JOIN'
+        });
+
+        // Ensure the instructions include a FROM and an ON and that the ON
+        // is made up of two table keys.
+        if(!_.has(joinInstructions, 'from') ||
+          !_.has(joinInstructions, 'on') ||
+          !_.isPlainObject(joinInstructions.on) ||
+          _.keys(joinInstructions.on).length !== 2) {
+            throw new Error('Invalid join instructions');
+          }
+
+        var JOIN_TABLE = joinInstructions.from;
+        var PARENT_TABLE = _.first(_.keys(joinInstructions.on));
+        var CHILD_TABLE = _.keys(joinInstructions.on)[1];
+        var PARENT_COLUMN = joinInstructions.on[_.first(_.keys(joinInstructions.on))];
+        var CHILD_COLUMN = joinInstructions.on[_.keys(joinInstructions.on)[1]];
+
+        var joinResults = [
+          { type: 'KEY', value: 'TABLE' },
+          { type: 'VALUE', value: JOIN_TABLE },
+          { type: 'KEY', value: 'TABLE_KEY' },
+          { type: 'VALUE', value: PARENT_TABLE },
+          { type: 'KEY', value: 'COLUMN_KEY' },
+          { type: 'VALUE', value: PARENT_COLUMN },
+          { type: 'KEY', value: 'TABLE_KEY' },
+          { type: 'VALUE', value: CHILD_TABLE },
+          { type: 'KEY', value: 'COLUMN_KEY' },
+          { type: 'VALUE', value: CHILD_COLUMN }
+        ];
+
+        results = results.concat(joinResults);
+      });
+    }
 
     //  ████████╗ ██████╗ ██╗  ██╗███████╗███╗   ██╗██╗███████╗███████╗██████╗
     //  ╚══██╔══╝██╔═══██╗██║ ██╔╝██╔════╝████╗  ██║██║╚══███╔╝██╔════╝██╔══██╗
@@ -385,6 +432,13 @@ module.exports = {
             processIn(obj[key]);
             return;
           }
+
+          // If the identifier is a JOIN, add it's token and process the joins
+          if(identifiers[key] === 'JOIN') {
+            processJoin(obj[key]);
+            return;
+          }
+
 
           // Add the identifier
           results.push({

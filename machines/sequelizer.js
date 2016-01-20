@@ -446,6 +446,40 @@ module.exports = {
     }
 
 
+    //  ╔═╗╦═╗╔═╗╔═╗╔═╗╔═╗╔═╗   ╦╔═╗╦╔╗╔╔═╗
+    //  ╠═╝╠╦╝║ ║║  ║╣ ╚═╗╚═╗   ║║ ║║║║║╚═╗
+    //  ╩  ╩╚═╚═╝╚═╝╚═╝╚═╝╚═╝  ╚╝╚═╝╩╝╚╝╚═╝
+    //
+    // Takes an array of join tokens and builds various SQL joins.
+    function processJoinGroup(tokens) {
+
+      // A JOIN token array assumes the following structure
+      // { type: 'KEY', value: 'TABLE' },
+      // { type: 'VALUE', value: 'contacts' },
+      // { type: 'KEY', value: 'TABLE_KEY' },
+      // { type: 'VALUE', value: 'users' },
+      // { type: 'KEY', value: 'COLUMN_KEY' },
+      // { type: 'VALUE', value: 'id' },
+      // { type: 'KEY', value: 'TABLE_KEY' },
+      // { type: 'VALUE', value: 'contacts' },
+      // { type: 'KEY', value: 'COLUMN_KEY' },
+      // { type: 'VALUE', value: 'user_id' }
+
+      // Hold the values that make up the join expression
+      var JOIN_TABLE = tokens[1] && tokens[1].value;
+      var PARENT_TABLE = tokens[3] && tokens[3].value;
+      var CHILD_TABLE = tokens[7] && tokens[7].value;
+      var PARENT_COLUMN = tokens[5] && tokens[5].value;
+      var CHILD_COLUMN = tokens[9] && tokens[9].value;
+
+      // Hold the actual expression we will pass to Knex
+      var joinExpr = [JOIN_TABLE, PARENT_TABLE+'.'+PARENT_COLUMN, '=', CHILD_TABLE+'.'+CHILD_COLUMN];
+
+      // Build the query
+      buildQueryPiece('join', joinExpr);
+    }
+
+
     //  ╦╔╗╔╔═╗╔═╗╦═╗╔╦╗  ╔╗ ╦ ╦╦╦  ╔╦╗╔═╗╦═╗
     //  ║║║║╚═╗║╣ ╠╦╝ ║   ╠╩╗║ ║║║   ║║║╣ ╠╦╝
     //  ╩╝╚╝╚═╝╚═╝╩╚═ ╩   ╚═╝╚═╝╩╩═╝═╩╝╚═╝╩╚═
@@ -601,9 +635,16 @@ module.exports = {
         //  ║ ╦╠╦╝║ ║║ ║╠═╝║║║║║ ╦
         //  ╚═╝╩╚═╚═╝╚═╝╩  ╩╝╚╝╚═╝
         //
-        // If the expression is an array then the values should be grouped.
+        // If the expression is an array then the values should be grouped. Unless
+        // they are describing join logic.
         if(_.isArray(expr)) {
-          processGroup(expr, false, expression);
+          if(identifier !== 'JOIN') {
+            processGroup(expr, false, expression);
+            return;
+          }
+
+          // Otherwise process the array of join logic
+          processJoinGroup(expr);
         }
 
       });

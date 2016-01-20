@@ -195,6 +195,55 @@ module.exports = {
     }
 
 
+    //  ╔═╗╦═╗╔═╗╔═╗╔═╗╔═╗╔═╗   ╦╔═╗╦╔╗╔  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
+    //  ╠═╝╠╦╝║ ║║  ║╣ ╚═╗╚═╗   ║║ ║║║║║  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
+    //  ╩  ╩╚═╚═╝╚═╝╚═╝╚═╝╚═╝  ╚╝╚═╝╩╝╚╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+    //
+    // Given a set of tokens that make up a join statement, process them into
+    // a logical set of tokens.
+    function processJoinStatement(tokens) {
+
+      var statementTokens = [];
+
+      // Find the start of the join statement
+      var startIdx = _.findIndex(tokens, { type: 'IDENTIFIER', value: 'JOIN' });
+
+      // Slice off the front of the array so we start with out join statement
+      var joinTokens = _.slice(tokens, startIdx+1);
+
+      // Find the end of the join statement
+      var endIdx = _.findIndex(joinTokens, { type: 'IDENTIFIER' });
+
+      // Slice the array so we only have tokens related to this join statement
+      if(endIdx > -1) {
+        joinTokens = _.slice(joinTokens, 0, endIdx);
+      }
+
+      // Add these tokens to the statements array
+      statementTokens.push(joinTokens);
+
+      // We want to next extract these join tokens from the array. Start by
+      // building the front of the tokens array and the end minus the joinTokens.
+      var front = _.slice(tokens, 0, startIdx);
+
+      // If there are no more tokens left after the join, use an empty array
+      var end = [];
+      if(endIdx > -1) {
+        end = _.slice(tokens, startIdx+endIdx+1);
+      }
+
+      // Remove the join tokens from the original tokens array.
+      tokens = _.concat(front, end);
+
+      // If there are more joins, continue processing
+      if(_.findIndex(tokens, { type: 'IDENTIFIER', value: 'JOIN' }) > -1) {
+        statementTokens = statementTokens.concat(processJoinStatement(tokens));
+      }
+
+      return statementTokens;
+    }
+
+
     //  ╔═╗╦═╗╔═╗╔╦╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
     //  ╠╣ ╠╦╝║ ║║║║  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
     //  ╚  ╩╚═╚═╝╩ ╩  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
@@ -228,12 +277,14 @@ module.exports = {
     // Next find the DISTINCT statements and group those
     indentifierSearch('DISTINCT');
 
+
     //  ╦╔╗╔╔╦╗╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
     //  ║║║║ ║ ║ ║  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
     //  ╩╝╚╝ ╩ ╚═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
     //
     // Next find the INTO statements and group those
     indentifierSearch('INTO');
+
 
     //  ╦╔╗╔╔═╗╔═╗╦═╗╔╦╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
     //  ║║║║╚═╗║╣ ╠╦╝ ║   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
@@ -262,6 +313,24 @@ module.exports = {
       // Add the tokens to the results
       results.push(insertTokens);
     })();
+
+
+    //   ╦╔═╗╦╔╗╔  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗╔═╗
+    //   ║║ ║║║║║  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║ ╚═╗
+    //  ╚╝╚═╝╩╝╚╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩ ╚═╝
+    (function() {
+
+      // Check for any JOIN statements
+      var idx = _.findIndex(tokens, { type: 'IDENTIFIER', value: 'JOIN' });
+      if(idx < 0) { return; }
+
+      // Parse each JOIN set into a set of tokens
+      var joinTokens = processJoinStatement(tokens);
+      joinTokens.unshift({ type: 'IDENTIFIER', value: 'JOIN' });
+      
+      results.push(joinTokens);
+    })();
+
 
     //  ╦ ╦╦ ╦╔═╗╦═╗╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
     //  ║║║╠═╣║╣ ╠╦╝║╣   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
@@ -295,6 +364,7 @@ module.exports = {
 
       results.push(groupedTokens);
     })();
+
 
 
     return exits.success(results);
