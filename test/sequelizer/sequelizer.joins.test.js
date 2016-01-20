@@ -64,5 +64,56 @@ describe('Sequelizer ::', function() {
       });
     });
 
+    it('should generate a query when an INNERJOIN statement is added', function(done) {
+      var tree = analyze({
+        select: ['users.id', 'contacts.phone'],
+        from: 'users',
+        innerJoin: [
+          {
+            from: 'contacts',
+            on: {
+              users: 'id',
+              contacts: 'user_id'
+            }
+          }
+        ]
+      });
+
+      Sequelizer({
+        dialect: 'postgresql',
+        tree: tree
+      })
+      .exec(function(err, result) {
+        assert(!err);
+        assert.equal(result, 'select "users"."id", "contacts"."phone" from "users" inner join "contacts" on "users"."id" = "contacts"."user_id"');
+        return done();
+      });
+    });
+
+    it('should generate a query when an OUTERJOIN statement is added', function(done) {
+      var tree = analyze({
+        select: ['users.id', 'contacts.phone'],
+        from: 'users',
+        outerJoin: [
+          {
+            from: 'contacts',
+            on: {
+              users: 'id',
+              contacts: 'user_id'
+            }
+          }
+        ]
+      });
+
+      Sequelizer({
+        dialect: 'postgresql',
+        tree: tree
+      })
+      .exec(function(err, result) {
+        assert(!err);
+        assert.equal(result, 'select "users"."id", "contacts"."phone" from "users" outer join "contacts" on "users"."id" = "contacts"."user_id"');
+        return done();
+      });
+    });
   });
 });

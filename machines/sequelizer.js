@@ -451,7 +451,7 @@ module.exports = {
     //  ╩  ╩╚═╚═╝╚═╝╚═╝╚═╝╚═╝  ╚╝╚═╝╩╝╚╝╚═╝
     //
     // Takes an array of join tokens and builds various SQL joins.
-    function processJoinGroup(tokens) {
+    function processJoinGroup(tokens, joinType) {
 
       // A JOIN token array assumes the following structure
       // { type: 'KEY', value: 'TABLE' },
@@ -476,7 +476,38 @@ module.exports = {
       var joinExpr = [JOIN_TABLE, PARENT_TABLE+'.'+PARENT_COLUMN, '=', CHILD_TABLE+'.'+CHILD_COLUMN];
 
       // Build the query
-      buildQueryPiece('join', joinExpr);
+      var fn;
+      switch(joinType) {
+        case 'JOIN':
+          fn = 'join';
+          break;
+        case 'INNERJOIN':
+          fn = 'innerJoin';
+          break;
+        case 'OUTERJOIN':
+          fn = 'outerJoin';
+          break;
+        case 'CROSSJOIN':
+          fn = 'crossJoin';
+          break;
+        case 'LEFTJOIN':
+          fn = 'leftJoin';
+          break;
+        case 'LEFTOUTERJOIN':
+          fn = 'leftOuterJoin';
+          break;
+        case 'RIGHTJOIN':
+          fn = 'rightJoin';
+          break;
+        case 'RIGHTOUTERJOIN':
+          fn = 'rightOuterJoin';
+          break;
+        case 'FULLOUTERJOIN':
+          fn = 'fullOuterJoin';
+          break;
+      }
+
+      buildQueryPiece(fn, joinExpr);
     }
 
 
@@ -638,13 +669,27 @@ module.exports = {
         // If the expression is an array then the values should be grouped. Unless
         // they are describing join logic.
         if(_.isArray(expr)) {
-          if(identifier !== 'JOIN') {
+
+          var joinTypes = [
+            'JOIN',
+            'INNERJOIN',
+            'OUTERJOIN',
+            'CROSSJOIN',
+            'LEFTJOIN',
+            'LEFTOUTERJOIN',
+            'RIGHTJOIN',
+            'RIGHTOUTERJOIN',
+            'FULLOUTERJOIN'
+          ];
+
+          var isJoin = _.indexOf(joinTypes, identifier);
+          if(isJoin === -1) {
             processGroup(expr, false, expression);
             return;
           }
 
           // Otherwise process the array of join logic
-          processJoinGroup(expr);
+          processJoinGroup(expr, identifier);
         }
 
       });

@@ -55,6 +55,14 @@ module.exports = {
       'insert': 'INSERT',
       'into': 'INTO',
       'join': 'JOIN',
+      'innerJoin': 'JOIN',
+      'outerJoin': 'JOIN',
+      'crossJoin': 'JOIN',
+      'leftJoin': 'JOIN',
+      'leftOuterJoin': 'JOIN',
+      'rightJoin': 'JOIN',
+      'rightOuterJoin': 'JOIN',
+      'fullOuterJoin': 'JOIN',
       '>': 'OPERATOR',
       '<': 'OPERATOR',
       '<>': 'OPERATOR',
@@ -305,7 +313,7 @@ module.exports = {
     //   ╦╔═╗╦╔╗╔  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗╔═╗
     //   ║║ ║║║║║  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║ ╚═╗
     //  ╚╝╚═╝╩╝╚╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩ ╚═╝
-    function processJoin(value) {
+    function processJoin(value, joinType) {
 
       // Ensure we have an array value
       if(!_.isArray(value)) {
@@ -317,7 +325,7 @@ module.exports = {
         // Add a JOIN token
         results.push({
           type: 'IDENTIFIER',
-          value: 'JOIN'
+          value: joinType.toUpperCase()
         });
 
         // Ensure the instructions include a FROM and an ON and that the ON
@@ -435,7 +443,7 @@ module.exports = {
 
           // If the identifier is a JOIN, add it's token and process the joins
           if(identifiers[key] === 'JOIN') {
-            processJoin(obj[key]);
+            processJoin(obj[key], key);
             return;
           }
 

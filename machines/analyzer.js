@@ -201,12 +201,12 @@ module.exports = {
     //
     // Given a set of tokens that make up a join statement, process them into
     // a logical set of tokens.
-    function processJoinStatement(tokens) {
+    function processJoinStatement(tokens, joinType) {
 
       var statementTokens = [];
 
       // Find the start of the join statement
-      var startIdx = _.findIndex(tokens, { type: 'IDENTIFIER', value: 'JOIN' });
+      var startIdx = _.findIndex(tokens, { type: 'IDENTIFIER', value: joinType });
 
       // Slice off the front of the array so we start with out join statement
       var joinTokens = _.slice(tokens, startIdx+1);
@@ -236,8 +236,8 @@ module.exports = {
       tokens = _.concat(front, end);
 
       // If there are more joins, continue processing
-      if(_.findIndex(tokens, { type: 'IDENTIFIER', value: 'JOIN' }) > -1) {
-        statementTokens = statementTokens.concat(processJoinStatement(tokens));
+      if(_.findIndex(tokens, { type: 'IDENTIFIER', value: joinType }) > -1) {
+        statementTokens = statementTokens.concat(processJoinStatement(tokens, joinType));
       }
 
       return statementTokens;
@@ -321,14 +321,33 @@ module.exports = {
     (function() {
 
       // Check for any JOIN statements
-      var idx = _.findIndex(tokens, { type: 'IDENTIFIER', value: 'JOIN' });
-      if(idx < 0) { return; }
+      var joins = [];
+
+      _.each([
+        'join',
+        'innerJoin',
+        'outerJoin',
+        'crossJoin',
+        'leftJoin',
+        'leftOuterJoin',
+        'rightJoin',
+        'rightOuterJoin',
+        'fullOuterJoin'
+      ], function(_joinIdentifier) {
+        var _idx = _.findIndex(tokens, { type: 'IDENTIFIER', value: _joinIdentifier.toUpperCase() });
+        if(_idx > -1) {
+          joins.push(_joinIdentifier.toUpperCase());
+        }
+      });
+
+      if(!joins.length) { return; }
 
       // Parse each JOIN set into a set of tokens
-      var joinTokens = processJoinStatement(tokens);
-      joinTokens.unshift({ type: 'IDENTIFIER', value: 'JOIN' });
-      
-      results.push(joinTokens);
+      _.each(joins, function(joinType) {
+        var joinTokens = processJoinStatement(tokens, joinType);
+        joinTokens.unshift({ type: 'IDENTIFIER', value: joinType });
+        results.push(joinTokens);
+      });
     })();
 
 
