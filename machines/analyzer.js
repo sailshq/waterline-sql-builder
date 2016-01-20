@@ -313,6 +313,14 @@ module.exports = {
     indentifierSearch('INTO');
 
 
+    //  ╦ ╦╔═╗╦╔╗╔╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
+    //  ║ ║╚═╗║║║║║ ╦  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
+    //  ╚═╝╚═╝╩╝╚╝╚═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+    //
+    // Next find the USING statements and group those
+    indentifierSearch('USING');
+
+
     //  ╦  ╦╔╦╗╦╔╦╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
     //  ║  ║║║║║ ║   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
     //  ╩═╝╩╩ ╩╩ ╩   ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
@@ -387,6 +395,39 @@ module.exports = {
     })();
 
 
+    //  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
+    //  ║ ║╠═╝ ║║╠═╣ ║ ║╣   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
+    //  ╚═╝╩  ═╩╝╩ ╩ ╩ ╚═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+    //
+    // Next find the UPDATE statements and group those
+    (function() {
+
+      // Check for an INSERT statement
+      var idx = _.findIndex(tokens, { type: 'IDENTIFIER', value: 'UPDATE' });
+      if(idx < 0) { return; }
+
+      // Find the next Identifier so we know the scope of the UPDATE.
+      // To do this slice the array at the UPDATE index, pull off the values, then
+      // see if there are any remaining identifiers.
+      var slice = _.slice(tokens, idx);
+      var identifier = _.first(_.pullAt(slice, 0));
+
+      var endIdx = _.findIndex(slice, { type: 'IDENTIFIER' });
+      if(endIdx < 0) { endIdx = undefined; }
+
+      // Limit the tokens to only those needed to fufill the UPDATE clause
+      var updateTokens = _.slice(slice, idx, endIdx);
+      updateTokens.unshift({ type: 'IDENTIFIER', value: 'UPDATE' });
+
+      if(endIdx > -1) {
+        tokens = _.slice(tokens, endIdx+1);
+      }
+
+      // Add the tokens to the results
+      results.push(updateTokens);
+    })();
+
+
     //   ╦╔═╗╦╔╗╔  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗╔═╗
     //   ║║ ║║║║║  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║ ╚═╗
     //  ╚╝╚═╝╩╝╚╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩ ╚═╝
@@ -429,7 +470,7 @@ module.exports = {
     //
     // Process the values contained in the WHERE statement.
     (function() {
-
+  
       // Check for a WHERE statement
       var idx = _.findIndex(tokens, { type: 'IDENTIFIER', value: 'WHERE' });
       if(idx < 0) { return; }

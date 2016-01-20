@@ -680,7 +680,32 @@ module.exports = {
 
         return expression;
       }
+    }
 
+
+    //  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔╗ ╦ ╦╦╦  ╔╦╗╔═╗╦═╗
+    //  ║ ║╠═╝ ║║╠═╣ ║ ║╣   ╠╩╗║ ║║║   ║║║╣ ╠╦╝
+    //  ╚═╝╩  ═╩╝╩ ╩ ╩ ╚═╝  ╚═╝╚═╝╩╩═╝═╩╝╚═╝╩╚═
+    //
+    // Builds an array of KEY/VALUE pairs to use as the update clause
+    function updateBuilder(expr, expression) {
+      var arr = [];
+
+      // Handle KEY/VALUE pairs
+      if(expr.type === 'KEY') {
+        arr.push(expr.value);
+        expression.push(arr);
+
+        return expression;
+      }
+
+      // Set the VALUE pair
+      if(expr.type === 'VALUE') {
+        arr = _.last(expression);
+        arr.push(expr.value);
+
+        return expression;
+      }
     }
 
 
@@ -724,6 +749,11 @@ module.exports = {
         // Handle sets of values being inserted
         if(identifier === 'INSERT' && (expr.type === 'KEY' || expr.type === 'VALUE')) {
           expression = insertBuilder(expr, expression);
+        }
+
+        // Handle sets of values being update
+        if(identifier === 'UPDATE' && (expr.type === 'KEY' || expr.type === 'VALUE')) {
+          expression = updateBuilder(expr, expression);
         }
 
         // Handle clauses in the WHERE value
@@ -779,6 +809,10 @@ module.exports = {
               buildQueryPiece('into', expr.value);
               break;
 
+            case 'USING':
+              buildQueryPiece('table', expr.value);
+              break;
+
             case 'LIMIT':
               buildQueryPiece('limit', expr.value);
               break;
@@ -811,6 +845,20 @@ module.exports = {
                 // Flatten the expression
                 expression = _.fromPairs(expression);
                 buildQueryPiece('insert', expression);
+              }
+              break;
+
+            case 'UPDATE':
+
+              // Look ahead and see if the next expression is an Identifier.
+              // If so or if there is no next identifier, add the update statments.
+              nextExpr = undefined;
+              nextExpr = tokenGroup[idx+1];
+              if(!nextExpr || nextExpr.type === 'IDENTIFIER') {
+
+                // Flatten the expression
+                expression = _.fromPairs(expression);
+                buildQueryPiece('update', expression);
               }
               break;
 

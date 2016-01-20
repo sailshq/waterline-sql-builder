@@ -63,6 +63,8 @@ module.exports = {
       'where': 'WHERE',
       'insert': 'INSERT',
       'into': 'INTO',
+      'update': 'UPDATE',
+      'using': 'USING',
       'join': 'JOIN',
       'innerJoin': 'JOIN',
       'outerJoin': 'JOIN',
@@ -217,6 +219,51 @@ module.exports = {
       results.push({
         type: 'IDENTIFIER',
         value: 'INTO'
+      });
+
+      results.push({
+        type: 'VALUE',
+        value: value
+      });
+    }
+
+    //  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
+    //  ║ ║╠═╝ ║║╠═╣ ║ ║╣   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
+    //  ╚═╝╩  ═╩╝╩ ╩ ╩ ╚═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+    function processUpdate(value) {
+
+      // Add the update statment
+      results.push({
+        type: 'IDENTIFIER',
+        value: 'UPDATE'
+      });
+
+      // Check if a value is being used
+      if(_.isObject(value)) {
+
+        _.each(_.keys(value), function(key) {
+          results.push({
+            type: 'KEY',
+            value: key
+          });
+
+          results.push({
+            type: 'VALUE',
+            value: value[key]
+          });
+        });
+
+        return;
+      }
+    }
+
+    //  ╦ ╦╔═╗╦╔╗╔╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
+    //  ║ ║╚═╗║║║║║ ╦  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
+    //  ╚═╝╚═╝╩╝╚╝╚═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+    function processUsing(value) {
+      results.push({
+        type: 'IDENTIFIER',
+        value: 'USING'
       });
 
       results.push({
@@ -570,6 +617,18 @@ module.exports = {
           // If the identifier is an INTO, add it's token
           if(identifiers[key] === 'INTO') {
             processInto(obj[key]);
+            return;
+          }
+
+          // If the identifier is an UPDATE, add it's token
+          if(identifiers[key] === 'UPDATE') {
+            processUpdate(obj[key]);
+            return;
+          }
+
+          // If the identifier is an USING, add it's token
+          if(identifiers[key] === 'USING') {
+            processUsing(obj[key]);
             return;
           }
 
