@@ -25,5 +25,16 @@ describe('Query Generation ::', function() {
       }, done);
     });
 
+    it('should generate a select query using aliased columns', function(done) {
+      Test({
+        dialect: 'postgresql',
+        query: {
+          select: ['title as book_title', 'author as book_author', 'year as book_year'],
+          from: 'books'
+        },
+        outcome: 'select "title" as "book_title", "author" as "book_author", "year" as "book_year" from "books"'
+      }, done);
+    });
+
   });
 });
