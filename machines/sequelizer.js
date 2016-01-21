@@ -851,6 +851,9 @@ module.exports = {
                 // Flatten the expression
                 expression = _.fromPairs(expression);
                 buildQueryPiece('insert', expression);
+
+                // Also add a 'returning' value
+                buildQueryPiece('returning', 'id');
               }
               break;
 

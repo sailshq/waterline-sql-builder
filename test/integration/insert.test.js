@@ -12,7 +12,7 @@ describe('Query Generation ::', function() {
           },
           into: 'books'
         },
-        outcome: 'insert into "books" ("title") values (\'Slaughterhouse Five\')'
+        outcome: 'insert into "books" ("title") values (\'Slaughterhouse Five\') returning "id"'
       }, done);
     });
 
@@ -26,7 +26,7 @@ describe('Query Generation ::', function() {
           },
           into: 'books'
         },
-        outcome: 'insert into "books" ("author", "title") values (\'Kurt Vonnegut\', \'Slaughterhouse Five\')'
+        outcome: 'insert into "books" ("author", "title") values (\'Kurt Vonnegut\', \'Slaughterhouse Five\') returning "id"'
       }, done);
     });
 
