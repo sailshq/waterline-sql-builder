@@ -78,6 +78,8 @@ module.exports = {
       '>': 'OPERATOR',
       '<': 'OPERATOR',
       '<>': 'OPERATOR',
+      '<=': 'OPERATOR',
+      '>=': 'OPERATOR',
       'like': 'OPERATOR'
     };
 
