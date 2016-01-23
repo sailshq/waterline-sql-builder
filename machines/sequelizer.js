@@ -734,6 +734,7 @@ module.exports = {
           // If the identifier is the DELETE key, we can go ahead and process it
           if(identifier === 'DELETE') {
             query.del();
+            query.returning('id');
           }
 
           return;

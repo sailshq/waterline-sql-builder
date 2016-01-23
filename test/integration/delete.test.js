@@ -13,9 +13,9 @@ describe('Query Generation ::', function() {
             activated: false
           }
         },
-        outcome: 'delete from "accounts" where "activated" = \'false\''
+        outcome: 'delete from "accounts" where "activated" = \'false\' returning "id"'
       }, done);
     });
-    
+
   });
 });
