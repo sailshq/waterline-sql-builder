@@ -19,6 +19,22 @@ describe('Query Generation ::', function() {
       }, done);
     });
 
+    it('should generate an update query where order doesn\'t matter', function(done) {
+      Test({
+        dialect: 'postgresql',
+        query: {
+          where: {
+            type: 'test'
+          },
+          using: 'user',
+          update: {
+            age: 10
+          },
+        },
+        outcome: 'update "user" set "age" = \'10\' where "type" = \'test\''
+      }, done);
+    });
+
     it('should generate an insert query when using multiple values', function(done) {
       Test({
         dialect: 'postgresql',
