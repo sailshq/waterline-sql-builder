@@ -953,7 +953,12 @@ module.exports = {
     });
 
     var _SQL = query.toSQL();
-    var text = query.client.positionBindings(_SQL.sql);
+    var text = _SQL.sql;
+
+    // Check if the bindings need to be positioned (aka changed to $1, $2 from ?, ?)
+    if(query.client && query.client.positionBindings) {
+      text = query.client.positionBindings(_SQL.sql);
+    }
 
     return exits.success({ sql: text, bindings: _SQL.bindings });
   },
