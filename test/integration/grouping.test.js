@@ -5,7 +5,6 @@ describe('Query Generation ::', function() {
 
     it('should generate a query when an OR statement is present', function(done) {
       Test({
-        dialect: 'postgresql',
         query: {
           select: '*',
           where: {
@@ -20,13 +19,38 @@ describe('Query Generation ::', function() {
           },
           from: 'users'
         },
-        outcome: 'select * from "users" where "id" > \'10\' or "name" = \'Tester\''
+        outcomes: [
+          {
+            dialect: 'postgresql',
+            sql: 'select * from "users" where "id" > $1 or "name" = $2',
+            bindings: ['10', 'Tester']
+          },
+          {
+            dialect: 'mysql',
+            sql: 'select * from `users` where `id` > ? or `name` = ?',
+            bindings: ['10', 'Tester']
+          },
+          {
+            dialect: 'sqlite3',
+            sql: 'select * from "users" where "id" > ? or "name" = ?',
+            bindings: ['10', 'Tester']
+          },
+          {
+            dialect: 'oracle',
+            sql: 'select * from "users" where "id" > :1 or "name" = :2',
+            bindings: ['10', 'Tester']
+          },
+          {
+            dialect: 'mariadb',
+            sql: 'select * from `users` where `id` > ? or `name` = ?',
+            bindings: ['10', 'Tester']
+          }
+        ]
       }, done);
     });
 
     it('should generate a query when a nested OR statement is used', function(done) {
       Test({
-        dialect: 'postgresql',
         query: {
           select: '*',
           where: {
@@ -44,7 +68,33 @@ describe('Query Generation ::', function() {
           },
           from: 'users'
         },
-        outcome: 'select * from "users" where ("id" = \'1\' or "id" > \'10\') or "name" = \'Tester\''
+        outcomes: [
+          {
+            dialect: 'postgresql',
+            sql: 'select * from "users" where ("id" = $1 or "id" > $2) or "name" = $3',
+            bindings: ['1', '10', 'Tester']
+          },
+          {
+            dialect: 'mysql',
+            sql: 'select * from `users` where (`id` = ? or `id` > ?) or `name` = ?',
+            bindings: ['1', '10', 'Tester']
+          },
+          {
+            dialect: 'sqlite3',
+            sql: 'select * from "users" where ("id" = ? or "id" > ?) or "name" = ?',
+            bindings: ['1', '10', 'Tester']
+          },
+          {
+            dialect: 'oracle',
+            sql: 'select * from "users" where ("id" = :1 or "id" > :2) or "name" = :3',
+            bindings: ['1', '10', 'Tester']
+          },
+          {
+            dialect: 'mariadb',
+            sql: 'select * from `users` where (`id` = ? or `id` > ?) or `name` = ?',
+            bindings: ['1', '10', 'Tester']
+          }
+        ]
       }, done);
     });
 

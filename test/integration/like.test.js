@@ -5,7 +5,6 @@ describe('Query Generation ::', function() {
 
     it('should generate a LIKE query', function(done) {
       Test({
-        dialect: 'postgresql',
         query: {
           select: '*',
           from: 'users',
@@ -26,7 +25,33 @@ describe('Query Generation ::', function() {
             ]
           }
         },
-        outcome: 'select * from "users" where "name" like \'\%Test\%\' or "id" not in (\'1\', \'2\', \'3\')'
+        outcomes: [
+          {
+            dialect: 'postgresql',
+            sql: 'select * from "users" where "name" like $1 or "id" not in ($2, $3, $4)',
+            bindings: ['%Test%', '1', '2', '3']
+          },
+          {
+            dialect: 'mysql',
+            sql: 'select * from `users` where `name` like ? or `id` not in (?, ?, ?)',
+            bindings: ['%Test%', '1', '2', '3']
+          },
+          {
+            dialect: 'sqlite3',
+            sql: 'select * from "users" where "name" like ? or "id" not in (?, ?, ?)',
+            bindings: ['%Test%', '1', '2', '3']
+          },
+          {
+            dialect: 'oracle',
+            sql: 'select * from "users" where "name" like :1 or "id" not in (:2, :3, :4)',
+            bindings: ['%Test%', '1', '2', '3']
+          },
+          {
+            dialect: 'mariadb',
+            sql: 'select * from `users` where `name` like ? or `id` not in (?, ?, ?)',
+            bindings: ['%Test%', '1', '2', '3']
+          }
+        ]
       }, done);
     });
 

@@ -5,7 +5,6 @@ describe('Query Generation ::', function() {
 
     it('should generate an update query', function(done) {
       Test({
-        dialect: 'postgresql',
         query: {
           update: {
             status: 'archived'
@@ -15,13 +14,38 @@ describe('Query Generation ::', function() {
           },
           using: 'books'
         },
-        outcome: 'update "books" set "status" = \'archived\' where "publishedDate" > \'2000\''
+        outcomes: [
+          {
+            dialect: 'postgresql',
+            sql: 'update "books" set "status" = $1 where "publishedDate" > $2 returning "id"',
+            bindings: ['archived', '2000']
+          },
+          {
+            dialect: 'mysql',
+            sql: 'update `books` set `status` = ? where `publishedDate` > ?',
+            bindings: ['archived', '2000']
+          },
+          {
+            dialect: 'sqlite3',
+            sql: 'update "books" set "status" = ? where "publishedDate" > ?',
+            bindings: ['archived', '2000']
+          },
+          {
+            dialect: 'oracle',
+            sql: 'update "books" set "status" = :1 where "publishedDate" > :2',
+            bindings: ['archived', '2000']
+          },
+          {
+            dialect: 'mariadb',
+            sql: 'update `books` set `status` = ? where `publishedDate` > ?',
+            bindings: ['archived', '2000']
+          }
+        ]
       }, done);
     });
 
     it('should generate an update query where order doesn\'t matter', function(done) {
       Test({
-        dialect: 'postgresql',
         query: {
           where: {
             type: 'test'
@@ -31,13 +55,38 @@ describe('Query Generation ::', function() {
             age: 10
           },
         },
-        outcome: 'update "user" set "age" = \'10\' where "type" = \'test\''
+        outcomes: [
+          {
+            dialect: 'postgresql',
+            sql: 'update "user" set "age" = $1 where "type" = $2 returning "id"',
+            bindings: ['10', 'test']
+          },
+          {
+            dialect: 'mysql',
+            sql: 'update `user` set `age` = ? where `type` = ?',
+            bindings: ['10', 'test']
+          },
+          {
+            dialect: 'sqlite3',
+            sql: 'update "user" set "age" = ? where "type" = ?',
+            bindings: ['10', 'test']
+          },
+          {
+            dialect: 'oracle',
+            sql: 'update "user" set "age" = :1 where "type" = :2',
+            bindings: ['10', 'test']
+          },
+          {
+            dialect: 'mariadb',
+            sql: 'update `user` set `age` = ? where `type` = ?',
+            bindings: ['10', 'test']
+          }
+        ]
       }, done);
     });
 
     it('should generate an insert query when using multiple values', function(done) {
       Test({
-        dialect: 'postgresql',
         query: {
           update: {
             status: 'archived',
@@ -48,7 +97,33 @@ describe('Query Generation ::', function() {
           },
           using: 'books'
         },
-        outcome: 'update "books" set "active" = \'false\', "status" = \'archived\' where "publishedDate" > \'2000\''
+        outcomes: [
+          {
+            dialect: 'postgresql',
+            sql: 'update "books" set "active" = $1, "status" = $2 where "publishedDate" > $3 returning "id"',
+            bindings: ['false', 'archived', '2000']
+          },
+          {
+            dialect: 'mysql',
+            sql: 'update `books` set `active` = ?, `status` = ? where `publishedDate` > ?',
+            bindings: ['false', 'archived', '2000']
+          },
+          {
+            dialect: 'sqlite3',
+            sql: 'update "books" set "active" = ?, "status" = ? where "publishedDate" > ?',
+            bindings: ['false', 'archived', '2000']
+          },
+          {
+            dialect: 'oracle',
+            sql: 'update "books" set "active" = :1, "status" = :2 where "publishedDate" > :3',
+            bindings: ['0', 'archived', '2000']
+          },
+          {
+            dialect: 'mariadb',
+            sql: 'update `books` set `active` = ?, `status` = ? where `publishedDate` > ?',
+            bindings: ['false', 'archived', '2000']
+          }
+        ]
       }, done);
     });
 

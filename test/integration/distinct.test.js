@@ -5,14 +5,39 @@ describe('Query Generation ::', function() {
 
     it('should generate a distinct query', function(done) {
       Test({
-        dialect: 'postgresql',
         query: {
           select: {
             distinct: ['firstName', 'lastName']
           },
           from: 'customers'
         },
-        outcome: 'select distinct "firstName", "lastName" from "customers"'
+        outcomes: [
+          {
+            dialect: 'postgresql',
+            sql: 'select distinct "firstName", "lastName" from "customers"',
+            bindings: []
+          },
+          {
+            dialect: 'mysql',
+            sql: 'select distinct `firstName`, `lastName` from `customers`',
+            bindings: []
+          },
+          {
+            dialect: 'sqlite3',
+            sql: 'select distinct "firstName", "lastName" from "customers"',
+            bindings: []
+          },
+          {
+            dialect: 'oracle',
+            sql: 'select distinct "firstName", "lastName" from "customers"',
+            bindings: []
+          },
+          {
+            dialect: 'mariadb',
+            sql: 'select distinct `firstName`, `lastName` from `customers`',
+            bindings: []
+          }
+        ]
       }, done);
     });
 

@@ -5,14 +5,39 @@ describe('Query Generation ::', function() {
 
     it('should generate a count query', function(done) {
       Test({
-        dialect: 'postgresql',
         query: {
           count: [
             'active'
           ],
           from: 'users'
         },
-        outcome: 'select count("active") from "users"'
+        outcomes: [
+          {
+            dialect: 'postgresql',
+            sql: 'select count("active") from "users"',
+            bindings: []
+          },
+          {
+            dialect: 'mysql',
+            sql: 'select count(`active`) from `users`',
+            bindings: []
+          },
+          {
+            dialect: 'sqlite3',
+            sql: 'select count("active") from "users"',
+            bindings: []
+          },
+          {
+            dialect: 'oracle',
+            sql: 'select count("active") from "users"',
+            bindings: []
+          },
+          {
+            dialect: 'mariadb',
+            sql: 'select count(`active`) from `users`',
+            bindings: []
+          }
+        ]
       }, done);
     });
 

@@ -4,24 +4,34 @@
  */
 
 var assert = require('assert');
+var async = require('async');
 var Pack = require('../../index');
 
 module.exports = function(test, cb) {
 
-  Pack.generateSql({
-    dialect: test.flavor,
-    query: test.query
-  }).exec({
+  function testDialect(outcome, next) {
+    Pack.generateSql({
+      dialect: outcome.dialect,
+      query: test.query
+    }).exec({
+      success: function(results) {
+        try {
+          assert.equal(results.sql, outcome.sql, outcome.dialect);
+          if(outcome.bindings) {
+            assert.deepEqual(results.bindings, outcome.bindings, outcome.dialect);
+          }
+        } catch (e) {
+          e.dialect = outcome.dialect;
+          return cb(e);
+        }
 
-    success: function(results) {
-      assert.equal(results, test.outcome);
-      return cb();
-    },
+        return next();
+      },
+      error: function(err) {
+        return next(err);
+      }
+    });
+  }
 
-    error: function(err) {
-      return cb(err);
-    }
-
-  });
-
+  async.each(test.outcomes, testDialect, cb);
 };

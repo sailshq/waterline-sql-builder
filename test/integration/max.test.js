@@ -5,14 +5,39 @@ describe('Query Generation ::', function() {
 
     it('should generate a max query', function(done) {
       Test({
-        dialect: 'postgresql',
         query: {
           max: [
             'active'
           ],
           from: 'users'
         },
-        outcome: 'select max("active") from "users"'
+        outcomes: [
+          {
+            dialect: 'postgresql',
+            sql: 'select max("active") from "users"',
+            bindings: []
+          },
+          {
+            dialect: 'mysql',
+            sql: 'select max(`active`) from `users`',
+            bindings: []
+          },
+          {
+            dialect: 'sqlite3',
+            sql: 'select max("active") from "users"',
+            bindings: []
+          },
+          {
+            dialect: 'oracle',
+            sql: 'select max("active") from "users"',
+            bindings: []
+          },
+          {
+            dialect: 'mariadb',
+            sql: 'select max(`active`) from `users`',
+            bindings: []
+          }
+        ]
       }, done);
     });
 
