@@ -26,7 +26,7 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select "users"."id", "contacts"."phone" from "users" inner join "contacts" on "users"."id" = "contacts"."user_id"');
+        assert.equal(result.sql, 'select "users"."id", "contacts"."phone" from "users" inner join "contacts" on "users"."id" = "contacts"."user_id"');
         return done();
       });
     });
@@ -59,7 +59,7 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select "users"."id", "contacts"."phone", "carriers"."name" from "users" inner join "contacts" on "users"."id" = "contacts"."user_id" inner join "carriers" on "users"."id" = "carriers"."user_id"');
+        assert.equal(result.sql, 'select "users"."id", "contacts"."phone", "carriers"."name" from "users" inner join "contacts" on "users"."id" = "contacts"."user_id" inner join "carriers" on "users"."id" = "carriers"."user_id"');
         return done();
       });
     });
@@ -85,7 +85,7 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select "users"."id", "contacts"."phone" from "users" inner join "contacts" on "users"."id" = "contacts"."user_id"');
+        assert.equal(result.sql, 'select "users"."id", "contacts"."phone" from "users" inner join "contacts" on "users"."id" = "contacts"."user_id"');
         return done();
       });
     });
@@ -111,7 +111,7 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select "users"."id", "contacts"."phone" from "users" outer join "contacts" on "users"."id" = "contacts"."user_id"');
+        assert.equal(result.sql, 'select "users"."id", "contacts"."phone" from "users" outer join "contacts" on "users"."id" = "contacts"."user_id"');
         return done();
       });
     });
@@ -145,7 +145,7 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select * from "users" inner join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"');
+        assert.equal(result.sql, 'select * from "users" inner join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"');
         return done();
       });
     });
@@ -177,7 +177,7 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select * from "users" inner join "accounts" on "accounts"."id" = "users"."account_id" and "accounts"."owner_id" = "users"."id"');
+        assert.equal(result.sql, 'select * from "users" inner join "accounts" on "accounts"."id" = "users"."account_id" and "accounts"."owner_id" = "users"."id"');
         return done();
       });
     });
@@ -226,7 +226,7 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select * from "users" inner join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id" inner join "carriers" on "carriers"."id" = "users"."account_id" or "carriers"."owner_id" = "users"."id"');
+        assert.equal(result.sql, 'select * from "users" inner join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id" inner join "carriers" on "carriers"."id" = "users"."account_id" or "carriers"."owner_id" = "users"."id"');
         return done();
       });
     });

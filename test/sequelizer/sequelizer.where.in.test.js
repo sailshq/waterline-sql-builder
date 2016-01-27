@@ -22,7 +22,8 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select "name" from "users" where "id" in (\'1\', \'2\', \'3\')');
+        assert.equal(result.sql, 'select "name" from "users" where "id" in ($1, $2, $3)');
+        assert.deepEqual(result.bindings, ['1', '2', '3']);
         return done();
       });
     });
@@ -53,7 +54,8 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select "name" from "users" where "id" in (\'1\', \'2\', \'3\') or "id" in (\'4\', \'5\', \'6\')');
+        assert.equal(result.sql, 'select "name" from "users" where "id" in ($1, $2, $3) or "id" in ($4, $5, $6)');
+        assert.deepEqual(result.bindings, ['1', '2', '3', '4', '5', '6']);
         return done();
       });
     });

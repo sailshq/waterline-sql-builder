@@ -18,7 +18,8 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select * from "users" limit \'10\'');
+        assert.equal(result.sql, 'select * from "users" limit $1');
+        assert.deepEqual(result.bindings, ['10']);
         return done();
       });
     });

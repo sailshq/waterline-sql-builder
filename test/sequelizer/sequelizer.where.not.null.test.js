@@ -22,7 +22,7 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select * from "users" where "updatedAt" is not null');
+        assert.equal(result.sql, 'select * from "users" where "updatedAt" is not null');
         return done();
       });
     });

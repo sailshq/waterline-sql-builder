@@ -20,7 +20,8 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'delete from "accounts" where "activated" = \'false\' returning "id"');
+        assert.equal(result.sql, 'delete from "accounts" where "activated" = $1 returning "id"');
+        assert.deepEqual(result.bindings, ['false']);
         return done();
       });
     });

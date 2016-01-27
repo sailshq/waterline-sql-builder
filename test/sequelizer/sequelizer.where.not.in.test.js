@@ -24,7 +24,8 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select "name" from "users" where "id" not in (\'1\', \'2\', \'3\')');
+        assert.equal(result.sql, 'select "name" from "users" where "id" not in ($1, $2, $3)');
+        assert.deepEqual(result.bindings, ['1', '2', '3']);
         return done();
       });
     });
@@ -59,7 +60,8 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select "name" from "users" where "id" not in (\'1\', \'2\', \'3\') or "id" not in (\'4\', \'5\', \'6\')');
+        assert.equal(result.sql, 'select "name" from "users" where "id" not in ($1, $2, $3) or "id" not in ($4, $5, $6)');
+        assert.deepEqual(result.bindings, ['1', '2', '3', '4', '5', '6']);
         return done();
       });
     });
@@ -95,7 +97,8 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select "name" from "users" where ("id" not in (\'1\', \'2\', \'3\') and "age" = \'21\') or "id" not in (\'4\', \'5\', \'6\')');
+        assert.equal(result.sql, 'select "name" from "users" where ("id" not in ($1, $2, $3) and "age" = $4) or "id" not in ($5, $6, $7)');
+        assert.deepEqual(result.bindings, ['1', '2', '3', '21', '4', '5', '6']);
         return done();
       });
     });

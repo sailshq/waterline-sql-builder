@@ -23,7 +23,8 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select "id" from "users" where not "firstName" = \'Test\' and not "lastName" = \'User\'');
+        assert.equal(result.sql, 'select "id" from "users" where not "firstName" = $1 and not "lastName" = $2');
+        assert.deepEqual(result.bindings, ['Test', 'User']);
         return done();
       });
     });
@@ -65,7 +66,8 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select * from "users" where not ("id" = \'1\' or not "id" > \'10\') or not "name" = \'Tester\'');
+        assert.equal(result.sql, 'select * from "users" where not ("id" = $1 or not "id" > $2) or not "name" = $3');
+        assert.deepEqual(result.bindings, ['1', '10', 'Tester']);
         return done();
       });
     });
@@ -87,7 +89,8 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select * from "users" where not "votes" > \'100\'');
+        assert.equal(result.sql, 'select * from "users" where not "votes" > $1');
+        assert.deepEqual(result.bindings, ['100']);
         return done();
       });
     });
@@ -115,12 +118,11 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select * from "users" where "name" = \'John\' or ("votes" > \'100\' and not "title" = \'Admin\')');
+        assert.equal(result.sql, 'select * from "users" where "name" = $1 or ("votes" > $2 and not "title" = $3)');
+        assert.deepEqual(result.bindings, ['John', '100', 'Admin']);
         return done();
       });
     });
-
-
 
   });
 });

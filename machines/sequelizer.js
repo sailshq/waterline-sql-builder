@@ -35,7 +35,10 @@ module.exports = {
     success: {
       variableName: 'result',
       description: 'A SQL string generated from the tree.',
-      example: 'select * from "books"'
+      example: {
+        sql: 'select * from "books"',
+        bindings: ['book']
+      }
     },
 
   },
@@ -949,8 +952,10 @@ module.exports = {
 
     });
 
-    var _SQL = query.toString();
-    return exits.success(_SQL);
+    var _SQL = query.toSQL();
+    var text = query.client.positionBindings(_SQL.sql);
+
+    return exits.success({ sql: text, bindings: _SQL.bindings });
   },
 
 

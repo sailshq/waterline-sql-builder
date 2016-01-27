@@ -33,7 +33,8 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select * from "users" where "name" like \'\%Test\%\' or "id" not in (\'1\', \'2\', \'3\')');
+        assert.equal(result.sql, 'select * from "users" where "name" like $1 or "id" not in ($2, $3, $4)');
+        assert.deepEqual(result.bindings, ['%Test%', '1', '2', '3']);
         return done();
       });
     });

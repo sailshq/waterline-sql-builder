@@ -19,7 +19,7 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select count("active") from "users"');
+        assert.equal(result.sql, 'select count("active") from "users"');
         return done();
       });
     });

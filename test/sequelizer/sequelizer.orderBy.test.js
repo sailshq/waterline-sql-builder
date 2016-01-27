@@ -18,7 +18,7 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select * from "users" order by "name" desc, "age" asc');
+        assert.equal(result.sql, 'select * from "users" order by "name" desc, "age" asc');
         return done();
       });
     });

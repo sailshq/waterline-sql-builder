@@ -19,7 +19,7 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select distinct "firstName", "lastName" from "customers"');
+        assert.equal(result.sql, 'select distinct "firstName", "lastName" from "customers"');
         return done();
       });
     });

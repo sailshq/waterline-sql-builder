@@ -17,7 +17,7 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select * from "books"');
+        assert.equal(result.sql, 'select * from "books"');
         return done();
       });
     });
@@ -34,7 +34,7 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select "title", "author", "year" from "books"');
+        assert.equal(result.sql, 'select "title", "author", "year" from "books"');
         return done();
       });
     });

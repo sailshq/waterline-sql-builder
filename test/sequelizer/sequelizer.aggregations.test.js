@@ -18,7 +18,7 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select * from "users" group by "count"');
+        assert.equal(result.sql, 'select * from "users" group by "count"');
         return done();
       });
     });
@@ -37,7 +37,7 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select min("active") from "users"');
+        assert.equal(result.sql, 'select min("active") from "users"');
         return done();
       });
     });
@@ -56,7 +56,7 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select max("active") from "users"');
+        assert.equal(result.sql, 'select max("active") from "users"');
         return done();
       });
     });
@@ -75,7 +75,7 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select sum("active") from "users"');
+        assert.equal(result.sql, 'select sum("active") from "users"');
         return done();
       });
     });
@@ -94,7 +94,7 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select avg("active") from "users"');
+        assert.equal(result.sql, 'select avg("active") from "users"');
         return done();
       });
     });

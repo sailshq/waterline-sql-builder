@@ -34,7 +34,10 @@ module.exports = {
     success: {
       variableName: 'result',
       description: 'The generated SQL statement.',
-      example: 'select * from "books"'
+      example: {
+        sql: 'select * from "books"',
+        bindings: ['books']
+      }
     },
 
   },

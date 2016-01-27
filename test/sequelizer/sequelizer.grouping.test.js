@@ -27,7 +27,8 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select * from "users" where "id" > \'10\' or "name" = \'Tester\'');
+        assert.equal(result.sql, 'select * from "users" where "id" > $1 or "name" = $2');
+        assert.deepEqual(result.bindings, ['10', 'Tester']);
         return done();
       });
     });
@@ -57,7 +58,8 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result, 'select * from "users" where ("id" = \'1\' or "id" > \'10\') or "name" = \'Tester\'');
+        assert.equal(result.sql, 'select * from "users" where ("id" = $1 or "id" > $2) or "name" = $3');
+        assert.deepEqual(result.bindings, ['1', '10', 'Tester']);
         return done();
       });
     });
