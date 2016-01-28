@@ -36,7 +36,7 @@ module.exports = {
       description: 'The generated SQL statement.',
       example: {
         sql: 'select * from "books"',
-        bindings: ['books']
+        bindings: ['===']
       }
     },
 
