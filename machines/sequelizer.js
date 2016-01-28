@@ -37,7 +37,7 @@ module.exports = {
       description: 'A SQL string generated from the tree.',
       example: {
         sql: 'select * from "books"',
-        bindings: ['book']
+        bindings: ['===']
       }
     },
 

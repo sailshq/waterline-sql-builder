@@ -52,5 +52,25 @@ describe('Sequelizer ::', function() {
       });
     });
 
+    it('should generate a query with a NULL value for input', function(done) {
+      var tree = analyze({
+        update: {
+          status: null,
+        },
+        using: 'books'
+      });
+
+      Sequelizer({
+        dialect: 'postgresql',
+        tree: tree
+      })
+      .exec(function(err, result) {
+        assert(!err, err);
+        assert.equal(result.sql, 'update "books" set "status" = $1 returning "id"');
+        assert.deepEqual(result.bindings, [null]);
+        return done();
+      });
+    });
+
   });
 });
