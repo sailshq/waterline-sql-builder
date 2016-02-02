@@ -592,6 +592,10 @@ module.exports = {
         // If so, look ahead at it's value to determine what to do next.
         if(isIdentitifier) {
 
+          //  ╔═╗╔═╗╔═╗╦═╗╔═╗╔╦╗╔═╗╦═╗  ╔═╗╦═╗╔═╗╔╦╗╦╔═╗╔═╗╔╦╗╔═╗╔═╗
+          //  ║ ║╠═╝║╣ ╠╦╝╠═╣ ║ ║ ║╠╦╝  ╠═╝╠╦╝║╣  ║║║║  ╠═╣ ║ ║╣ ╚═╗
+          //  ╚═╝╩  ╚═╝╩╚═╩ ╩ ╩ ╚═╝╩╚═  ╩  ╩╚═╚═╝═╩╝╩╚═╝╩ ╩ ╩ ╚═╝╚═╝
+
           // If the identifier is an OPERATOR, add it's tokens
           if(identifiers[key] === 'OPERATOR') {
 
@@ -609,45 +613,29 @@ module.exports = {
             return;
           }
 
-          // If the identifier is a SELECT, add it's token
-          if(identifiers[key] === 'SELECT') {
-            processSelect(obj[key]);
+          if(identifiers[key] === 'IN') {
+            processIn(obj[key]);
             return;
           }
+
+          // If the identifier is an OR, start a group and add each token.
+          if(identifiers[key] === 'OR') {
+            processOr(obj[key]);
+            return;
+          }
+
+          if(identifiers[key] === 'NOT') {
+            processNot(obj[key]);
+            return;
+          }
+
+          //  ╔═╗ ╦ ╦╔═╗╦═╗╦╔═╗╔═╗
+          //  ║═╬╗║ ║║╣ ╠╦╝║║╣ ╚═╗
+          //  ╚═╝╚╚═╝╚═╝╩╚═╩╚═╝╚═╝
 
           // If the identifier is a FROM, add it's token
           if(identifiers[key] === 'FROM') {
             processFrom(obj[key]);
-            return;
-          }
-
-          // If the identifier is an INSERT, add it's token
-          if(identifiers[key] === 'INSERT') {
-            processInsert(obj[key]);
-            return;
-          }
-
-          // If the identifier is an INTO, add it's token
-          if(identifiers[key] === 'INTO') {
-            processInto(obj[key]);
-            return;
-          }
-
-          // If the identifier is an UPDATE, add it's token
-          if(identifiers[key] === 'UPDATE') {
-            processUpdate(obj[key]);
-            return;
-          }
-
-          // If the identifier is an USING, add it's token
-          if(identifiers[key] === 'USING') {
-            processUsing(obj[key]);
-            return;
-          }
-
-          // If the identifier is a DELETE, add it's token
-          if(identifiers[key] === 'DELETE') {
-            processDelete(obj[key]);
             return;
           }
 
@@ -669,9 +657,59 @@ module.exports = {
             return;
           }
 
-          // If the identifier is a COUNT
-          if(identifiers[key] === 'COUNT') {
-            processAggregations(obj[key], 'COUNT');
+          //  ╔╦╗╔╦╗╦    ╔═╗╔═╗╔╦╗╔╦╗╔═╗╔╗╔╔╦╗╔═╗
+          //   ║║║║║║    ║  ║ ║║║║║║║╠═╣║║║ ║║╚═╗
+          //  ═╩╝╩ ╩╩═╝  ╚═╝╚═╝╩ ╩╩ ╩╩ ╩╝╚╝═╩╝╚═╝
+
+          // If the identifier is a SELECT, add it's token
+          if(identifiers[key] === 'SELECT') {
+            processSelect(obj[key]);
+            return;
+          }
+
+          // If the identifier is an INSERT, add it's token
+          if(identifiers[key] === 'INSERT') {
+            processInsert(obj[key]);
+            return;
+          }
+
+          // If the identifier is an UPDATE, add it's token
+          if(identifiers[key] === 'UPDATE') {
+            processUpdate(obj[key]);
+            return;
+          }
+
+          // If the identifier is a DELETE, add it's token
+          if(identifiers[key] === 'DELETE') {
+            processDelete(obj[key]);
+            return;
+          }
+
+          // If the identifier is an INTO, add it's token
+          if(identifiers[key] === 'INTO') {
+            processInto(obj[key]);
+            return;
+          }
+
+          // If the identifier is an USING, add it's token
+          if(identifiers[key] === 'USING') {
+            processUsing(obj[key]);
+            return;
+          }
+
+          //  ╔═╗╔═╗╔═╗╦═╗╔═╗╔═╗╔═╗╔╦╗╔═╗╔═╗
+          //  ╠═╣║ ╦║ ╦╠╦╝║╣ ║ ╦╠═╣ ║ ║╣ ╚═╗
+          //  ╩ ╩╚═╝╚═╝╩╚═╚═╝╚═╝╩ ╩ ╩ ╚═╝╚═╝
+
+          // If the identifier is a AVG
+          if(identifiers[key] === 'AVG') {
+            processAggregations(obj[key], 'AVG');
+            return;
+          }
+
+          // If the identifier is a SUM
+          if(identifiers[key] === 'SUM') {
+            processAggregations(obj[key], 'SUM');
             return;
           }
 
@@ -687,33 +725,16 @@ module.exports = {
             return;
           }
 
-          // If the identifier is a SUM
-          if(identifiers[key] === 'SUM') {
-            processAggregations(obj[key], 'SUM');
+
+          // If the identifier is a COUNT
+          if(identifiers[key] === 'COUNT') {
+            processAggregations(obj[key], 'COUNT');
             return;
           }
 
-          // If the identifier is a AVG
-          if(identifiers[key] === 'AVG') {
-            processAggregations(obj[key], 'AVG');
-            return;
-          }
-
-          // If the identifier is an OR, start a group and add each token.
-          if(identifiers[key] === 'OR') {
-            processOr(obj[key]);
-            return;
-          }
-
-          if(identifiers[key] === 'NOT') {
-            processNot(obj[key]);
-            return;
-          }
-
-          if(identifiers[key] === 'IN') {
-            processIn(obj[key]);
-            return;
-          }
+          //  ╔═╗╔╦╗╦ ╦╔═╗╦═╗
+          //  ║ ║ ║ ╠═╣║╣ ╠╦╝
+          //  ╚═╝ ╩ ╩ ╩╚═╝╩╚═
 
           if(identifiers[key] === 'LIMIT') {
             processPagination(obj[key], 'LIMIT');
@@ -725,12 +746,15 @@ module.exports = {
             return;
           }
 
+          //   ╦╔═╗╦╔╗╔╔═╗
+          //   ║║ ║║║║║╚═╗
+          //  ╚╝╚═╝╩╝╚╝╚═╝
+
           // If the identifier is a JOIN, add it's token and process the joins
           if(identifiers[key] === 'JOIN') {
             processJoin(obj[key], key);
             return;
           }
-
 
           // Add the identifier
           results.push({
