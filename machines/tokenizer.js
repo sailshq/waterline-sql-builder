@@ -126,16 +126,47 @@ module.exports = {
         }
       }
 
-      // Add the select to the results
-      results.push({
-        type: 'IDENTIFIER',
-        value: 'SELECT'
-      });
+      // If the value is not an array or object, add the value
+      if(!_.isPlainObject(value) && !_.isArray(value)) {
 
-      // Add the value to the results
-      results.push({
-        type: 'VALUE',
-        value: value
+        // Add the SELECT to the results
+        results.push({
+          type: 'IDENTIFIER',
+          value: 'SELECT'
+        });
+
+        // Add the value to the results
+        results.push({
+          type: 'VALUE',
+          value: value
+        });
+
+        return;
+      }
+
+      // If the value is not an array, make it one so that we can process each
+      // element.
+      if(!_.isArray(value)) {
+        value = [value];
+      }
+
+      _.each(value, function(val) {
+
+        // Add the SELECT to the results
+        results.push({
+          type: 'IDENTIFIER',
+          value: 'SELECT'
+        });
+
+        // If the value isn't an object, no need to process it further
+        if(!_.isPlainObject(val)) {
+          results.push({
+            type: 'VALUE',
+            value: val
+          });
+
+          return;
+        }
       });
     }
 

@@ -20,7 +20,7 @@ describe('Tokenizer ::', function() {
 
         assert.deepEqual(result, [
           { type: 'IDENTIFIER', value: 'SELECT' },
-          { type: 'VALUE', value: [ 'id' ] },
+          { type: 'VALUE', value: 'id' },
           { type: 'IDENTIFIER', value: 'WHERE' },
           { type: 'KEY', value: 'firstName' },
           { type: 'VALUE', value: 'Test' },

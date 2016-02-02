@@ -30,7 +30,7 @@ describe('Query Generation ::', function() {
           {
             dialect: 'oracle',
             sql: 'insert into "books" ("title") values (:1) returning ROWID into :2',
-            bindings: ['Slaughterhouse Five', '']
+            bindings: ['Slaughterhouse Five', { 'columnName': 'id' }]
           },
           {
             dialect: 'mariadb',
@@ -69,7 +69,7 @@ describe('Query Generation ::', function() {
           {
             dialect: 'oracle',
             sql: 'insert into "books" ("author", "title") values (:1, :2) returning ROWID into :3',
-            bindings: ['Kurt Vonnegut', 'Slaughterhouse Five', '']
+            bindings: ['Kurt Vonnegut', 'Slaughterhouse Five', { 'columnName': 'id' }]
           },
           {
             dialect: 'mariadb',

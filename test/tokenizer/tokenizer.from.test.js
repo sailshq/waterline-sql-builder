@@ -37,7 +37,11 @@ describe('Tokenizer ::', function() {
 
         assert.deepEqual(result, [
           { type: 'IDENTIFIER', value: 'SELECT' },
-          { type: 'VALUE', value: [ 'title', 'author', 'year' ] },
+          { type: 'VALUE', value: 'title' },
+          { type: 'IDENTIFIER', value: 'SELECT' },
+          { type: 'VALUE', value: 'author' },
+          { type: 'IDENTIFIER', value: 'SELECT' },
+          { type: 'VALUE', value: 'year' },
           { type: 'IDENTIFIER', value: 'SCHEMA' },
           { type: 'VALUE', value: 'foo' },
           { type: 'IDENTIFIER', value: 'FROM' },

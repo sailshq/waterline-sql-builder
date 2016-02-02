@@ -33,7 +33,11 @@ describe('Analyzer ::', function() {
           ],
           [
             { type: 'IDENTIFIER', value: 'SELECT' },
-            { type: 'VALUE', value: ['users.id', 'contacts.phone'] }
+            { type: 'VALUE', value: 'users.id' }
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'SELECT' },
+            { type: 'VALUE', value: 'contacts.phone' }
           ],
           [
             { type: 'IDENTIFIER', value: 'JOIN' },
@@ -91,7 +95,11 @@ describe('Analyzer ::', function() {
           ],
           [
             { type: 'IDENTIFIER', value: 'SELECT' },
-            { type: 'VALUE', value: ['users.id', 'contacts.phone'] }
+            { type: 'VALUE', value: 'users.id' }
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'SELECT' },
+            { type: 'VALUE', value: 'contacts.phone' }
           ],
           [
             { type: 'IDENTIFIER', value: 'JOIN' },
@@ -154,7 +162,11 @@ describe('Analyzer ::', function() {
           ],
           [
             { type: 'IDENTIFIER', value: 'SELECT' },
-            { type: 'VALUE', value: ['users.id', 'contacts.phone'] }
+            { type: 'VALUE', value: 'users.id' }
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'SELECT' },
+            { type: 'VALUE', value: 'contacts.phone' }
           ],
           [
             { type: 'IDENTIFIER', value: 'INNERJOIN' },

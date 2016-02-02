@@ -49,22 +49,23 @@ module.exports = {
     // Given an identifier, search for it and group the results.
     function indentifierSearch(identifier) {
       var idx = _.findIndex(tokens, { type: 'IDENTIFIER', value: identifier });
-      if(idx > -1) {
+      if(idx < 0) return;
 
-        var statement = [];
-        statement.push(tokens[idx]);
-        statement.push(tokens[idx+1]);
+      var statement = [];
+      statement.push(tokens[idx]);
+      statement.push(tokens[idx+1]);
 
-        // Remove the values
-        // Do it in two steps because of a weird bug in Lodash that I need to
-        // look into.
-        // TODO: Look into why lodash treats this array differently
-        _.pullAt(tokens, idx);
-        _.pullAt(tokens, idx);
+      // Remove the values
+      // Do it in two steps because of a weird bug in Lodash that I need to
+      // look into.
+      // TODO: Look into why lodash treats this array differently
+      _.pullAt(tokens, idx);
+      _.pullAt(tokens, idx);
 
-        // TODO: Update when we add sub-queries
-        results.push(statement);
-      }
+      results.push(statement);
+
+      // Run again to see if there are more identifiers
+      indentifierSearch(identifier);
     }
 
     //  ╔═╗╔═╗╔╗╔╔╦╗╦╔╦╗╦╔═╗╔╗╔  ╦ ╦╔═╗╔╗╔╔╦╗╦  ╦╔╗╔╔═╗

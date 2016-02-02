@@ -18,27 +18,27 @@ describe('Query Generation ::', function() {
           {
             dialect: 'postgresql',
             sql: 'update "books" set "status" = $1 where "publishedDate" > $2 returning "id"',
-            bindings: ['archived', '2000']
+            bindings: ['archived', 2000]
           },
           {
             dialect: 'mysql',
             sql: 'update `books` set `status` = ? where `publishedDate` > ?',
-            bindings: ['archived', '2000']
+            bindings: ['archived', 2000]
           },
           {
             dialect: 'sqlite3',
             sql: 'update "books" set "status" = ? where "publishedDate" > ?',
-            bindings: ['archived', '2000']
+            bindings: ['archived', 2000]
           },
           {
             dialect: 'oracle',
             sql: 'update "books" set "status" = :1 where "publishedDate" > :2',
-            bindings: ['archived', '2000']
+            bindings: ['archived', 2000]
           },
           {
             dialect: 'mariadb',
             sql: 'update `books` set `status` = ? where `publishedDate` > ?',
-            bindings: ['archived', '2000']
+            bindings: ['archived', 2000]
           }
         ]
       }, done);
@@ -59,27 +59,27 @@ describe('Query Generation ::', function() {
           {
             dialect: 'postgresql',
             sql: 'update "user" set "age" = $1 where "type" = $2 returning "id"',
-            bindings: ['10', 'test']
+            bindings: [10, 'test']
           },
           {
             dialect: 'mysql',
             sql: 'update `user` set `age` = ? where `type` = ?',
-            bindings: ['10', 'test']
+            bindings: [10, 'test']
           },
           {
             dialect: 'sqlite3',
             sql: 'update "user" set "age" = ? where "type" = ?',
-            bindings: ['10', 'test']
+            bindings: [10, 'test']
           },
           {
             dialect: 'oracle',
             sql: 'update "user" set "age" = :1 where "type" = :2',
-            bindings: ['10', 'test']
+            bindings: [10, 'test']
           },
           {
             dialect: 'mariadb',
             sql: 'update `user` set `age` = ? where `type` = ?',
-            bindings: ['10', 'test']
+            bindings: [10, 'test']
           }
         ]
       }, done);
@@ -101,27 +101,27 @@ describe('Query Generation ::', function() {
           {
             dialect: 'postgresql',
             sql: 'update "books" set "active" = $1, "status" = $2 where "publishedDate" > $3 returning "id"',
-            bindings: ['false', 'archived', '2000']
+            bindings: [false, 'archived', 2000]
           },
           {
             dialect: 'mysql',
             sql: 'update `books` set `active` = ?, `status` = ? where `publishedDate` > ?',
-            bindings: ['false', 'archived', '2000']
+            bindings: [false, 'archived', 2000]
           },
           {
             dialect: 'sqlite3',
             sql: 'update "books" set "active" = ?, "status" = ? where "publishedDate" > ?',
-            bindings: ['false', 'archived', '2000']
+            bindings: [false, 'archived', 2000]
           },
           {
             dialect: 'oracle',
             sql: 'update "books" set "active" = :1, "status" = :2 where "publishedDate" > :3',
-            bindings: ['0', 'archived', '2000']
+            bindings: ['0', 'archived', 2000]
           },
           {
             dialect: 'mariadb',
             sql: 'update `books` set `active` = ?, `status` = ? where `publishedDate` > ?',
-            bindings: ['false', 'archived', '2000']
+            bindings: [false, 'archived', 2000]
           }
         ]
       }, done);

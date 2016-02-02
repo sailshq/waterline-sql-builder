@@ -31,7 +31,7 @@ describe('Analyzer ::', function() {
           ],
           [
             { type: 'IDENTIFIER', value: 'SELECT' },
-            { type: 'VALUE', value: [ 'name' ] }
+            { type: 'VALUE', value: 'name' }
           ],
           [
             { type: 'IDENTIFIER', value: 'WHERE' },
@@ -83,7 +83,7 @@ describe('Analyzer ::', function() {
           ],
           [
             { type: 'IDENTIFIER', value: 'SELECT' },
-            { type: 'VALUE', value: [ 'name' ] }
+            { type: 'VALUE', value: 'name' }
           ],
           [
             { type: 'IDENTIFIER', value: 'WHERE' },

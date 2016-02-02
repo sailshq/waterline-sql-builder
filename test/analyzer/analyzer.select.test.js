@@ -51,7 +51,15 @@ describe('Analyzer ::', function() {
           ],
           [
             { type: 'IDENTIFIER', value: 'SELECT' },
-            { type: 'VALUE', value: ['title', 'author', 'year'] }
+            { type: 'VALUE', value: 'title' }
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'SELECT' },
+            { type: 'VALUE', value: 'author' }
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'SELECT' },
+            { type: 'VALUE', value: 'year' }
           ]
         ]);
 
