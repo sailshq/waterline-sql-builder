@@ -39,7 +39,22 @@ module.exports = {
 
     var _ = require('lodash');
     var tokens = inputs.tokens;
-    var results = [];
+
+
+    //  ██╗  ██╗███████╗██╗     ██████╗ ███████╗██████╗
+    //  ██║  ██║██╔════╝██║     ██╔══██╗██╔════╝██╔══██╗
+    //  ███████║█████╗  ██║     ██████╔╝█████╗  ██████╔╝
+    //  ██╔══██║██╔══╝  ██║     ██╔═══╝ ██╔══╝  ██╔══██╗
+    //  ██║  ██║███████╗███████╗██║     ███████╗██║  ██║
+    //  ╚═╝  ╚═╝╚══════╝╚══════╝╚═╝     ╚══════╝╚═╝  ╚═╝
+    //
+    //  ███████╗██╗   ██╗███╗   ██╗ ██████╗████████╗██╗ ██████╗ ███╗   ██╗███████╗
+    //  ██╔════╝██║   ██║████╗  ██║██╔════╝╚══██╔══╝██║██╔═══██╗████╗  ██║██╔════╝
+    //  █████╗  ██║   ██║██╔██╗ ██║██║        ██║   ██║██║   ██║██╔██╗ ██║███████╗
+    //  ██╔══╝  ██║   ██║██║╚██╗██║██║        ██║   ██║██║   ██║██║╚██╗██║╚════██║
+    //  ██║     ╚██████╔╝██║ ╚████║╚██████╗   ██║   ██║╚██████╔╝██║ ╚████║███████║
+    //  ╚═╝      ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝   ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝
+    //
 
 
     //  ╦╔╦╗╔═╗╔╗╔╔╦╗╦╔═╗╦╔═╗╦═╗  ╔═╗╔═╗╔═╗╦═╗╔═╗╦ ╦
@@ -47,7 +62,7 @@ module.exports = {
     //  ╩═╩╝╚═╝╝╚╝ ╩ ╩╚  ╩╚═╝╩╚═  ╚═╝╚═╝╩ ╩╩╚═╚═╝╩ ╩
     //
     // Given an identifier, search for it and group the results.
-    function indentifierSearch(identifier) {
+    function indentifierSearch(identifier, tokens, results) {
       var idx = _.findIndex(tokens, { type: 'IDENTIFIER', value: identifier });
       if(idx < 0) return;
 
@@ -65,8 +80,9 @@ module.exports = {
       results.push(statement);
 
       // Run again to see if there are more identifiers
-      indentifierSearch(identifier);
+      indentifierSearch(identifier, tokens, results);
     }
+
 
     //  ╔═╗╔═╗╔╗╔╔╦╗╦╔╦╗╦╔═╗╔╗╔  ╦ ╦╔═╗╔╗╔╔╦╗╦  ╦╔╗╔╔═╗
     //  ║  ║ ║║║║ ║║║ ║ ║║ ║║║║  ╠═╣╠═╣║║║ ║║║  ║║║║║ ╦
@@ -245,281 +261,305 @@ module.exports = {
     }
 
 
-    //  ╔═╗╦═╗╔═╗╔╦╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
-    //  ╠╣ ╠╦╝║ ║║║║  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
-    //  ╚  ╩╚═╚═╝╩ ╩  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+    //   █████╗ ███╗   ██╗ █████╗ ██╗  ██╗   ██╗███████╗███████╗██████╗
+    //  ██╔══██╗████╗  ██║██╔══██╗██║  ╚██╗ ██╔╝╚══███╔╝██╔════╝██╔══██╗
+    //  ███████║██╔██╗ ██║███████║██║   ╚████╔╝   ███╔╝ █████╗  ██████╔╝
+    //  ██╔══██║██║╚██╗██║██╔══██║██║    ╚██╔╝   ███╔╝  ██╔══╝  ██╔══██╗
+    //  ██║  ██║██║ ╚████║██║  ██║███████╗██║   ███████╗███████╗██║  ██║
+    //  ╚═╝  ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝╚══════╝╚═╝   ╚══════╝╚══════╝╚═╝  ╚═╝
     //
-    // Start analyzing by finding any top level FROM statements and bring those
-    // to the top of the results. This has to do with the way Knex works but
-    // shouldn't actually matter when the ordering is used.
-    indentifierSearch('FROM');
+    // Runs through the tokens and based on the surrounding tokens groups them
+    // together into logical pieces that can be passed to functions inside the
+    // Sequelizer.
+
+    function analyzer(tokens) {
+
+      // Hold the results of the token processing
+      var results = [];
 
 
-    //  ╦ ╦╔═╗╦╔╗╔╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
-    //  ║ ║╚═╗║║║║║ ╦  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
-    //  ╚═╝╚═╝╩╝╚╝╚═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
-    //
-    // Next find the USING statements and group those
-    indentifierSearch('USING');
+      //  ╔═╗╦═╗╔═╗╔╦╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
+      //  ╠╣ ╠╦╝║ ║║║║  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
+      //  ╚  ╩╚═╚═╝╩ ╩  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+      //
+      // Start analyzing by finding any top level FROM statements and bring those
+      // to the top of the results. This has to do with the way Knex works but
+      // shouldn't actually matter when the ordering is used.
+      indentifierSearch('FROM', tokens, results);
 
 
-    //  ╦╔╗╔╔╦╗╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
-    //  ║║║║ ║ ║ ║  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
-    //  ╩╝╚╝ ╩ ╚═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
-    //
-    // Next find the INTO statements and group those
-    indentifierSearch('INTO');
+      //  ╦ ╦╔═╗╦╔╗╔╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
+      //  ║ ║╚═╗║║║║║ ╦  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
+      //  ╚═╝╚═╝╩╝╚╝╚═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+      //
+      // Next find the USING statements and group those
+      indentifierSearch('USING', tokens, results);
 
 
-    //  ╔═╗╔═╗╦  ╔═╗╔═╗╔╦╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
-    //  ╚═╗║╣ ║  ║╣ ║   ║   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
-    //  ╚═╝╚═╝╩═╝╚═╝╚═╝ ╩   ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
-    //
-    // Next find the SELECT statements and group those
-    indentifierSearch('SELECT');
+      //  ╦╔╗╔╔╦╗╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
+      //  ║║║║ ║ ║ ║  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
+      //  ╩╝╚╝ ╩ ╚═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+      //
+      // Next find the INTO statements and group those
+      indentifierSearch('INTO', tokens, results);
 
 
-    //  ╔═╗╔═╗╦ ╦╔═╗╔╦╗╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
-    //  ╚═╗║  ╠═╣║╣ ║║║╠═╣  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
-    //  ╚═╝╚═╝╩ ╩╚═╝╩ ╩╩ ╩  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
-    //
-    // Next find the SCHEMA statements and group those
-    indentifierSearch('SCHEMA');
+      //  ╔═╗╔═╗╦  ╔═╗╔═╗╔╦╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
+      //  ╚═╗║╣ ║  ║╣ ║   ║   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
+      //  ╚═╝╚═╝╩═╝╚═╝╚═╝ ╩   ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+      //
+      // Next find the SELECT statements and group those
+      indentifierSearch('SELECT', tokens, results);
 
 
-    //  ╔╦╗╦╔═╗╔╦╗╦╔╗╔╔═╗╔╦╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
-    //   ║║║╚═╗ ║ ║║║║║   ║   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
-    //  ═╩╝╩╚═╝ ╩ ╩╝╚╝╚═╝ ╩   ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
-    //
-    // Next find the DISTINCT statements and group those
-    indentifierSearch('DISTINCT');
+      //  ╔═╗╔═╗╦ ╦╔═╗╔╦╗╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
+      //  ╚═╗║  ╠═╣║╣ ║║║╠═╣  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
+      //  ╚═╝╚═╝╩ ╩╚═╝╩ ╩╩ ╩  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+      //
+      // Next find the SCHEMA statements and group those
+      indentifierSearch('SCHEMA', tokens, results);
 
 
-    //  ╔═╗╔═╗╦ ╦╔╗╔╔╦╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
-    //  ║  ║ ║║ ║║║║ ║   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
-    //  ╚═╝╚═╝╚═╝╝╚╝ ╩   ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
-    //
-    // Next find the COUNT statements and group those
-    indentifierSearch('COUNT');
+      //  ╔╦╗╦╔═╗╔╦╗╦╔╗╔╔═╗╔╦╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
+      //   ║║║╚═╗ ║ ║║║║║   ║   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
+      //  ═╩╝╩╚═╝ ╩ ╩╝╚╝╚═╝ ╩   ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+      //
+      // Next find the DISTINCT statements and group those
+      indentifierSearch('DISTINCT', tokens, results);
 
 
-    //  ╔═╗╔═╗╔═╗╦═╗╔═╗╔═╗╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
-    //  ╠═╣║ ╦║ ╦╠╦╝║╣ ║ ╦╠═╣ ║ ║║ ║║║║╚═╗
-    //  ╩ ╩╚═╝╚═╝╩╚═╚═╝╚═╝╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
-    //
-    // Next find the aggregation statements and group those
-    indentifierSearch('MIN');
-    indentifierSearch('MAX');
-    indentifierSearch('SUM');
-    indentifierSearch('AVG');
+      //  ╔═╗╔═╗╦ ╦╔╗╔╔╦╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
+      //  ║  ║ ║║ ║║║║ ║   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
+      //  ╚═╝╚═╝╚═╝╝╚╝ ╩   ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+      //
+      // Next find the COUNT statements and group those
+      indentifierSearch('COUNT', tokens, results);
 
 
-    //  ╔═╗╦═╗╔═╗╦ ╦╔═╗  ╔╗ ╦ ╦  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
-    //  ║ ╦╠╦╝║ ║║ ║╠═╝  ╠╩╗╚╦╝  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
-    //  ╚═╝╩╚═╚═╝╚═╝╩    ╚═╝ ╩   ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
-    //
-    // Next find the GROUP BY statements and group those
-    indentifierSearch('GROUPBY');
+      //  ╔═╗╔═╗╔═╗╦═╗╔═╗╔═╗╔═╗╔╦╗╦╔═╗╔╗╔╔═╗
+      //  ╠═╣║ ╦║ ╦╠╦╝║╣ ║ ╦╠═╣ ║ ║║ ║║║║╚═╗
+      //  ╩ ╩╚═╝╚═╝╩╚═╚═╝╚═╝╩ ╩ ╩ ╩╚═╝╝╚╝╚═╝
+      //
+      // Next find the aggregation statements and group those
+      indentifierSearch('MIN', tokens, results);
+      indentifierSearch('MAX', tokens, results);
+      indentifierSearch('SUM', tokens, results);
+      indentifierSearch('AVG', tokens, results);
 
 
-    //  ╦  ╦╔╦╗╦╔╦╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
-    //  ║  ║║║║║ ║   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
-    //  ╩═╝╩╩ ╩╩ ╩   ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
-    //
-    // Next find the LIMIT statements and group those
-    indentifierSearch('LIMIT');
+      //  ╔═╗╦═╗╔═╗╦ ╦╔═╗  ╔╗ ╦ ╦  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
+      //  ║ ╦╠╦╝║ ║║ ║╠═╝  ╠╩╗╚╦╝  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
+      //  ╚═╝╩╚═╚═╝╚═╝╩    ╚═╝ ╩   ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+      //
+      // Next find the GROUP BY statements and group those
+      indentifierSearch('GROUPBY', tokens, results);
 
 
-    //  ╔═╗╔═╗╔═╗╔═╗╔═╗╔╦╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
-    //  ║ ║╠╣ ╠╣ ╚═╗║╣  ║   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
-    //  ╚═╝╚  ╚  ╚═╝╚═╝ ╩   ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
-    //
-    // Next find the OFFSET statements and group those
-    indentifierSearch('OFFSET');
+      //  ╦  ╦╔╦╗╦╔╦╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
+      //  ║  ║║║║║ ║   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
+      //  ╩═╝╩╩ ╩╩ ╩   ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+      //
+      // Next find the LIMIT statements and group those
+      indentifierSearch('LIMIT', tokens, results);
 
 
-    //  ╔╦╗╔═╗╦  ╔═╗╔╦╗╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
-    //   ║║║╣ ║  ║╣  ║ ║╣   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
-    //  ═╩╝╚═╝╩═╝╚═╝ ╩ ╚═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
-    //
-    // Next find the DELETE statements
-    (function() {
-      var idx = _.findIndex(tokens, { type: 'IDENTIFIER', value: 'DELETE' });
-      if(idx > -1) {
-
-        var statement = [];
-        statement.push(tokens[idx]);
-
-        // Remove the value
-        _.pullAt(tokens, idx);
-
-        results.push(statement);
-      }
-    })();
-
-    //  ╔═╗╦═╗╔╦╗╔═╗╦═╗  ╔╗ ╦ ╦  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗╔═╗
-    //  ║ ║╠╦╝ ║║║╣ ╠╦╝  ╠╩╗╚╦╝  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║ ╚═╗
-    //  ╚═╝╩╚══╩╝╚═╝╩╚═  ╚═╝ ╩   ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩ ╚═╝
-    //
-    // Next find all the ordering statements and group them
-    (function() {
-
-      // Check for an ORDER BY statement
-      var idx = _.findIndex(tokens, { type: 'IDENTIFIER', value: 'ORDERBY' });
-      if(idx < 0) { return; }
-
-      // Find the next Identifier so we know the scope of the Order statements.
-      // To do this slice the array at the ORDERBY index, pull off the values, then
-      // see if there are any remaining Identifiers.
-      var slice = _.slice(tokens, idx);
-      var identifier = _.first(_.pullAt(slice, 0));
-
-      var endIdx = _.findIndex(slice, { type: 'IDENTIFIER' });
-      if(endIdx < 0) { endIdx = undefined; }
-
-      // Limit the tokens to only those needed to fufill the ORDER clause
-      var orderTokens = _.slice(slice, idx, endIdx);
-      orderTokens.unshift({ type: 'IDENTIFIER', value: 'ORDERBY' });
-
-      // Add the tokens to the results
-      results.push(orderTokens);
-    })();
+      //  ╔═╗╔═╗╔═╗╔═╗╔═╗╔╦╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
+      //  ║ ║╠╣ ╠╣ ╚═╗║╣  ║   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
+      //  ╚═╝╚  ╚  ╚═╝╚═╝ ╩   ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+      //
+      // Next find the OFFSET statements and group those
+      indentifierSearch('OFFSET', tokens, results);
 
 
-    //  ╦╔╗╔╔═╗╔═╗╦═╗╔╦╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
-    //  ║║║║╚═╗║╣ ╠╦╝ ║   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
-    //  ╩╝╚╝╚═╝╚═╝╩╚═ ╩   ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
-    //
-    // Next find the INSERT statements and group those
-    (function() {
+      //  ╔╦╗╔═╗╦  ╔═╗╔╦╗╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
+      //   ║║║╣ ║  ║╣  ║ ║╣   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
+      //  ═╩╝╚═╝╩═╝╚═╝ ╩ ╚═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+      //
+      // Next find the DELETE statements
+      (function() {
+        var idx = _.findIndex(tokens, { type: 'IDENTIFIER', value: 'DELETE' });
+        if(idx > -1) {
 
-      // Check for an INSERT statement
-      var idx = _.findIndex(tokens, { type: 'IDENTIFIER', value: 'INSERT' });
-      if(idx < 0) { return; }
+          var statement = [];
+          statement.push(tokens[idx]);
 
-      // Find the next Identifier so we know the scope of the INSERT.
-      // To do this slice the array at the INSERT index, pull off the values, then
-      // see if there are any remaining Identifiers.
-      var slice = _.slice(tokens, idx);
-      var identifier = _.first(_.pullAt(slice, 0));
+          // Remove the value
+          _.pullAt(tokens, idx);
 
-      var endIdx = _.findIndex(slice, { type: 'IDENTIFIER' });
-      if(endIdx < 0) { endIdx = undefined; }
-
-      // Limit the tokens to only those needed to fufill the INSERT clause
-      var insertTokens = _.slice(slice, idx, endIdx);
-      insertTokens.unshift({ type: 'IDENTIFIER', value: 'INSERT' });
-
-      // Add the tokens to the results
-      results.push(insertTokens);
-    })();
-
-
-    //  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
-    //  ║ ║╠═╝ ║║╠═╣ ║ ║╣   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
-    //  ╚═╝╩  ═╩╝╩ ╩ ╩ ╚═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
-    //
-    // Next find the UPDATE statements and group those
-    (function() {
-
-      // Check for an INSERT statement
-      var idx = _.findIndex(tokens, { type: 'IDENTIFIER', value: 'UPDATE' });
-      if(idx < 0) { return; }
-
-      // Find the next Identifier so we know the scope of the UPDATE.
-      // To do this slice the array at the UPDATE index, pull off the values, then
-      // see if there are any remaining identifiers.
-      var slice = _.slice(tokens, idx);
-      var identifier = _.first(_.pullAt(slice, 0));
-
-      var endIdx = _.findIndex(slice, { type: 'IDENTIFIER' });
-      if(endIdx < 0) { endIdx = undefined; }
-
-      // Limit the tokens to only those needed to fufill the UPDATE clause
-      var updateTokens = _.slice(slice, 0, endIdx);
-      updateTokens.unshift({ type: 'IDENTIFIER', value: 'UPDATE' });
-
-      if(endIdx > -1) {
-        tokens = _.slice(tokens, endIdx+1);
-      }
-
-      // Add the tokens to the results
-      results.push(updateTokens);
-    })();
-
-
-    //   ╦╔═╗╦╔╗╔  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗╔═╗
-    //   ║║ ║║║║║  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║ ╚═╗
-    //  ╚╝╚═╝╩╝╚╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩ ╚═╝
-    (function() {
-
-      // Check for any JOIN statements
-      var joins = [];
-
-      _.each([
-        'join',
-        'innerJoin',
-        'outerJoin',
-        'crossJoin',
-        'leftJoin',
-        'leftOuterJoin',
-        'rightJoin',
-        'rightOuterJoin',
-        'fullOuterJoin'
-      ], function(_joinIdentifier) {
-        var _idx = _.findIndex(tokens, { type: 'IDENTIFIER', value: _joinIdentifier.toUpperCase() });
-        if(_idx > -1) {
-          joins.push(_joinIdentifier.toUpperCase());
+          results.push(statement);
         }
-      });
+      })();
 
-      if(!joins.length) { return; }
+      //  ╔═╗╦═╗╔╦╗╔═╗╦═╗  ╔╗ ╦ ╦  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗╔═╗
+      //  ║ ║╠╦╝ ║║║╣ ╠╦╝  ╠╩╗╚╦╝  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║ ╚═╗
+      //  ╚═╝╩╚══╩╝╚═╝╩╚═  ╚═╝ ╩   ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩ ╚═╝
+      //
+      // Next find all the ordering statements and group them
+      (function() {
 
-      // Parse each JOIN set into a set of tokens
-      _.each(joins, function(joinType) {
-        var joinTokens = processJoinStatement(tokens, joinType);
-        joinTokens.unshift({ type: 'IDENTIFIER', value: joinType });
-        results.push(joinTokens);
-      });
-    })();
+        // Check for an ORDER BY statement
+        var idx = _.findIndex(tokens, { type: 'IDENTIFIER', value: 'ORDERBY' });
+        if(idx < 0) { return; }
 
+        // Find the next Identifier so we know the scope of the Order statements.
+        // To do this slice the array at the ORDERBY index, pull off the values, then
+        // see if there are any remaining Identifiers.
+        var slice = _.slice(tokens, idx);
+        var identifier = _.first(_.pullAt(slice, 0));
 
-    //  ╦ ╦╦ ╦╔═╗╦═╗╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
-    //  ║║║╠═╣║╣ ╠╦╝║╣   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
-    //  ╚╩╝╩ ╩╚═╝╩╚═╚═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
-    //
-    // Process the values contained in the WHERE statement.
-    (function() {
+        var endIdx = _.findIndex(slice, { type: 'IDENTIFIER' });
+        if(endIdx < 0) { endIdx = undefined; }
 
-      // Check for a WHERE statement
-      var idx = _.findIndex(tokens, { type: 'IDENTIFIER', value: 'WHERE' });
-      if(idx < 0) { return; }
+        // Limit the tokens to only those needed to fufill the ORDER clause
+        var orderTokens = _.slice(slice, idx, endIdx);
+        orderTokens.unshift({ type: 'IDENTIFIER', value: 'ORDERBY' });
 
-      // Find the next Identifier so we know the scope of the WHERE.
-      // To do this slice the array at the WHERE index, pull off the where, then
-      // see if there are any remaining Identifiers.
-      var slice = _.slice(tokens, idx);
-      var whereIdentifier = _.first(_.pullAt(slice, 0));
-
-      var endIdx = _.findIndex(slice, { type: 'IDENTIFIER' });
-      if(endIdx < 0) { endIdx = undefined; }
-
-      // Limit the tokens to only those needed to fufill the WHERE clause
-      var whereTokens = _.slice(slice, idx, endIdx);
-
-      // Process and group and conditions.
-      // ex: OR
-      var groupedTokens = conditionHandler(whereTokens);
-
-      // Add the WHERE identifier back in
-      groupedTokens.unshift(whereIdentifier);
-
-      results.push(groupedTokens);
-    })();
+        // Add the tokens to the results
+        results.push(orderTokens);
+      })();
 
 
+      //  ╦╔╗╔╔═╗╔═╗╦═╗╔╦╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
+      //  ║║║║╚═╗║╣ ╠╦╝ ║   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
+      //  ╩╝╚╝╚═╝╚═╝╩╚═ ╩   ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+      //
+      // Next find the INSERT statements and group those
+      (function() {
 
-    return exits.success(results);
+        // Check for an INSERT statement
+        var idx = _.findIndex(tokens, { type: 'IDENTIFIER', value: 'INSERT' });
+        if(idx < 0) { return; }
+
+        // Find the next Identifier so we know the scope of the INSERT.
+        // To do this slice the array at the INSERT index, pull off the values, then
+        // see if there are any remaining Identifiers.
+        var slice = _.slice(tokens, idx);
+        var identifier = _.first(_.pullAt(slice, 0));
+
+        var endIdx = _.findIndex(slice, { type: 'IDENTIFIER' });
+        if(endIdx < 0) { endIdx = undefined; }
+
+        // Limit the tokens to only those needed to fufill the INSERT clause
+        var insertTokens = _.slice(slice, idx, endIdx);
+        insertTokens.unshift({ type: 'IDENTIFIER', value: 'INSERT' });
+
+        // Add the tokens to the results
+        results.push(insertTokens);
+      })();
+
+
+      //  ╦ ╦╔═╗╔╦╗╔═╗╔╦╗╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
+      //  ║ ║╠═╝ ║║╠═╣ ║ ║╣   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
+      //  ╚═╝╩  ═╩╝╩ ╩ ╩ ╚═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+      //
+      // Next find the UPDATE statements and group those
+      (function() {
+
+        // Check for an INSERT statement
+        var idx = _.findIndex(tokens, { type: 'IDENTIFIER', value: 'UPDATE' });
+        if(idx < 0) { return; }
+
+        // Find the next Identifier so we know the scope of the UPDATE.
+        // To do this slice the array at the UPDATE index, pull off the values, then
+        // see if there are any remaining identifiers.
+        var slice = _.slice(tokens, idx);
+        var identifier = _.first(_.pullAt(slice, 0));
+
+        var endIdx = _.findIndex(slice, { type: 'IDENTIFIER' });
+        if(endIdx < 0) { endIdx = undefined; }
+
+        // Limit the tokens to only those needed to fufill the UPDATE clause
+        var updateTokens = _.slice(slice, 0, endIdx);
+        updateTokens.unshift({ type: 'IDENTIFIER', value: 'UPDATE' });
+
+        if(endIdx > -1) {
+          tokens = _.slice(tokens, endIdx+1);
+        }
+
+        // Add the tokens to the results
+        results.push(updateTokens);
+      })();
+
+
+      //   ╦╔═╗╦╔╗╔  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗╔═╗
+      //   ║║ ║║║║║  ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║ ╚═╗
+      //  ╚╝╚═╝╩╝╚╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩ ╚═╝
+      (function() {
+
+        // Check for any JOIN statements
+        var joins = [];
+
+        _.each([
+          'join',
+          'innerJoin',
+          'outerJoin',
+          'crossJoin',
+          'leftJoin',
+          'leftOuterJoin',
+          'rightJoin',
+          'rightOuterJoin',
+          'fullOuterJoin'
+        ], function(_joinIdentifier) {
+          var _idx = _.findIndex(tokens, { type: 'IDENTIFIER', value: _joinIdentifier.toUpperCase() });
+          if(_idx > -1) {
+            joins.push(_joinIdentifier.toUpperCase());
+          }
+        });
+
+        if(!joins.length) { return; }
+
+        // Parse each JOIN set into a set of tokens
+        _.each(joins, function(joinType) {
+          var joinTokens = processJoinStatement(tokens, joinType);
+          joinTokens.unshift({ type: 'IDENTIFIER', value: joinType });
+          results.push(joinTokens);
+        });
+      })();
+
+
+      //  ╦ ╦╦ ╦╔═╗╦═╗╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
+      //  ║║║╠═╣║╣ ╠╦╝║╣   ╚═╗ ║ ╠═╣ ║ ║╣ ║║║║╣ ║║║ ║
+      //  ╚╩╝╩ ╩╚═╝╩╚═╚═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝╩ ╩╚═╝╝╚╝ ╩
+      //
+      // Process the values contained in the WHERE statement.
+      (function() {
+
+        // Check for a WHERE statement
+        var idx = _.findIndex(tokens, { type: 'IDENTIFIER', value: 'WHERE' });
+        if(idx < 0) { return; }
+
+        // Find the next Identifier so we know the scope of the WHERE.
+        // To do this slice the array at the WHERE index, pull off the where, then
+        // see if there are any remaining Identifiers.
+        var slice = _.slice(tokens, idx);
+        var whereIdentifier = _.first(_.pullAt(slice, 0));
+
+        var endIdx = _.findIndex(slice, { type: 'IDENTIFIER' });
+        if(endIdx < 0) { endIdx = undefined; }
+
+        // Limit the tokens to only those needed to fufill the WHERE clause
+        var whereTokens = _.slice(slice, idx, endIdx);
+
+        // Process and group and conditions.
+        // ex: OR
+        var groupedTokens = conditionHandler(whereTokens);
+
+        // Add the WHERE identifier back in
+        groupedTokens.unshift(whereIdentifier);
+
+        results.push(groupedTokens);
+      })();
+
+      return results;
+    }
+
+
+    // Kick off the analyzer. Could run one or more times depending on the use
+    // of subqueries.
+    var analyzedTokens = analyzer(tokens);
+
+
+    return exits.success(analyzedTokens);
   },
 
 
