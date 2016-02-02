@@ -75,6 +75,7 @@ module.exports = {
       'rightJoin': 'JOIN',
       'rightOuterJoin': 'JOIN',
       'fullOuterJoin': 'JOIN',
+      'as': 'AS',
       '>': 'OPERATOR',
       '<': 'OPERATOR',
       '<>': 'OPERATOR',
@@ -83,6 +84,34 @@ module.exports = {
       'like': 'OPERATOR'
     };
 
+    // These are the Data Manipulation Identifiers that denote a subquery
+    var DML_IDENTIFIERS = [
+      'select',
+      'insert',
+      'update',
+      'del'
+    ];
+
+    //  ╔═╗╦ ╦╔═╗╔═╗╦╔═  ╔═╗╔═╗╦═╗  ╔═╗╦ ╦╔╗ ╔═╗ ╦ ╦╔═╗╦═╗╦ ╦
+    //  ║  ╠═╣║╣ ║  ╠╩╗  ╠╣ ║ ║╠╦╝  ╚═╗║ ║╠╩╗║═╬╗║ ║║╣ ╠╦╝╚╦╝
+    //  ╚═╝╩ ╩╚═╝╚═╝╩ ╩  ╚  ╚═╝╩╚═  ╚═╝╚═╝╚═╝╚═╝╚╚═╝╚═╝╩╚═ ╩
+    function checkForSubquery(value) {
+      var isSubquery = false;
+
+      // Check if the object has any top level DML identifiers
+      _.each(value, function(val, key) {
+        if(_.indexOf(DML_IDENTIFIERS, key) < 0) return;
+        isSubquery = true;
+      });
+
+      // If this is a sub query, tokenize it as such
+      if(isSubquery) {
+        tokenizeObject(value, undefined, undefined, isSubquery);
+        return isSubquery;
+      }
+
+      return isSubquery;
+    }
 
     //  ╔═╗╔═╗╔═╗╦═╗╔═╗╔╦╗╔═╗╦═╗╔═╗
     //  ║ ║╠═╝║╣ ╠╦╝╠═╣ ║ ║ ║╠╦╝╚═╗
@@ -107,7 +136,7 @@ module.exports = {
     function processSelect(value) {
 
       // Check if a distinct or other key is being used
-      if(_.isObject(value) && !_.isArray(value)) {
+      if(_.isPlainObject(value) && !_.isArray(value)) {
         if(value.distinct) {
 
           // Add the distinct to the results
@@ -150,6 +179,8 @@ module.exports = {
         value = [value];
       }
 
+      // Process each item in there SELECT statement and process subqueries as
+      // needed.
       _.each(value, function(val) {
 
         // Add the SELECT to the results
@@ -167,6 +198,19 @@ module.exports = {
 
           return;
         }
+
+        // Check if the object is a sub-query
+        if(_.isPlainObject(val)) {
+          var isSubquery = checkForSubquery(val);
+
+          // If it's not, add it's value
+          if(!isSubquery) {
+            results.push({
+              type: 'VALUE',
+              value: val
+            });
+          }
+        }
       });
     }
 
@@ -176,7 +220,8 @@ module.exports = {
     function processFrom(value) {
 
       // Check if a schema is being used
-      if(_.isObject(value)) {
+      if(_.isPlainObject(value)) {
+
         if(value.schema) {
           results.push({
             type: 'IDENTIFIER',
@@ -189,12 +234,16 @@ module.exports = {
           });
         }
 
-        if(value.table) {
-          results.push({
-            type: 'IDENTIFIER',
-            value: 'FROM'
-          });
+        // Add the FROM identifier
+        results.push({
+          type: 'IDENTIFIER',
+          value: 'FROM'
+        });
 
+        // Check if a subquery is being used
+        var isSubQuery = checkForSubquery(value);
+
+        if(!isSubQuery && value.table) {
           results.push({
             type: 'VALUE',
             value: value.table
@@ -204,7 +253,7 @@ module.exports = {
         return;
       }
 
-      // Otherwise just add the FROM value
+      // Otherwise just add the FROM identifier and value
       results.push({
         type: 'IDENTIFIER',
         value: 'FROM'
@@ -214,6 +263,7 @@ module.exports = {
         type: 'VALUE',
         value: value
       });
+
     }
 
     //  ╦╔╗╔╔═╗╔═╗╦═╗╔╦╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
@@ -353,10 +403,26 @@ module.exports = {
         value: 'IN'
       });
 
-      results.push({
-        type: 'VALUE',
-        value: value
-      });
+      // If the value isn't an object, no need to process it further
+      if(!_.isPlainObject(value)) {
+        results.push({
+          type: 'VALUE',
+          value: value
+        });
+      }
+
+      // Check if the object is a sub-query
+      if(_.isPlainObject(value)) {
+        var isSubquery = checkForSubquery(value);
+
+        // If it's not, add it's value
+        if(!isSubquery) {
+          results.push({
+            type: 'VALUE',
+            value: value
+          });
+        }
+      }
     }
 
     //  ╦ ╦╦ ╦╔═╗╦═╗╔═╗  ╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╦╗╔═╗╔╗╔╔╦╗
@@ -614,9 +680,18 @@ module.exports = {
     //
     // @obj {Object} - the token obj being processed
     // @processor {Object} - a value to insert between each key in the array
-    function tokenizeObject(obj, processor, parent) {
+    function tokenizeObject(obj, processor, parent, isSubQuery) {
+
+      // If this obj represent a sub-query, add a sub query token
+      if(isSubQuery) {
+        results.push({
+          type: 'SUBQUERY',
+          value: null
+        });
+      }
 
       _.each(_.keys(obj), function(key, idx) {
+
         // Check if the key is a known identifier
         var isIdentitifier = identifiers[key];
 
@@ -756,7 +831,6 @@ module.exports = {
             return;
           }
 
-
           // If the identifier is a COUNT
           if(identifiers[key] === 'COUNT') {
             processAggregations(obj[key], 'COUNT');
@@ -774,6 +848,23 @@ module.exports = {
 
           if(identifiers[key] === 'OFFSET') {
             processPagination(obj[key], 'OFFSET');
+            return;
+          }
+
+          // AS is only available on sub queries
+          if(identifiers[key] === 'AS') {
+            if(!isSubQuery) return;
+
+            results.push({
+              type: 'IDENTIFIER',
+              value: 'AS'
+            });
+
+            results.push({
+              type: 'VALUE',
+              value: obj[key]
+            });
+
             return;
           }
 
@@ -818,8 +909,17 @@ module.exports = {
           value: key
         });
 
-        // If the value is an object, recursively parse it
+        // If the value is an object, recursively parse it unless it matches as
+        // a sub query
         if(_.isPlainObject(obj[key])) {
+
+          // Check if the value is a subquery first
+          var subQuery = checkForSubquery(obj[key]);
+          if(subQuery) {
+            return;
+          }
+
+          // Otherwise parse the object
           tokenizeObject(obj[key], undefined, key);
           return;
         }
@@ -843,8 +943,17 @@ module.exports = {
           results.push(processor);
         }
       });
+
+      // If this obj represent a sub-query, close the sub query token
+      if(isSubQuery) {
+        results.push({
+          type: 'ENDSUBQUERY',
+          value: null
+        });
+      }
     }
 
+    // Kick off recursive parsing of the RQL object
     tokenizeObject(expression);
 
     return exits.success(results);
