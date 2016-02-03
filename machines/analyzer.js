@@ -62,14 +62,12 @@ module.exports = {
     //  ╚╩╝╩╚═╩ ╩ ╚═╝  ╚═╝╩ ╩╚═╝╝╚╝╩ ╩
     //
     // Given a chunk of data, write it to the result container
-    var writeChunk = function writeChunk(data, wrapped, container) {
-      var chunk = data;
-      var wrappedChunk = wrapped;
-      var results = container;
-
+    var writeChunk = function writeChunk(chunk, wrappedChunk, results, write) {
       try {
         // Remove the trailing comma from the chunk
-        chunk = chunk.slice(0, -1);
+        if (chunk.charAt(chunk.length - 1) === ',') {
+          chunk = chunk.slice(0, -1);
+        }
 
         // If this is a wrapped chunk, close it off
         if (wrappedChunk) {
@@ -77,14 +75,20 @@ module.exports = {
           chunk += ']';
         }
 
-        // Close the chunk
-        chunk += ']';
+        // Close the chunk, unless it's empty
+        if (chunk.charAt(chunk.length - 1) !== '[') {
+          chunk += ']';
+        }
 
         // Write the chunk
-        results.push(JSON.parse(chunk));
+        if (write) {
+          results.push(JSON.parse(chunk));
+        }
       } catch (e) {
-        throw new Error('Error parsing chunk', chunk);
+        throw new Error('Error parsing chunk');
       }
+
+      return chunk;
     };
 
 
@@ -96,10 +100,42 @@ module.exports = {
       var chunk;
 
       // Hold the flag for wrapping a chunk
-      var wrappedChunk;
+      var wrappedChunk = false;
+
+      // Hold the flag array for wrapping a subquery
+      var subquery = [];
+      var subqueryTag = false;
 
       // Process the token list in order
       _.each(tokens, function analyzeToken(token) {
+        //  ╔═╗╦ ╦╔╗ ╔═╗ ╦ ╦╔═╗╦═╗╦ ╦
+        //  ╚═╗║ ║╠╩╗║═╬╗║ ║║╣ ╠╦╝╚╦╝
+        //  ╚═╝╚═╝╚═╝╚═╝╚╚═╝╚═╝╩╚═ ╩
+        //
+        // If the token is a subquery, flag it as such and open up a new group
+        // on the chunk.
+        if (token.type === 'SUBQUERY') {
+          subquery.push(true);
+          subqueryTag = true;
+          chunk += JSON.stringify(token) + ', [';
+          return;
+        }
+
+        if (token.type === 'ENDSUBQUERY') {
+          subquery.pop();
+
+          // Remove the trailing comma from the chunk
+          if (chunk.charAt(chunk.length - 1) === ',') {
+            chunk = chunk.slice(0, -1);
+          }
+
+          // Double close here to also close up the identifier that opened the
+          // subquery.
+          chunk += ']],';
+
+          return;
+        }
+
         //  ╦╔╦╗╔═╗╔╗╔╔╦╗╦╔═╗╦╔═╗╦═╗╔═╗
         //  ║ ║║║╣ ║║║ ║ ║╠╣ ║║╣ ╠╦╝╚═╗
         //  ╩═╩╝╚═╝╝╚╝ ╩ ╩╚  ╩╚═╝╩╚═╚═╝
@@ -107,12 +143,34 @@ module.exports = {
         // If the token is an identifier, write the current chunk and start a
         // new one.
         if (token.type === 'IDENTIFIER') {
+          // The write flag determines if the clause is ready to be parsed and
+          // written to the results. If we are inside a subquery it shouldn't
+          // be written to the results until the end. It should be closed though.
+          var write = subquery.length ? false : true;
+
+          // If there is an active chunk write it
           if (chunk) {
-            writeChunk(chunk, wrappedChunk, results);
+            chunk = writeChunk(chunk, wrappedChunk, results, write);
           }
 
-          // Start a new chunk
-          chunk = '[' + JSON.stringify(token) + ',';
+          // The subquery tag toggles itself off after the first chunk of data.
+          // It represents the opening of the subquery so there shouldn't be a
+          // comma or we would end up with [,[
+          if (subquery.length && !subqueryTag) {
+            chunk += ',';
+          }
+
+          // Toggle off the subqueryTag
+          if (subquery.length && subqueryTag) {
+            subqueryTag = false;
+          }
+
+          // Start a new chunk unless there is a subquery being built
+          if (subquery.length) {
+            chunk += '[' + JSON.stringify(token) + ',';
+          } else {
+            chunk = '[' + JSON.stringify(token) + ',';
+          }
 
           // If this is a wrapped chunk, add an extra '['
           if (_.indexOf(WRAPPED_TOKENS, token.value) > -1) {
@@ -145,8 +203,11 @@ module.exports = {
 
         // Save the current group to the condition
         if (token.type === 'ENDGROUP') {
-          // Remove the last comma from the group
-          chunk = chunk.slice(0, -1);
+          // Remove the trailing comma from the group
+          if (chunk.charAt(chunk.length - 1) === ',') {
+            chunk = chunk.slice(0, -1);
+          }
+
           // Close the group
           chunk += '],';
           return;
@@ -171,7 +232,8 @@ module.exports = {
 
       // Add the last chunk onto the stack
       if (chunk) {
-        writeChunk(chunk, wrappedChunk, results);
+        var write = subquery.length ? false : true;
+        writeChunk(chunk, wrappedChunk, results, write);
       }
 
       return results;
