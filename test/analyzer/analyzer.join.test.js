@@ -28,16 +28,16 @@ describe('Analyzer ::', function() {
 
         assert.deepEqual(result, [
           [
-            { type: 'IDENTIFIER', value: 'FROM' },
-            { type: 'VALUE', value: 'users' }
-          ],
-          [
             { type: 'IDENTIFIER', value: 'SELECT' },
             { type: 'VALUE', value: 'users.id' }
           ],
           [
             { type: 'IDENTIFIER', value: 'SELECT' },
             { type: 'VALUE', value: 'contacts.phone' }
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'FROM' },
+            { type: 'VALUE', value: 'users' }
           ],
           [
             { type: 'IDENTIFIER', value: 'JOIN' },
@@ -90,16 +90,16 @@ describe('Analyzer ::', function() {
 
         assert.deepEqual(result, [
           [
-            { type: 'IDENTIFIER', value: 'FROM' },
-            { type: 'VALUE', value: 'users' }
-          ],
-          [
             { type: 'IDENTIFIER', value: 'SELECT' },
             { type: 'VALUE', value: 'users.id' }
           ],
           [
             { type: 'IDENTIFIER', value: 'SELECT' },
             { type: 'VALUE', value: 'contacts.phone' }
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'FROM' },
+            { type: 'VALUE', value: 'users' }
           ],
           [
             { type: 'IDENTIFIER', value: 'JOIN' },
@@ -114,7 +114,10 @@ describe('Analyzer ::', function() {
               { type: 'VALUE', value: 'contacts' },
               { type: 'KEY', value: 'COLUMN_KEY' },
               { type: 'VALUE', value: 'user_id' }
-            ],
+            ]
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'JOIN' },
             [
               { type: 'KEY', value: 'TABLE' },
               { type: 'VALUE', value: 'carriers' },
@@ -157,16 +160,16 @@ describe('Analyzer ::', function() {
 
         assert.deepEqual(result, [
           [
-            { type: 'IDENTIFIER', value: 'FROM' },
-            { type: 'VALUE', value: 'users' }
-          ],
-          [
             { type: 'IDENTIFIER', value: 'SELECT' },
             { type: 'VALUE', value: 'users.id' }
           ],
           [
             { type: 'IDENTIFIER', value: 'SELECT' },
             { type: 'VALUE', value: 'contacts.phone' }
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'FROM' },
+            { type: 'VALUE', value: 'users' }
           ],
           [
             { type: 'IDENTIFIER', value: 'INNERJOIN' },
@@ -218,12 +221,12 @@ describe('Analyzer ::', function() {
 
         assert.deepEqual(result, [
           [
-            { type: 'IDENTIFIER', value: 'FROM' },
-            { type: 'VALUE', value: 'users' }
-          ],
-          [
             { type: 'IDENTIFIER', value: 'SELECT' },
             { type: 'VALUE', value: '*' }
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'FROM' },
+            { type: 'VALUE', value: 'users' }
           ],
           [
             { type: 'IDENTIFIER', value: 'JOIN' },
@@ -298,12 +301,12 @@ describe('Analyzer ::', function() {
 
         assert.deepEqual(result, [
           [
-            { type: 'IDENTIFIER', value: 'FROM' },
-            { type: 'VALUE', value: 'users' }
-          ],
-          [
             { type: 'IDENTIFIER', value: 'SELECT' },
             { type: 'VALUE', value: '*' }
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'FROM' },
+            { type: 'VALUE', value: 'users' }
           ],
           [
             { type: 'IDENTIFIER', value: 'JOIN' },
@@ -328,7 +331,10 @@ describe('Analyzer ::', function() {
               { type: 'VALUE', value: 'users' },
               { type: 'KEY', value: 'COLUMN_KEY' },
               { type: 'VALUE', value: 'id' }
-            ],
+            ]
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'JOIN' },
             [
               { type: 'KEY', value: 'TABLE' },
               { type: 'VALUE', value: 'contacts' },

@@ -21,13 +21,13 @@ describe('Analyzer ::', function() {
 
         assert.deepEqual(result, [
           [
-            { type: 'IDENTIFIER', value: 'INTO' },
-            { type: 'VALUE', value: 'books' }
-          ],
-          [
             { type: 'IDENTIFIER', value: 'INSERT' },
             { type: 'KEY', value: 'title' },
             { type: 'VALUE', value: 'Slaughterhouse Five' }
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'INTO' },
+            { type: 'VALUE', value: 'books' }
           ]
         ]);
 

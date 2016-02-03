@@ -20,12 +20,12 @@ describe('Analyzer ::', function() {
 
         assert.deepEqual(result,  [
           [
-            { type: 'IDENTIFIER', value: 'FROM' },
-            { type: 'VALUE', value: 'users' }
-          ],
-          [
             { type: 'IDENTIFIER', value: 'SELECT' },
             { type: 'VALUE', value: '*' }
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'FROM' },
+            { type: 'VALUE', value: 'users' }
           ],
           [
             { type: 'IDENTIFIER', value: 'OFFSET' },

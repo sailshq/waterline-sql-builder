@@ -29,10 +29,6 @@ describe('Analyzer ::', function() {
 
         assert.deepEqual(result,  [
           [
-            { type: 'IDENTIFIER', value: 'FROM' },
-            { type: 'VALUE', value: 'users' }
-          ],
-          [
             { type: 'IDENTIFIER', value: 'SELECT' },
             { type: 'VALUE', value: '*' }
           ],
@@ -47,6 +43,10 @@ describe('Analyzer ::', function() {
               { type: 'KEY', value: 'name' },
               { type: 'VALUE', value: 'Tester' }
             ]
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'FROM' },
+            { type: 'VALUE', value: 'users' }
           ]
         ]);
 
@@ -81,10 +81,6 @@ describe('Analyzer ::', function() {
 
         assert.deepEqual(result, [
           [
-            { type: 'IDENTIFIER', value: 'FROM' },
-            { type: 'VALUE', value: 'users' }
-          ],
-          [
             { type: 'IDENTIFIER', value: 'SELECT' },
             { type: 'VALUE', value: '*' }
           ],
@@ -105,6 +101,10 @@ describe('Analyzer ::', function() {
               { type: 'KEY', value: 'name' },
               { type: 'VALUE', value: 'Tester' }
             ]
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'FROM' },
+            { type: 'VALUE', value: 'users' }
           ]
         ]);
 

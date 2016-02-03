@@ -20,12 +20,12 @@ describe('Analyzer ::', function() {
 
         assert.deepEqual(result,  [
           [
-            { type: 'IDENTIFIER', value: 'FROM' },
-            { type: 'VALUE', value: 'users' }
-          ],
-          [
             { type: 'IDENTIFIER', value: 'SELECT' },
             { type: 'VALUE', value: '*' }
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'FROM' },
+            { type: 'VALUE', value: 'users' }
           ],
           [
             { type: 'IDENTIFIER', value: 'GROUPBY' },
@@ -53,12 +53,12 @@ describe('Analyzer ::', function() {
 
         assert.deepEqual(result,  [
           [
-            { type: 'IDENTIFIER', value: 'FROM' },
-            { type: 'VALUE', value: 'users' }
-          ],
-          [
             { type: 'IDENTIFIER', value: 'MIN' },
             { type: 'VALUE', value: [ 'active' ] }
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'FROM' },
+            { type: 'VALUE', value: 'users' }
           ]
         ]);
 
@@ -82,12 +82,12 @@ describe('Analyzer ::', function() {
 
         assert.deepEqual(result,  [
           [
-            { type: 'IDENTIFIER', value: 'FROM' },
-            { type: 'VALUE', value: 'users' }
-          ],
-          [
             { type: 'IDENTIFIER', value: 'MAX' },
             { type: 'VALUE', value: [ 'active' ] }
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'FROM' },
+            { type: 'VALUE', value: 'users' }
           ]
         ]);
 
@@ -111,12 +111,12 @@ describe('Analyzer ::', function() {
 
         assert.deepEqual(result,  [
           [
-            { type: 'IDENTIFIER', value: 'FROM' },
-            { type: 'VALUE', value: 'users' }
-          ],
-          [
             { type: 'IDENTIFIER', value: 'SUM' },
             { type: 'VALUE', value: [ 'active' ] }
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'FROM' },
+            { type: 'VALUE', value: 'users' }
           ]
         ]);
 
@@ -140,12 +140,12 @@ describe('Analyzer ::', function() {
 
         assert.deepEqual(result,  [
           [
-            { type: 'IDENTIFIER', value: 'FROM' },
-            { type: 'VALUE', value: 'users' }
-          ],
-          [
             { type: 'IDENTIFIER', value: 'AVG' },
             { type: 'VALUE', value: [ 'active' ] }
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'FROM' },
+            { type: 'VALUE', value: 'users' }
           ]
         ]);
 

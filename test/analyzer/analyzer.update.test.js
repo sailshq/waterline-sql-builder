@@ -24,10 +24,6 @@ describe('Analyzer ::', function() {
 
         assert.deepEqual(result, [
           [
-            { type: 'IDENTIFIER', value: 'USING' },
-            { type: 'VALUE', value: 'books' }
-          ],
-          [
             { type: 'IDENTIFIER', value: 'UPDATE' },
             { type: 'KEY', value: 'status' },
             { type: 'VALUE', value: 'archived' }
@@ -37,6 +33,10 @@ describe('Analyzer ::', function() {
             { type: 'KEY', value: 'publishedDate' },
             { type: 'OPERATOR', value: '>' },
             { type: 'VALUE', value: 2000 }
+          ],
+          [
+            { type: 'IDENTIFIER', value: 'USING' },
+            { type: 'VALUE', value: 'books' }
           ]
         ]);
 
