@@ -17,7 +17,6 @@ describe('Tokenizer ::', function() {
                   select: ['id'],
                   from: 'users',
                   where: {
-                    votes: { '>': 100 },
                     or: [
                       { status: 'active' },
                       { name: 'John' }
@@ -45,9 +44,6 @@ describe('Tokenizer ::', function() {
             { type: 'IDENTIFIER', value: 'FROM' },
             { type: 'VALUE', value: 'users' },
             { type: 'IDENTIFIER', value: 'WHERE' },
-            { type: 'KEY', value: 'votes' },
-            { type: 'OPERATOR', value: '>' },
-            { type: 'VALUE', value: 100 },
             { type: 'CONDITION', value: 'OR' },
             { type: 'GROUP', value: 0 },
             { type: 'KEY', value: 'status' },
@@ -77,7 +73,6 @@ describe('Tokenizer ::', function() {
                     select: ['id'],
                     from: 'users',
                     where: {
-                      votes: { '>': 100 },
                       or: [
                         { status: 'active' },
                         { name: 'John' }
@@ -107,9 +102,6 @@ describe('Tokenizer ::', function() {
             { type: 'IDENTIFIER', value: 'FROM' },
             { type: 'VALUE', value: 'users' },
             { type: 'IDENTIFIER', value: 'WHERE' },
-            { type: 'KEY', value: 'votes' },
-            { type: 'OPERATOR', value: '>' },
-            { type: 'VALUE', value: 100 },
             { type: 'CONDITION', value: 'OR' },
             { type: 'GROUP', value: 0 },
             { type: 'KEY', value: 'status' },
@@ -138,7 +130,6 @@ describe('Tokenizer ::', function() {
               select: ['username'],
               from: 'users',
               where: {
-                votes: { '>': 100 },
                 or: [
                   { status: 'active' },
                   { name: 'John' }
@@ -162,9 +153,6 @@ describe('Tokenizer ::', function() {
             { type: 'IDENTIFIER', value: 'FROM' },
             { type: 'VALUE', value: 'users' },
             { type: 'IDENTIFIER', value: 'WHERE' },
-            { type: 'KEY', value: 'votes' },
-            { type: 'OPERATOR', value: '>' },
-            { type: 'VALUE', value: 100 },
             { type: 'CONDITION', value: 'OR' },
             { type: 'GROUP', value: 0 },
             { type: 'KEY', value: 'status' },
