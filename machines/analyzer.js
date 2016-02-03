@@ -55,7 +55,17 @@ module.exports = {
     var KEY_VALUE_TOKENS = ['KEY', 'VALUE', 'OPERATOR', 'COMBINATOR'];
 
     // Wrapped tokens
-    var WRAPPED_TOKENS = ['JOIN', 'INNERJOIN'];
+    var WRAPPED_TOKENS = [
+      'JOIN',
+      'INNERJOIN',
+      'OUTERJOIN',
+      'CROSSJOIN',
+      'LEFTJOIN',
+      'LEFTOUTERJOIN',
+      'RIGHTJOIN',
+      'RIGHTOUTERJOIN',
+      'FULLOUTERJOIN'
+    ];
 
     //  ╦ ╦╦═╗╦╔╦╗╔═╗  ╔═╗╦ ╦╦ ╦╔╗╔╦╔═
     //  ║║║╠╦╝║ ║ ║╣   ║  ╠═╣║ ║║║║╠╩╗
