@@ -5,7 +5,7 @@ var assert = require('assert');
 describe('Analyzer ::', function() {
   describe('DELETE statements', function() {
 
-    it.only('should generate a valid group for DELETE statements', function(done) {
+    it('should generate a valid group for DELETE statements', function(done) {
       var tokens = tokenize({
         del: true,
         from: 'accounts',
