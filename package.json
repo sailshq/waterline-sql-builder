@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "Generate SQL queries.",
   "scripts": {
-    "test": "node ./node_modules/mocha/bin/mocha --recursive"
+    "test": "node ./node_modules/mocha/bin/mocha --recursive",
+    "fasttest": "node ./node_modules/mocha/bin/mocha --recursive",
+    "pretest": "npm run lint",
+    "lint": "eslint machines test"
   },
   "keywords": [
     "sql",
@@ -18,8 +21,10 @@
     "machine": "10.4.0"
   },
   "devDependencies": {
-    "async": "~1.5.2",
-    "mocha": "~2.3.4"
+    "async": "1.5.2",
+    "eslint": "1.10.3",
+    "espree": "3.0.1",
+    "mocha": "2.3.4"
   },
   "machinepack": {
     "friendlyName": "SQL Builder",
