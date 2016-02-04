@@ -2,7 +2,6 @@ var Test = require('../support/test-runner');
 
 describe('Query Generation ::', function() {
   describe('COUNT statements', function() {
-
     it('should generate a count query', function(done) {
       Test({
         query: {
@@ -40,6 +39,5 @@ describe('Query Generation ::', function() {
         ]
       }, done);
     });
-
   });
 });

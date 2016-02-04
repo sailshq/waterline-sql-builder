@@ -4,7 +4,6 @@ var assert = require('assert');
 
 describe('Analyzer ::', function() {
   describe('UPDATE statements', function() {
-
     it('should generate a valid group for UPDATE statements', function(done) {
       var tokens = tokenize({
         update: {
@@ -43,6 +42,5 @@ describe('Analyzer ::', function() {
         return done();
       });
     });
-
   });
 });

@@ -3,7 +3,6 @@ var assert = require('assert');
 
 describe('Tokenizer ::', function() {
   describe('Aggregations', function() {
-
     it('should generate a valid token array for GROUP BY', function(done) {
       Tokenizer({
         expression: {
@@ -21,7 +20,7 @@ describe('Tokenizer ::', function() {
           { type: 'IDENTIFIER', value: 'FROM' },
           { type: 'VALUE', value: 'users' },
           { type: 'IDENTIFIER', value: 'GROUPBY' },
-          { type: 'VALUE', value: [ 'count' ] }
+          { type: 'VALUE', value: ['count'] }
         ]);
 
         return done();
@@ -42,7 +41,7 @@ describe('Tokenizer ::', function() {
 
         assert.deepEqual(result,  [
           { type: 'IDENTIFIER', value: 'MIN' },
-          { type: 'VALUE', value: [ 'active' ] },
+          { type: 'VALUE', value: ['active'] },
           { type: 'IDENTIFIER', value: 'FROM' },
           { type: 'VALUE', value: 'users' }
         ]);
@@ -65,7 +64,7 @@ describe('Tokenizer ::', function() {
 
         assert.deepEqual(result,  [
           { type: 'IDENTIFIER', value: 'MAX' },
-          { type: 'VALUE', value: [ 'active' ] },
+          { type: 'VALUE', value: ['active'] },
           { type: 'IDENTIFIER', value: 'FROM' },
           { type: 'VALUE', value: 'users' }
         ]);
@@ -88,7 +87,7 @@ describe('Tokenizer ::', function() {
 
         assert.deepEqual(result,  [
           { type: 'IDENTIFIER', value: 'SUM' },
-          { type: 'VALUE', value: [ 'active' ] },
+          { type: 'VALUE', value: ['active'] },
           { type: 'IDENTIFIER', value: 'FROM' },
           { type: 'VALUE', value: 'users' }
         ]);
@@ -111,7 +110,7 @@ describe('Tokenizer ::', function() {
 
         assert.deepEqual(result,  [
           { type: 'IDENTIFIER', value: 'AVG' },
-          { type: 'VALUE', value: [ 'active' ] },
+          { type: 'VALUE', value: ['active'] },
           { type: 'IDENTIFIER', value: 'FROM' },
           { type: 'VALUE', value: 'users' }
         ]);
@@ -119,6 +118,5 @@ describe('Tokenizer ::', function() {
         return done();
       });
     });
-
   });
 });

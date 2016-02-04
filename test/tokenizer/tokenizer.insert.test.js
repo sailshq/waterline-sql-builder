@@ -3,7 +3,6 @@ var assert = require('assert');
 
 describe('Tokenizer ::', function() {
   describe('INSERT statements', function() {
-
     it('should generate a valid token array for an INSERT is used', function(done) {
       Tokenizer({
         expression: {
@@ -27,6 +26,5 @@ describe('Tokenizer ::', function() {
         return done();
       });
     });
-
   });
 });

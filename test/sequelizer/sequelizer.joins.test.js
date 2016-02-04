@@ -4,7 +4,6 @@ var assert = require('assert');
 
 describe('Sequelizer ::', function() {
   describe('JOIN statements', function() {
-
     it('should generate a query when a JOIN statement is added', function(done) {
       var tree = analyze({
         select: ['users.id', 'contacts.phone'],

@@ -4,7 +4,6 @@ var assert = require('assert');
 
 describe('Sequelizer ::', function() {
   describe('UPDATE statements', function() {
-
     it('should generate a simple query with an UPDATE statement', function(done) {
       var tree = analyze({
         update: {
@@ -55,7 +54,7 @@ describe('Sequelizer ::', function() {
     it('should generate a query with a NULL value for input', function(done) {
       var tree = analyze({
         update: {
-          status: null,
+          status: null
         },
         using: 'books'
       });
@@ -71,6 +70,5 @@ describe('Sequelizer ::', function() {
         return done();
       });
     });
-
   });
 });

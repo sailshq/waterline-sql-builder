@@ -4,7 +4,6 @@ var assert = require('assert');
 
 describe('Sequelizer ::', function() {
   describe('OFFSET statements', function() {
-
     it('should generate a simple query with a OFFSET statement', function(done) {
       var tree = analyze({
         select: '*',
@@ -23,6 +22,5 @@ describe('Sequelizer ::', function() {
         return done();
       });
     });
-
   });
 });

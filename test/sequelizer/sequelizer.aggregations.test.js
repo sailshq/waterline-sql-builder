@@ -4,7 +4,6 @@ var assert = require('assert');
 
 describe('Sequelizer ::', function() {
   describe('Aggregations', function() {
-
     it('should generate a group by query', function(done) {
       var tree = analyze({
         select: '*',
@@ -98,6 +97,5 @@ describe('Sequelizer ::', function() {
         return done();
       });
     });
-
   });
 });

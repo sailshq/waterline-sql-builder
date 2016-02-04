@@ -8,8 +8,7 @@ var async = require('async');
 var Pack = require('../../index');
 
 module.exports = function(test, cb) {
-
-  function testDialect(outcome, next) {
+  var testDialect = function testDialect(outcome, next) {
     Pack.generateSql({
       dialect: outcome.dialect,
       query: test.query
@@ -17,7 +16,7 @@ module.exports = function(test, cb) {
       success: function(results) {
         try {
           assert.equal(results.sql, outcome.sql, outcome.dialect);
-          if(outcome.bindings) {
+          if (outcome.bindings) {
             assert.deepEqual(results.bindings, outcome.bindings, outcome.dialect);
           }
         } catch (e) {
@@ -31,7 +30,7 @@ module.exports = function(test, cb) {
         return next(err);
       }
     });
-  }
+  };
 
   async.each(test.outcomes, testDialect, cb);
 };

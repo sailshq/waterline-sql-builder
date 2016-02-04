@@ -4,7 +4,6 @@ var assert = require('assert');
 
 describe('Analyzer ::', function() {
   describe('Aggregations', function() {
-
     it('should generate a valid group when when GROUP BY is used', function(done) {
       var tokens = tokenize({
         select: '*',
@@ -54,7 +53,7 @@ describe('Analyzer ::', function() {
         assert.deepEqual(result,  [
           [
             { type: 'IDENTIFIER', value: 'MIN' },
-            { type: 'VALUE', value: [ 'active' ] }
+            { type: 'VALUE', value: ['active'] }
           ],
           [
             { type: 'IDENTIFIER', value: 'FROM' },
@@ -83,7 +82,7 @@ describe('Analyzer ::', function() {
         assert.deepEqual(result,  [
           [
             { type: 'IDENTIFIER', value: 'MAX' },
-            { type: 'VALUE', value: [ 'active' ] }
+            { type: 'VALUE', value: ['active'] }
           ],
           [
             { type: 'IDENTIFIER', value: 'FROM' },
@@ -112,7 +111,7 @@ describe('Analyzer ::', function() {
         assert.deepEqual(result,  [
           [
             { type: 'IDENTIFIER', value: 'SUM' },
-            { type: 'VALUE', value: [ 'active' ] }
+            { type: 'VALUE', value: ['active'] }
           ],
           [
             { type: 'IDENTIFIER', value: 'FROM' },
@@ -141,7 +140,7 @@ describe('Analyzer ::', function() {
         assert.deepEqual(result,  [
           [
             { type: 'IDENTIFIER', value: 'AVG' },
-            { type: 'VALUE', value: [ 'active' ] }
+            { type: 'VALUE', value: ['active'] }
           ],
           [
             { type: 'IDENTIFIER', value: 'FROM' },
@@ -152,6 +151,5 @@ describe('Analyzer ::', function() {
         return done();
       });
     });
-
   });
 });

@@ -2,7 +2,6 @@ var Test = require('../support/test-runner');
 
 describe('Query Generation ::', function() {
   describe('JOINS ::', function() {
-
     it('should generate a basic join query', function(done) {
       Test({
         query: {
@@ -152,6 +151,5 @@ describe('Query Generation ::', function() {
         ]
       }, done);
     });
-
   });
 });

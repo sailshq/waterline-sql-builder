@@ -4,7 +4,6 @@ var assert = require('assert');
 
 describe('Analyzer ::', function() {
   describe('DELETE statements', function() {
-
     it('should generate a valid group for DELETE statements', function(done) {
       var tokens = tokenize({
         del: true,
@@ -38,6 +37,5 @@ describe('Analyzer ::', function() {
         return done();
       });
     });
-
   });
 });

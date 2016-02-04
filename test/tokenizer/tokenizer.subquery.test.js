@@ -3,9 +3,7 @@ var assert = require('assert');
 
 describe('Tokenizer ::', function() {
   describe('Subqueries ::', function() {
-
     describe('used as a predicate', function() {
-
       it('should generate a valid token array for an IN subquery', function(done) {
         Tokenizer({
           expression: {
@@ -118,11 +116,9 @@ describe('Tokenizer ::', function() {
           return done();
         });
       });
-
     }); // </ predicate >
 
     describe('used as scalar values', function() {
-
       it('should generate a valid token array when used inside a SELECT', function(done) {
         Tokenizer({
           expression: {
@@ -218,11 +214,9 @@ describe('Tokenizer ::', function() {
           return done();
         });
       });
-
     }); // </ scalar >
 
     describe('used as table sub query', function() {
-
       it('should generate a valid token array when used as a value in a FROM', function(done) {
         Tokenizer({
           expression: {
@@ -299,8 +293,6 @@ describe('Tokenizer ::', function() {
           return done();
         });
       });
-
     }); // </ table >
-
   });
 });

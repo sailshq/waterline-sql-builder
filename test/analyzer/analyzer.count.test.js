@@ -4,7 +4,6 @@ var assert = require('assert');
 
 describe('Analyzer ::', function() {
   describe('COUNT statements', function() {
-
     it('should generate a valid group when when COUNT is used', function(done) {
       var tokens = tokenize({
         count: [
@@ -22,7 +21,7 @@ describe('Analyzer ::', function() {
         assert.deepEqual(result,  [
           [
             { type: 'IDENTIFIER', value: 'COUNT' },
-            { type: 'VALUE', value: [ 'active' ] }
+            { type: 'VALUE', value: ['active'] }
           ],
           [
             { type: 'IDENTIFIER', value: 'FROM' },
@@ -33,6 +32,5 @@ describe('Analyzer ::', function() {
         return done();
       });
     });
-
   });
 });

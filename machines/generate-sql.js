@@ -38,13 +38,12 @@ module.exports = {
         sql: 'select * from "books"',
         bindings: ['===']
       }
-    },
+    }
 
   },
 
 
-  fn: function(inputs, exits) {
-
+  fn: function generateSql(inputs, exits) {
     var Pack = require('../index');
 
     // Tokenize the values
@@ -64,8 +63,6 @@ module.exports = {
     }).execSync();
 
     return exits.success(sql);
-  },
-
-
+  }
 
 };

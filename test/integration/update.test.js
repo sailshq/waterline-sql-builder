@@ -2,7 +2,6 @@ var Test = require('../support/test-runner');
 
 describe('Query Generation ::', function() {
   describe('UPDATE statements', function() {
-
     it('should generate an update query', function(done) {
       Test({
         query: {
@@ -53,7 +52,7 @@ describe('Query Generation ::', function() {
           using: 'user',
           update: {
             age: 10
-          },
+          }
         },
         outcomes: [
           {
@@ -126,6 +125,5 @@ describe('Query Generation ::', function() {
         ]
       }, done);
     });
-
   });
 });

@@ -3,7 +3,6 @@ var assert = require('assert');
 
 describe('Tokenizer ::', function() {
   describe('Various Operators', function() {
-
     it('should generate a valid token array when LIKE is used', function(done) {
       Tokenizer({
         expression: {
@@ -19,7 +18,7 @@ describe('Tokenizer ::', function() {
               {
                 not: {
                   id: {
-                    in: [1,2,3]
+                    in: [1, 2, 3]
                   }
                 }
               }
@@ -46,7 +45,7 @@ describe('Tokenizer ::', function() {
           { type: 'CONDITION', value: 'NOT' },
           { type: 'KEY', value: 'id' },
           { type: 'CONDITION', value: 'IN' },
-          { type: 'VALUE', value: [ 1, 2, 3 ] },
+          { type: 'VALUE', value: [1, 2, 3] },
           { type: 'ENDGROUP', value: 1 },
           { type: 'ENDCONDITION', value: 'OR' }
         ]);
@@ -54,6 +53,5 @@ describe('Tokenizer ::', function() {
         return done();
       });
     });
-
   });
 });

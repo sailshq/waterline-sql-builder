@@ -2,7 +2,6 @@ var Test = require('../support/test-runner');
 
 describe('Query Generation ::', function() {
   describe('WHERE IN statements', function() {
-
     it('should generate a query', function(done) {
       Test({
         query: {
@@ -10,7 +9,7 @@ describe('Query Generation ::', function() {
           from: 'users',
           where: {
             id: {
-              in: [1,2,3]
+              in: [1, 2, 3]
             }
           }
         },
@@ -53,12 +52,12 @@ describe('Query Generation ::', function() {
             or: [
               {
                 id: {
-                  in: [1,2,3]
+                  in: [1, 2, 3]
                 }
               },
               {
                 id: {
-                  in: [4,5,6]
+                  in: [4, 5, 6]
                 }
               }
             ]
@@ -93,6 +92,5 @@ describe('Query Generation ::', function() {
         ]
       }, done);
     });
-
   });
 });

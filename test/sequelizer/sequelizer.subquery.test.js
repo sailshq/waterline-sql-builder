@@ -4,9 +4,7 @@ var assert = require('assert');
 
 describe('Sequelizer ::', function() {
   describe('Subqueries', function() {
-
     describe('used as a predicate', function() {
-
       it('should generate a valid query for an IN subquery', function(done) {
         var tree = analyze({
           select: '*',
@@ -72,11 +70,9 @@ describe('Sequelizer ::', function() {
           return done();
         });
       });
-
     });
 
     describe('used as scalar values', function() {
-
       it('should generate a valid query when used inside a SELECT', function(done) {
         var tree = analyze({
           select: ['name', {
@@ -131,11 +127,9 @@ describe('Sequelizer ::', function() {
           return done();
         });
       });
-
     });
 
     describe('used as table sub query', function() {
-
       it('should generate a valid query when used as a value in a FROM', function(done) {
         var tree = analyze({
           select: ['name', 'age'],
@@ -184,8 +178,6 @@ describe('Sequelizer ::', function() {
           return done();
         });
       });
-
     });
-
   });
 });

@@ -4,12 +4,11 @@ var assert = require('assert');
 
 describe('Analyzer ::', function() {
   describe('ORDER BY statements', function() {
-
     it('should generate a valid group when ORDER BY is used', function(done) {
       var tokens = tokenize({
         select: '*',
         from: 'users',
-        orderBy: [{ name: 'desc' },{ age: 'asc' }]
+        orderBy: [{ name: 'desc' }, { age: 'asc' }]
       });
 
       Analyzer({
@@ -39,6 +38,5 @@ describe('Analyzer ::', function() {
         return done();
       });
     });
-
   });
 });

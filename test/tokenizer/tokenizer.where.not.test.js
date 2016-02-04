@@ -3,7 +3,6 @@ var assert = require('assert');
 
 describe('Tokenizer ::', function() {
   describe('WHERE NOT statements', function() {
-
     it('should generate a valid token array', function(done) {
       Tokenizer({
         expression: {
@@ -31,7 +30,7 @@ describe('Tokenizer ::', function() {
           { type: 'VALUE', value: 'Test' },
           { type: 'CONDITION', value: 'NOT' },
           { type: 'KEY', value: 'lastName' },
-          { type: 'VALUE', value: 'User' },
+          { type: 'VALUE', value: 'User' }
         ]);
 
         return done();
@@ -184,6 +183,5 @@ describe('Tokenizer ::', function() {
         return done();
       });
     });
-
   });
 });

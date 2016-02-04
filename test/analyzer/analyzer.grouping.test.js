@@ -4,7 +4,6 @@ var assert = require('assert');
 
 describe('Analyzer ::', function() {
   describe('Grouping statements with OR', function() {
-
     it('should generate a valid group', function(done) {
       var tokens = tokenize({
         select: '*',
@@ -111,6 +110,5 @@ describe('Analyzer ::', function() {
         return done();
       });
     });
-
   });
 });

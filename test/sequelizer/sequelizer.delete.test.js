@@ -4,7 +4,6 @@ var assert = require('assert');
 
 describe('Sequelizer ::', function() {
   describe('DELETE statements', function() {
-
     it('should generate a simple query with an DELETE statement', function(done) {
       var tree = analyze({
         del: true,
@@ -25,6 +24,5 @@ describe('Sequelizer ::', function() {
         return done();
       });
     });
-
   });
 });

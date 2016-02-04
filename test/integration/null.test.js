@@ -2,9 +2,7 @@ var Test = require('../support/test-runner');
 
 describe('Query Generation ::', function() {
   describe('NULL operator ::', function() {
-
     describe('IS NULL ::', function() {
-
       it('should generate a query when a NULL value is used', function(done) {
         Test({
           query: {
@@ -43,11 +41,9 @@ describe('Query Generation ::', function() {
           ]
         }, done);
       });
-
     });
 
     describe('IS NOT NULL ::', function() {
-
       it('should generate a query when a NOT NULL value is used', function(done) {
         Test({
           query: {
@@ -62,8 +58,6 @@ describe('Query Generation ::', function() {
           outcome: 'select * from "users" where "updatedAt" is not null'
         }, done);
       });
-
     });
-
   });
 });

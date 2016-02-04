@@ -4,7 +4,6 @@ var assert = require('assert');
 
 describe('Sequelizer ::', function() {
   describe('COUNT statements', function() {
-
     it('should generate a count query', function(done) {
       var tree = analyze({
         count: [
@@ -23,6 +22,5 @@ describe('Sequelizer ::', function() {
         return done();
       });
     });
-
   });
 });

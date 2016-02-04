@@ -2,7 +2,6 @@ var Test = require('../support/test-runner');
 
 describe('Query Generation ::', function() {
   describe('WHERE NOT statements', function() {
-
     it('should generate a query with a WHERE NOT statement', function(done) {
       Test({
         query: {
@@ -193,6 +192,5 @@ describe('Query Generation ::', function() {
         ]
       }, done);
     });
-
   });
 });

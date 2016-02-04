@@ -2,7 +2,6 @@ var Test = require('../support/test-runner');
 
 describe('Query Generation ::', function() {
   describe('Simple WHERE statements', function() {
-
     it('should generate a query with a simple WHERE statement', function(done) {
       Test({
         query: {
@@ -160,6 +159,5 @@ describe('Query Generation ::', function() {
         ]
       }, done);
     });
-
   });
 });

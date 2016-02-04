@@ -4,7 +4,6 @@ var assert = require('assert');
 
 describe('Analyzer ::', function() {
   describe('INSERT statements', function() {
-
     it('should generate a valid group for INSERT statements', function(done) {
       var tokens = tokenize({
         insert: {
@@ -34,6 +33,5 @@ describe('Analyzer ::', function() {
         return done();
       });
     });
-
   });
 });

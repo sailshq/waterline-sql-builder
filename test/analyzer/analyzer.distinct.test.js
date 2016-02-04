@@ -4,7 +4,6 @@ var assert = require('assert');
 
 describe('Analyzer ::', function() {
   describe('DISTINCT statements', function() {
-
     it('should generate a valid group when when DISTINCT is used', function(done) {
       var tokens = tokenize({
         select: {
@@ -33,6 +32,5 @@ describe('Analyzer ::', function() {
         return done();
       });
     });
-
   });
 });

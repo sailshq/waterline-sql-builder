@@ -3,7 +3,6 @@ var assert = require('assert');
 
 describe('Tokenizer ::', function() {
   describe('COUNT statements', function() {
-
     it('should generate a valid token array when COUNT is used', function(done) {
       Tokenizer({
         expression: {
@@ -18,7 +17,7 @@ describe('Tokenizer ::', function() {
 
         assert.deepEqual(result,  [
           { type: 'IDENTIFIER', value: 'COUNT' },
-          { type: 'VALUE', value: [ 'active' ] },
+          { type: 'VALUE', value: ['active'] },
           { type: 'IDENTIFIER', value: 'FROM' },
           { type: 'VALUE', value: 'users' }
         ]);
@@ -26,6 +25,5 @@ describe('Tokenizer ::', function() {
         return done();
       });
     });
-
   });
 });

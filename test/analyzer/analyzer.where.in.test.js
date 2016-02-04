@@ -4,14 +4,13 @@ var assert = require('assert');
 
 describe('Analyzer ::', function() {
   describe('WHERE IN statements', function() {
-
     it('should generate a valid group', function(done) {
       var tokens = tokenize({
         select: ['name'],
         from: 'users',
         where: {
           id: {
-            in: [1,2,3]
+            in: [1, 2, 3]
           }
         }
       });
@@ -35,7 +34,7 @@ describe('Analyzer ::', function() {
             { type: 'IDENTIFIER', value: 'WHERE' },
             { type: 'KEY', value: 'id' },
             { type: 'CONDITION', value: 'IN' },
-            { type: 'VALUE', value: [ 1, 2, 3 ] }
+            { type: 'VALUE', value: [1, 2, 3] }
           ]
         ]);
 
@@ -51,12 +50,12 @@ describe('Analyzer ::', function() {
           or: [
             {
               id: {
-                in: [1,2,3]
+                in: [1, 2, 3]
               }
             },
             {
               id: {
-                in: [4,5,6]
+                in: [4, 5, 6]
               }
             }
           ]
@@ -83,12 +82,12 @@ describe('Analyzer ::', function() {
             [
               { type: 'KEY', value: 'id' },
               { type: 'CONDITION', value: 'IN' },
-              { type: 'VALUE', value: [ 1, 2, 3 ] }
+              { type: 'VALUE', value: [1, 2, 3] }
             ],
             [
               { type: 'KEY', value: 'id' },
               { type: 'CONDITION', value: 'IN' },
-              { type: 'VALUE', value: [ 4, 5, 6 ] }
+              { type: 'VALUE', value: [4, 5, 6] }
             ]
           ]
         ]);
@@ -96,6 +95,5 @@ describe('Analyzer ::', function() {
         return done();
       });
     });
-
   });
 });

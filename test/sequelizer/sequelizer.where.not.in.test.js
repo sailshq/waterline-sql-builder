@@ -4,7 +4,6 @@ var assert = require('assert');
 
 describe('Sequelizer ::', function() {
   describe('WHERE NOT IN statements', function() {
-
     it('should generate a query', function(done) {
       var tree = analyze({
         select: ['name'],
@@ -12,7 +11,7 @@ describe('Sequelizer ::', function() {
         where: {
           not: {
             id: {
-              in: [1,2,3]
+              in: [1, 2, 3]
             }
           }
         }
@@ -39,14 +38,14 @@ describe('Sequelizer ::', function() {
             {
               not: {
                 id: {
-                  in: [1,2,3]
+                  in: [1, 2, 3]
                 }
               }
             },
             {
               not: {
                 id: {
-                  in: [4,5,6]
+                  in: [4, 5, 6]
                 }
               }
             }
@@ -75,7 +74,7 @@ describe('Sequelizer ::', function() {
             {
               not: {
                 id: {
-                  in: [1,2,3]
+                  in: [1, 2, 3]
                 }
               },
               age: 21
@@ -83,7 +82,7 @@ describe('Sequelizer ::', function() {
             {
               not: {
                 id: {
-                  in: [4,5,6]
+                  in: [4, 5, 6]
                 }
               }
             }
@@ -102,6 +101,5 @@ describe('Sequelizer ::', function() {
         return done();
       });
     });
-
   });
 });

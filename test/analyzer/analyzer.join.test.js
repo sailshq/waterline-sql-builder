@@ -4,7 +4,6 @@ var assert = require('assert');
 
 describe('Analyzer ::', function() {
   describe('JOINS', function() {
-
     it('should generate a valid group when JOIN is used', function(done) {
       var tokens = tokenize({
         select: ['users.id', 'contacts.phone'],
@@ -363,6 +362,5 @@ describe('Analyzer ::', function() {
         return done();
       });
     });
-
   });
 });

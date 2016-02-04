@@ -4,7 +4,6 @@ var assert = require('assert');
 
 describe('Analyzer ::', function() {
   describe('OFFSET statements', function() {
-
     it('should generate a valid group when OFFSET is used', function(done) {
       var tokens = tokenize({
         select: '*',
@@ -36,6 +35,5 @@ describe('Analyzer ::', function() {
         return done();
       });
     });
-
   });
 });

@@ -2,7 +2,6 @@ var Test = require('../support/test-runner');
 
 describe('Query Generation ::', function() {
   describe('Grouping statements with OR', function() {
-
     it('should generate a query when an OR statement is present', function(done) {
       Test({
         query: {
@@ -97,6 +96,5 @@ describe('Query Generation ::', function() {
         ]
       }, done);
     });
-
   });
 });

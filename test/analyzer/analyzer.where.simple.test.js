@@ -4,7 +4,6 @@ var assert = require('assert');
 
 describe('Analyzer ::', function() {
   describe('Simple WHERE statements', function() {
-
     it('should generate a valid group', function(done) {
       var tokens = tokenize({
         select: ['id'],
@@ -157,6 +156,5 @@ describe('Analyzer ::', function() {
         return done();
       });
     });
-
   });
 });

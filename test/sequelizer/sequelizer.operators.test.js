@@ -4,7 +4,6 @@ var assert = require('assert');
 
 describe('Sequelizer ::', function() {
   describe('Various Operators', function() {
-
     it('should generate a query for LIKE operators', function(done) {
       var tree = analyze({
         select: '*',
@@ -19,7 +18,7 @@ describe('Sequelizer ::', function() {
             {
               not: {
                 id: {
-                  in: [1,2,3]
+                  in: [1, 2, 3]
                 }
               }
             }
@@ -38,6 +37,5 @@ describe('Sequelizer ::', function() {
         return done();
       });
     });
-
   });
 });

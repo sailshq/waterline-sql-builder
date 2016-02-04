@@ -4,7 +4,6 @@ var assert = require('assert');
 
 describe('Sequelizer ::', function() {
   describe('WHERE NOT NULL statements', function() {
-
     it('should generate a query with a simple WHERE statement', function(done) {
       var tree = analyze({
         select: '*',
@@ -26,6 +25,5 @@ describe('Sequelizer ::', function() {
         return done();
       });
     });
-
   });
 });

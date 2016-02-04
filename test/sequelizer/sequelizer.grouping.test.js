@@ -4,7 +4,6 @@ var assert = require('assert');
 
 describe('Sequelizer ::', function() {
   describe('Grouping statements with OR', function() {
-
     it('should generate a query when an OR statement is used', function(done) {
       var tree = analyze({
         select: '*',
@@ -63,6 +62,5 @@ describe('Sequelizer ::', function() {
         return done();
       });
     });
-
   });
 });

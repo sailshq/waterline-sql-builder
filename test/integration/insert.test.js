@@ -2,7 +2,6 @@ var Test = require('../support/test-runner');
 
 describe('Query Generation ::', function() {
   describe('INSERT statements', function() {
-
     it('should generate an insert query', function(done) {
       Test({
         query: {
@@ -79,6 +78,5 @@ describe('Query Generation ::', function() {
         ]
       }, done);
     });
-
   });
 });

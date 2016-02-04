@@ -4,7 +4,6 @@ var assert = require('assert');
 
 describe('Sequelizer ::', function() {
   describe('INSERT statements', function() {
-
     it('should generate a simple query with an INSERT statement', function(done) {
       var tree = analyze({
         insert: {
@@ -45,6 +44,5 @@ describe('Sequelizer ::', function() {
         return done();
       });
     });
-
   });
 });

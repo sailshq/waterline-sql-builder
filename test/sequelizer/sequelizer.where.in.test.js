@@ -4,14 +4,13 @@ var assert = require('assert');
 
 describe('Sequelizer ::', function() {
   describe('WHERE IN statements', function() {
-
     it('should generate a query', function(done) {
       var tree = analyze({
         select: ['name'],
         from: 'users',
         where: {
           id: {
-            in: [1,2,3]
+            in: [1, 2, 3]
           }
         }
       });
@@ -36,12 +35,12 @@ describe('Sequelizer ::', function() {
           or: [
             {
               id: {
-                in: [1,2,3]
+                in: [1, 2, 3]
               }
             },
             {
               id: {
-                in: [4,5,6]
+                in: [4, 5, 6]
               }
             }
           ]
@@ -59,6 +58,5 @@ describe('Sequelizer ::', function() {
         return done();
       });
     });
-
   });
 });

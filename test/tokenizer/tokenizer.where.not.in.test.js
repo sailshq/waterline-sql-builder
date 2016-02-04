@@ -3,7 +3,6 @@ var assert = require('assert');
 
 describe('Tokenizer ::', function() {
   describe('WHERE NOT IN statements', function() {
-
     it('should generate a valid token array', function(done) {
       Tokenizer({
         expression: {
@@ -12,7 +11,7 @@ describe('Tokenizer ::', function() {
           where: {
             not: {
               id: {
-                in: [1,2,3]
+                in: [1, 2, 3]
               }
             }
           }
@@ -30,7 +29,7 @@ describe('Tokenizer ::', function() {
           { type: 'CONDITION', value: 'NOT' },
           { type: 'KEY', value: 'id' },
           { type: 'CONDITION', value: 'IN' },
-          { type: 'VALUE', value: [ 1, 2, 3 ] }
+          { type: 'VALUE', value: [1, 2, 3] }
         ]);
 
         return done();
@@ -47,14 +46,14 @@ describe('Tokenizer ::', function() {
               {
                 not: {
                   id: {
-                    in: [1,2,3]
+                    in: [1, 2, 3]
                   }
                 }
               },
               {
                 not: {
                   id: {
-                    in: [4,5,6]
+                    in: [4, 5, 6]
                   }
                 }
               }
@@ -76,13 +75,13 @@ describe('Tokenizer ::', function() {
           { type: 'CONDITION', value: 'NOT' },
           { type: 'KEY', value: 'id' },
           { type: 'CONDITION', value: 'IN' },
-          { type: 'VALUE', value: [ 1, 2, 3 ] },
+          { type: 'VALUE', value: [1, 2, 3] },
           { type: 'ENDGROUP', value: 0 },
           { type: 'GROUP', value: 1 },
           { type: 'CONDITION', value: 'NOT' },
           { type: 'KEY', value: 'id' },
           { type: 'CONDITION', value: 'IN' },
-          { type: 'VALUE', value: [ 4, 5, 6 ] },
+          { type: 'VALUE', value: [4, 5, 6] },
           { type: 'ENDGROUP', value: 1 },
           { type: 'ENDCONDITION', value: 'OR' }
         ]);
@@ -90,6 +89,5 @@ describe('Tokenizer ::', function() {
         return done();
       });
     });
-
   });
 });

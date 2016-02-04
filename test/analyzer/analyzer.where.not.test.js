@@ -4,7 +4,6 @@ var assert = require('assert');
 
 describe('Analyzer ::', function() {
   describe('WHERE NOT statements', function() {
-
     it('should generate a valid group', function(done) {
       var tokens = tokenize({
         select: ['id'],
@@ -99,19 +98,19 @@ describe('Analyzer ::', function() {
               { type: 'CONDITION', value: 'NOT' },
               [
                 { type: 'KEY', value: 'id' },
-                { type: 'VALUE', value: 1 },
+                { type: 'VALUE', value: 1 }
               ],
               [
                 { type: 'CONDITION', value: 'NOT' },
                 { type: 'KEY', value: 'id' },
                 { type: 'OPERATOR', value: '>' },
-                { type: 'VALUE', value: 10 },
+                { type: 'VALUE', value: 10 }
               ]
             ],
             [
               { type: 'CONDITION', value: 'NOT' },
               { type: 'KEY', value: 'name' },
-              { type: 'VALUE', value: 'Tester' },
+              { type: 'VALUE', value: 'Tester' }
             ]
           ]
         ]);
@@ -212,7 +211,5 @@ describe('Analyzer ::', function() {
         return done();
       });
     });
-
-
   });
 });

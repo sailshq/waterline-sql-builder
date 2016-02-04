@@ -4,7 +4,6 @@ var assert = require('assert');
 
 describe('Analyzer ::', function() {
   describe('WHERE NOT IN statements', function() {
-
     it('should generate a valid group', function(done) {
       var tokens = tokenize({
         select: ['name'],
@@ -12,7 +11,7 @@ describe('Analyzer ::', function() {
         where: {
           not: {
             id: {
-              in: [1,2,3]
+              in: [1, 2, 3]
             }
           }
         }
@@ -38,7 +37,7 @@ describe('Analyzer ::', function() {
             { type: 'CONDITION', value: 'NOT' },
             { type: 'KEY', value: 'id' },
             { type: 'CONDITION', value: 'IN' },
-            { type: 'VALUE', value: [ 1, 2, 3 ] }
+            { type: 'VALUE', value: [1, 2, 3] }
           ]
         ]);
 
@@ -55,14 +54,14 @@ describe('Analyzer ::', function() {
             {
               not: {
                 id: {
-                  in: [1,2,3]
+                  in: [1, 2, 3]
                 }
               }
             },
             {
               not: {
                 id: {
-                  in: [4,5,6]
+                  in: [4, 5, 6]
                 }
               }
             }
@@ -91,13 +90,13 @@ describe('Analyzer ::', function() {
               { type: 'CONDITION', value: 'NOT' },
               { type: 'KEY', value: 'id' },
               { type: 'CONDITION', value: 'IN' },
-              { type: 'VALUE', value: [ 1, 2, 3 ] }
+              { type: 'VALUE', value: [1, 2, 3] }
             ],
             [
               { type: 'CONDITION', value: 'NOT' },
               { type: 'KEY', value: 'id' },
               { type: 'CONDITION', value: 'IN' },
-              { type: 'VALUE', value: [ 4, 5, 6 ] }
+              { type: 'VALUE', value: [4, 5, 6] }
             ]
           ]
         ]);
@@ -105,6 +104,5 @@ describe('Analyzer ::', function() {
         return done();
       });
     });
-
   });
 });

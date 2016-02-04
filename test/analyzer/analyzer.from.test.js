@@ -4,7 +4,6 @@ var assert = require('assert');
 
 describe('Analyzer ::', function() {
   describe('FROM statements', function() {
-
     it('should generate a valid group when FROM is used', function(done) {
       var tokens = tokenize({
         select: '*',
@@ -70,6 +69,5 @@ describe('Analyzer ::', function() {
         return done();
       });
     });
-
   });
 });

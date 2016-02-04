@@ -2,9 +2,7 @@ var Test = require('../support/test-runner');
 
 describe('Query Generation ::', function() {
   describe('Subqueries', function() {
-
     describe('used as scalar values', function() {
-
       it('should generate a valid query when used inside a SELECT', function(done) {
         Test({
           query: {
@@ -95,8 +93,6 @@ describe('Query Generation ::', function() {
           ]
         }, done);
       });
-
     });
-
   });
 });

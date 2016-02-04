@@ -3,7 +3,6 @@ var assert = require('assert');
 
 describe('Tokenizer ::', function() {
   describe('WHERE IN statements', function() {
-
     it('should generate a valid token array', function(done) {
       Tokenizer({
         expression: {
@@ -11,7 +10,7 @@ describe('Tokenizer ::', function() {
           from: 'users',
           where: {
             id: {
-              in: [1,2,3]
+              in: [1, 2, 3]
             }
           }
         }
@@ -27,7 +26,7 @@ describe('Tokenizer ::', function() {
           { type: 'IDENTIFIER', value: 'WHERE' },
           { type: 'KEY', value: 'id' },
           { type: 'CONDITION', value: 'IN' },
-          { type: 'VALUE', value: [1,2,3] }
+          { type: 'VALUE', value: [1, 2, 3] }
         ]);
 
         return done();
@@ -43,12 +42,12 @@ describe('Tokenizer ::', function() {
             or: [
               {
                 id: {
-                  in: [1,2,3]
+                  in: [1, 2, 3]
                 }
               },
               {
                 id: {
-                  in: [4,5,6]
+                  in: [4, 5, 6]
                 }
               }
             ]
@@ -68,12 +67,12 @@ describe('Tokenizer ::', function() {
           { type: 'GROUP', value: 0 },
           { type: 'KEY', value: 'id' },
           { type: 'CONDITION', value: 'IN' },
-          { type: 'VALUE', value: [1,2,3] },
+          { type: 'VALUE', value: [1, 2, 3] },
           { type: 'ENDGROUP', value: 0 },
           { type: 'GROUP', value: 1 },
           { type: 'KEY', value: 'id' },
           { type: 'CONDITION', value: 'IN' },
-          { type: 'VALUE', value: [4,5,6] },
+          { type: 'VALUE', value: [4, 5, 6] },
           { type: 'ENDGROUP', value: 1 },
           { type: 'ENDCONDITION', value: 'OR' }
         ]);
@@ -81,6 +80,5 @@ describe('Tokenizer ::', function() {
         return done();
       });
     });
-
   });
 });

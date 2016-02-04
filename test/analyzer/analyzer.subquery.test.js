@@ -4,9 +4,7 @@ var assert = require('assert');
 
 describe('Analyzer ::', function() {
   describe('Subqueries', function() {
-
     describe('used as a predicate', function() {
-
       it('should generate a valid group for an IN subquery', function(done) {
         var tokens = tokenize({
           select: '*',
@@ -145,11 +143,9 @@ describe('Analyzer ::', function() {
           return done();
         });
       });
-
     });
 
     describe('used as scalar values', function() {
-
       it('should generate a valid group when used inside a SELECT', function(done) {
         var tokens = tokenize({
           select: ['name', {
@@ -279,11 +275,9 @@ describe('Analyzer ::', function() {
           return done();
         });
       });
-
     });
 
     describe('used as table sub query', function() {
-
       it('should generate a valid group when used as a value in a FROM', function(done) {
         var tokens = tokenize({
           select: ['name', 'age'],
@@ -392,8 +386,6 @@ describe('Analyzer ::', function() {
           return done();
         });
       });
-
     });
-
   });
 });

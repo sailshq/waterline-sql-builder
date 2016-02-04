@@ -2,9 +2,7 @@ var Test = require('../support/test-runner');
 
 describe('Query Generation ::', function() {
   describe('Subqueries', function() {
-
     describe('used as table sub query', function() {
-
       it('should generate a valid query when used as a value in a FROM', function(done) {
         Test({
           query: {
@@ -89,8 +87,6 @@ describe('Query Generation ::', function() {
           ]
         }, done);
       });
-
     });
-
   });
 });

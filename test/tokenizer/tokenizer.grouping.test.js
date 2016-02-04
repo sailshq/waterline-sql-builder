@@ -3,7 +3,6 @@ var assert = require('assert');
 
 describe('Tokenizer ::', function() {
   describe('Grouping statements with OR', function() {
-
     it('should generate a valid token array', function(done) {
       Tokenizer({
         expression: {
@@ -100,6 +99,5 @@ describe('Tokenizer ::', function() {
         return done();
       });
     });
-
   });
 });

@@ -3,7 +3,6 @@ var assert = require('assert');
 
 describe('Tokenizer ::', function() {
   describe('OFFSET statements', function() {
-
     it('should generate a valid token array when OFFSET is used', function(done) {
       Tokenizer({
         expression: {
@@ -27,6 +26,5 @@ describe('Tokenizer ::', function() {
         return done();
       });
     });
-
   });
 });

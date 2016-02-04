@@ -2,9 +2,7 @@ var Test = require('../support/test-runner');
 
 describe('Query Generation ::', function() {
   describe('Subqueries', function() {
-
     describe('used as a predicate', function() {
-
       it('should generate a valid query for an IN subquery', function(done) {
         Test({
           query: {
@@ -106,8 +104,6 @@ describe('Query Generation ::', function() {
           ]
         }, done);
       });
-
     });
-
   });
 });

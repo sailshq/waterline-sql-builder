@@ -4,7 +4,6 @@ var assert = require('assert');
 
 describe('Sequelizer ::', function() {
   describe('SELECT statements', function() {
-
     it('should generate a query for select "*"', function(done) {
       var tree = analyze({
         select: '*',
@@ -38,6 +37,5 @@ describe('Sequelizer ::', function() {
         return done();
       });
     });
-
   });
 });

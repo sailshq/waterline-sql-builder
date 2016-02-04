@@ -3,7 +3,6 @@ var assert = require('assert');
 
 describe('Tokenizer ::', function() {
   describe('DELETE statements', function() {
-
     it('should generate a valid token array for an DELETE is used', function(done) {
       Tokenizer({
         expression: {
@@ -29,6 +28,5 @@ describe('Tokenizer ::', function() {
         return done();
       });
     });
-
   });
 });
