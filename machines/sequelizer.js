@@ -688,6 +688,150 @@ module.exports = {
     };
 
 
+    //  ╔═╗╦═╗╔═╗╔═╗╔═╗╔═╗╔═╗  ╦  ╦╔═╗╦  ╦ ╦╔═╗
+    //  ╠═╝╠╦╝║ ║║  ║╣ ╚═╗╚═╗  ╚╗╔╝╠═╣║  ║ ║║╣
+    //  ╩  ╩╚═╚═╝╚═╝╚═╝╚═╝╚═╝   ╚╝ ╩ ╩╩═╝╚═╝╚═╝
+    //
+    // Negotiates building a query piece based on the identifier
+    var processValue = function processValue(expr, idx, options) {
+      // Examine the identifier value
+      switch (options.identifier) {
+        case 'SELECT':
+          buildQueryPiece('select', expr.value, options.query);
+          break;
+
+        case 'FROM':
+          buildQueryPiece('from', expr.value, options.query);
+          break;
+
+        case 'SCHEMA':
+          buildQueryPiece('withSchema', expr.value, options.query);
+          break;
+
+        case 'DISTINCT':
+          buildQueryPiece('distinct', expr.value, options.query);
+          break;
+
+        case 'COUNT':
+        case 'MIN':
+        case 'MAX':
+        case 'SUM':
+        case 'AVG':
+          if (!_.isArray(expr.value)) {
+            expr.value = [expr.value];
+          }
+
+          _.each(expr.value, function processAvg(val) {
+            buildQueryPiece(options.identifier.toLowerCase(), val, options.query);
+          });
+          break;
+
+        case 'GROUPBY':
+          buildQueryPiece('groupBy', expr.value, options.query);
+          break;
+
+        case 'INTO':
+          buildQueryPiece('into', expr.value, options.query);
+          break;
+
+        case 'USING':
+          buildQueryPiece('table', expr.value, options.query);
+          break;
+
+        case 'LIMIT':
+          buildQueryPiece('limit', expr.value, options.query);
+          break;
+
+        case 'OFFSET':
+          buildQueryPiece('offset', expr.value, options.query);
+          break;
+
+        case 'ORDERBY':
+
+          // Look ahead and see if the next expression is an Identifier.
+          // If so or if there is no next identifier, add the insert statments.
+          options.nextExpr = undefined;
+          options.nextExpr = options.tokenGroup[idx + 1];
+          if (!options.nextExpr || options.nextExpr.type === 'IDENTIFIER') {
+            _.each(options.expression, function processOrderBy(ordering) {
+              buildQueryPiece('orderBy', ordering, options.query);
+            });
+          }
+          break;
+
+        case 'INSERT':
+
+          // Look ahead and see if the next expression is an Identifier.
+          // If so or if there is no next identifier, add the insert statments.
+          options.nextExpr = undefined;
+          options.nextExpr = options.tokenGroup[idx + 1];
+          if (!options.nextExpr || options.nextExpr.type === 'IDENTIFIER') {
+            // Flatten the expression
+            options.expression = _.fromPairs(options.expression);
+            buildQueryPiece('insert', options.expression, options.query);
+
+            // Also add a 'returning' value
+            buildQueryPiece('returning', 'id', options.query);
+          }
+          break;
+
+        case 'UPDATE':
+
+          // Look ahead and see if the next expression is an Identifier.
+          // If so or if there is no next identifier, add the update statments.
+          options.nextExpr = undefined;
+          options.nextExpr = options.tokenGroup[idx + 1];
+          if (!options.nextExpr || options.nextExpr.type === 'IDENTIFIER') {
+            // Flatten the expression
+            options.expression = _.fromPairs(options.expression);
+            buildQueryPiece('update', options.expression, options.query);
+
+            // Also add a 'returning' value
+            buildQueryPiece('returning', 'id', options.query);
+          }
+          break;
+
+        case 'WHERE':
+
+          // Check the modifier to see if a different function other than
+          // WHERE should be used. The most common is NOT.
+          if (options.modifier && options.modifier.length) {
+            if (options.modifier.length === 1 && _.first(options.modifier) === 'NOT') {
+              options.fn = 'whereNot';
+            }
+
+            if (options.modifier.length === 1 && _.first(options.modifier) === 'IN') {
+              options.fn = 'whereIn';
+            }
+
+            // If there are more than 1 modifier then we need to checkout
+            // the combo. Usually it's a [NOT,IN] situation.
+            // For now let's assume it will only ever be 2 items.
+            if (options.modifier.length > 1) {
+              var first = _.first(_.pullAt(options.modifier, 0));
+              var second = _.first(_.pullAt(options.modifier, 0));
+
+              if (first === 'NOT' && second === 'IN') {
+                options.fn = 'whereNotIn';
+              }
+            }
+
+            // Otherwise use the where fn
+          } else {
+            options.fn = 'where';
+          }
+
+          // Set the second or third item in the array to the value
+          buildQueryPiece(options.fn, options.expression, options.query);
+
+          // Clear the modifier
+          options.modifier = [];
+          break;
+
+      }
+    };
+
+
     //  ╔═╗═╗ ╦╔═╗╦═╗╔═╗╔═╗╔═╗╦╔═╗╔╗╔  ╔═╗╔═╗╦═╗╔═╗╔═╗╦═╗
     //  ║╣ ╔╩╦╝╠═╝╠╦╝║╣ ╚═╗╚═╗║║ ║║║║  ╠═╝╠═╣╠╦╝╚═╗║╣ ╠╦╝
     //  ╚═╝╩ ╚═╩  ╩╚═╚═╝╚═╝╚═╝╩╚═╝╝╚╝  ╩  ╩ ╩╩╚═╚═╝╚═╝╩╚═
@@ -707,13 +851,14 @@ module.exports = {
         return;
       }
 
-      // Modifiers
+      // NOT Modifier
       if (expr.type === 'CONDITION' && expr.value === 'NOT') {
         options.modifier = options.modifier || [];
         options.modifier.push(expr.value);
         return;
       }
 
+      // IN Modifier
       if (expr.type === 'CONDITION' && expr.value === 'IN') {
         options.modifier = options.modifier || [];
         options.modifier.push(expr.value);
@@ -740,146 +885,23 @@ module.exports = {
         options.expression = orderByBuilder(expr, options.expression, options.query);
       }
 
-      // Process value and use the appropriate Knex function
-      if (expr.type === 'VALUE') {
-        // Examine the identifier value
-        switch (options.identifier) {
-          case 'SELECT':
-            buildQueryPiece('select', expr.value, options.query);
-            break;
-
-          case 'FROM':
-            buildQueryPiece('from', expr.value, options.query);
-            break;
-
-          case 'SCHEMA':
-            buildQueryPiece('withSchema', expr.value, options.query);
-            break;
-
-          case 'DISTINCT':
-            buildQueryPiece('distinct', expr.value, options.query);
-            break;
-
-          case 'COUNT':
-          case 'MIN':
-          case 'MAX':
-          case 'SUM':
-          case 'AVG':
-            if (!_.isArray(expr.value)) {
-              expr.value = [expr.value];
-            }
-
-            _.each(expr.value, function processAvg(val) {
-              buildQueryPiece(options.identifier.toLowerCase(), val, options.query);
-            });
-            break;
-
-          case 'GROUPBY':
-            buildQueryPiece('groupBy', expr.value, options.query);
-            break;
-
-          case 'INTO':
-            buildQueryPiece('into', expr.value, options.query);
-            break;
-
-          case 'USING':
-            buildQueryPiece('table', expr.value, options.query);
-            break;
-
-          case 'LIMIT':
-            buildQueryPiece('limit', expr.value, options.query);
-            break;
-
-          case 'OFFSET':
-            buildQueryPiece('offset', expr.value, options.query);
-            break;
-
-          case 'ORDERBY':
-
-            // Look ahead and see if the next expression is an Identifier.
-            // If so or if there is no next identifier, add the insert statments.
-            options.nextExpr = undefined;
-            options.nextExpr = options.tokenGroup[idx + 1];
-            if (!options.nextExpr || options.nextExpr.type === 'IDENTIFIER') {
-              _.each(options.expression, function processOrderBy(ordering) {
-                buildQueryPiece('orderBy', ordering, options.query);
-              });
-            }
-            break;
-
-          case 'INSERT':
-
-            // Look ahead and see if the next expression is an Identifier.
-            // If so or if there is no next identifier, add the insert statments.
-            options.nextExpr = undefined;
-            options.nextExpr = options.tokenGroup[idx + 1];
-            if (!options.nextExpr || options.nextExpr.type === 'IDENTIFIER') {
-              // Flatten the expression
-              options.expression = _.fromPairs(options.expression);
-              buildQueryPiece('insert', options.expression, options.query);
-
-              // Also add a 'returning' value
-              buildQueryPiece('returning', 'id', options.query);
-            }
-            break;
-
-          case 'UPDATE':
-
-            // Look ahead and see if the next expression is an Identifier.
-            // If so or if there is no next identifier, add the update statments.
-            options.nextExpr = undefined;
-            options.nextExpr = options.tokenGroup[idx + 1];
-            if (!options.nextExpr || options.nextExpr.type === 'IDENTIFIER') {
-              // Flatten the expression
-              options.expression = _.fromPairs(options.expression);
-              buildQueryPiece('update', options.expression, options.query);
-
-              // Also add a 'returning' value
-              buildQueryPiece('returning', 'id', options.query);
-            }
-            break;
-
-          case 'WHERE':
-
-            // Check the modifier to see if a different function other than
-            // WHERE should be used. The most common is NOT.
-            if (options.modifier && options.modifier.length) {
-              if (options.modifier.length === 1 && _.first(options.modifier) === 'NOT') {
-                options.fn = 'whereNot';
-              }
-
-              if (options.modifier.length === 1 && _.first(options.modifier) === 'IN') {
-                options.fn = 'whereIn';
-              }
-
-              // If there are more than 1 modifier then we need to checkout
-              // the combo. Usually it's a [NOT,IN] situation.
-              // For now let's assume it will only ever be 2 items.
-              if (options.modifier.length > 1) {
-                var first = _.first(_.pullAt(options.modifier, 0));
-                var second = _.first(_.pullAt(options.modifier, 0));
-
-                if (first === 'NOT' && second === 'IN') {
-                  options.fn = 'whereNotIn';
-                }
-              }
-
-              // Otherwise use the where fn
-            } else {
-              options.fn = 'where';
-            }
-
-            // Set the second or third item in the array to the value
-            buildQueryPiece(options.fn, options.expression, options.query);
-
-            // Clear the modifier
-            options.modifier = [];
-            break;
-        }
-
+      // Handle AS statements
+      if (options.identifier === 'AS' && expr.type === 'VALUE') {
+        options.query.as(expr.value);
         return;
       }
 
+      // Process value and use the appropriate Knex function
+      if (expr.type === 'VALUE') {
+        processValue(expr, idx, options);
+        return;
+      }
+
+      // Handle SUBQUERY keys
+      if (expr.type === 'SUBQUERY') {
+        options.subQuery = true;
+        return;
+      }
 
       //  ╔═╗╦═╗╔═╗╦ ╦╔═╗╦╔╗╔╔═╗
       //  ║ ╦╠╦╝║ ║║ ║╠═╝║║║║║ ╦
@@ -900,6 +922,31 @@ module.exports = {
           'FULLOUTERJOIN'
         ];
 
+        // If the expression is a subQuery then process it standalone query
+        // and pass it in as the expression value
+        if (options.subQuery) {
+          // Build a standalone knex query builder and pass it the expression
+          var subQueryBuilder = knex.queryBuilder();
+          tokenParser(subQueryBuilder, expr);
+
+          // Toggle off the subquery flag
+          options.subQuery = false;
+
+          // Build the query using the subquery object as the value
+          if (options.identifier === 'WHERE') {
+            options.expression.push(subQueryBuilder);
+
+            // If not a WHERE clause, just stick the subquery on the value
+          } else {
+            expr.value = subQueryBuilder;
+          }
+
+          // Process the value
+          processValue(expr, idx, options);
+
+          return;
+        }
+
         var isJoin = _.indexOf(joinTypes, options.identifier);
         if (isJoin === -1) {
           processGroup(expr, false, options.expression, undefined, options.query);
@@ -919,13 +966,14 @@ module.exports = {
     var treeParser = function treeParser(tokenGroup, key, query) {
       // Build up the default options
       var options = {
-        identifier: null,
+        identifier: undefined,
         modifier: [],
-        fn: null,
-        nextExpr: null,
+        fn: undefined,
+        nextExpr: undefined,
         expression: [],
         query: query,
-        tokenGroup: tokenGroup
+        tokenGroup: tokenGroup,
+        subQuery: false
       };
 
       // Loop through each item in the group and build up the expression
@@ -943,8 +991,6 @@ module.exports = {
     //     ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═══╝    ╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝
     //
     // Loop through each token group in the tree and add to the query
-    // console.log('TREE', require('util').inspect(tree, false, null));
-
     var tokenParser = function tokenParser(query, tree) {
       _.forEach(tree, function parseTree(tokenGroup, key) {
         treeParser(tokenGroup, key, query);
