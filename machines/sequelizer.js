@@ -46,7 +46,10 @@ module.exports = {
 
   fn: function sequelizer(inputs, exits) {
     var _ = require('lodash');
-    var knex = require('knex')({ dialect: inputs.dialect });
+    var knex = require('knex')({
+      dialect: inputs.dialect,
+      useNullAsDefault: true
+    });
 
 
     //  ╔╗ ╦ ╦╦╦  ╔╦╗  ╔═╗ ╦ ╦╔═╗╦═╗╦ ╦  ╔═╗╦╔═╗╔═╗╔═╗
