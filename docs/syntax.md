@@ -243,12 +243,17 @@ db.users.find({$or: [
 ```
 
 
-#### Sub-Queries
+## Sub-Queries
 
 You can also create subqueries. The following example will show you how to nest
-queries within a query as well as show a combination of AND and OR operators.
+queries within a query.
 
-TODO: Write parser for this.
+There are three types of valid subqueries: `predicate`, `scalar`, and `table`.
+
+#### Predicate Subqueries
+
+Predicate subqueries are valid when used inside a `where` clause to return a
+list of values.
 
 **Example**
 
@@ -257,19 +262,18 @@ TODO: Write parser for this.
   select: '*',
   from: 'accounts',
   where: {
-    id: [
-      {
+    id: {
+      in: {
         select: ['id'],
         from: 'users',
         where: {
-          votes: { '>': 100 },
           or: [
             { status: 'active' },
             { name: 'John' }
           ]
         }
       }
-    ]
+    }
   }
 }
 ```
@@ -278,24 +282,149 @@ TODO: Write parser for this.
 
 ```sql
 -- PostgreSQL
-select * from "accounts" where "id" IN (select "id" from "users" where "votes" > '100' and "status" = 'active' or "name" = 'John')
+select * from "accounts" where "id" in (select "id" from "users" where "status" = 'active' or "name" = 'John')
 ```
 
 ```javascript
 // MongoDB
-var users = db.users.find({
-  $and: [
-    { votes: { $gt: 100 } },
-    {
-      $or: [
+
+```
+
+**Example**
+
+```javascript
+{
+  select: '*',
+  from: 'accounts',
+  where: {
+    not: {
+      id: {
+        in: {
+          select: ['id'],
+          from: 'users',
+          where: {
+            or: [
+              { status: 'active' },
+              { name: 'John' }
+            ]
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+-- PostgreSQL
+select * from "accounts" where "id" not in (select "id" from "users" where "status" = 'active' or "name" = 'John')
+```
+
+```javascript
+// MongoDB
+
+```
+
+#### Scalar Subqueries
+
+Scalar subqueries are valid when used as a single value. The subquery can only
+return one column value.
+
+**Example**
+
+```javascript
+{
+  select: ['name', {
+    select: ['username'],
+    from: 'users',
+    where: {
+      or: [
         { status: 'active' },
         { name: 'John' }
       ]
-    }
-  ]
-}, { _id: 0 });
-db.accounts.find({ _id: { $in: users }});
+    },
+    as: 'username'
+  }, 'age'],
+  from: 'accounts'
+}
 ```
+
+**Outputs:**
+
+```sql
+-- PostgreSQL
+select "name", (select "username" from "users" where "status" = 'active' or "name" = 'John') as "username", "age" from "accounts"
+```
+
+```javascript
+// MongoDB
+
+```
+
+**Example**
+
+```javascript
+{
+  select: ['name', 'age'],
+  from: 'accounts',
+  where: {
+    username: {
+      select: ['username'],
+      from: 'users',
+      where: {
+        color: 'accounts.color'
+      }
+    }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+-- PostgreSQL
+select "name", "age" from "accounts" where "username" = (select "username" from "users" where "color" = 'accounts.color')
+```
+
+```javascript
+// MongoDB
+
+```
+
+#### Table Subqueries
+
+Table subqueries are valid when used as a single value in the `FROM` clause.
+The subquery can only return one column value.
+
+**Example**
+
+```javascript
+{
+  select: ['name', 'age'],
+  from: {
+    select: ['age'],
+    from: 'users',
+    where: {
+      age: 21
+    }
+  }
+}
+```
+
+**Outputs:**
+
+```sql
+-- PostgreSQL
+select "name", "age" from (select "age" from "users" where "age" = '21')
+```
+
+```javascript
+// MongoDB
+
+```
+
 
 ## Where Not Clauses
 
