@@ -16,7 +16,7 @@
   "author": "Cody Stoltman <particlebanana@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "knex": "0.9.0",
+    "knex": "particlebanana/knex#local-fork",
     "lodash": "4.0.0",
     "machine": "10.4.0"
   },
