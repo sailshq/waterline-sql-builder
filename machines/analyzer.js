@@ -67,12 +67,17 @@ module.exports = {
       'FULLOUTERJOIN'
     ];
 
+    // Hold the results of the token processing as a stringfied version.
+    // After we are done building up all the grouped tokens, it can be
+    // JSON parsed
+    var results = '';
+
     //  ╦ ╦╦═╗╦╔╦╗╔═╗  ╔═╗╦ ╦╦ ╦╔╗╔╦╔═
     //  ║║║╠╦╝║ ║ ║╣   ║  ╠═╣║ ║║║║╠╩╗
     //  ╚╩╝╩╚═╩ ╩ ╚═╝  ╚═╝╩ ╩╚═╝╝╚╝╩ ╩
     //
     // Given a chunk of data, write it to the result container
-    var writeChunk = function writeChunk(chunk, wrappedChunk, results, write) {
+    var writeChunk = function writeChunk(chunk, wrappedChunk, write) {
       try {
         // Remove the trailing comma from the chunk
         if (chunk.charAt(chunk.length - 1) === ',') {
@@ -87,12 +92,12 @@ module.exports = {
 
         // Close the chunk, unless it's empty
         if (chunk.charAt(chunk.length - 1) !== '[') {
-          chunk += ']';
+          chunk += '],';
         }
 
         // Write the chunk
         if (write) {
-          results.push(JSON.parse(chunk));
+          results += chunk;
         }
       } catch (e) {
         throw new Error('Error parsing chunk');
@@ -103,9 +108,6 @@ module.exports = {
 
 
     var analyzer = function analyzer(tokens) {
-      // Hold the results of the token processing
-      var results = [];
-
       // Hold the current chunk
       var chunk;
 
@@ -114,7 +116,6 @@ module.exports = {
 
       // Hold the flag array for wrapping a subquery
       var subquery = [];
-      var subqueryTag = false;
 
       // Process the token list in order
       _.each(tokens, function analyzeToken(token) {
@@ -126,7 +127,6 @@ module.exports = {
         // on the chunk.
         if (token.type === 'SUBQUERY') {
           subquery.push(true);
-          subqueryTag = true;
           chunk += JSON.stringify(token) + ', [';
           return;
         }
@@ -160,22 +160,11 @@ module.exports = {
 
           // If there is an active chunk write it
           if (chunk) {
-            chunk = writeChunk(chunk, wrappedChunk, results, write);
+            chunk = writeChunk(chunk, wrappedChunk, write);
           }
 
-          // The subquery tag toggles itself off after the first chunk of data.
-          // It represents the opening of the subquery so there shouldn't be a
-          // comma or we would end up with [,[
-          if (subquery.length && !subqueryTag) {
-            chunk += ',';
-          }
-
-          // Toggle off the subqueryTag
-          if (subquery.length && subqueryTag) {
-            subqueryTag = false;
-          }
-
-          // Start a new chunk unless there is a subquery being built
+          // Start a new chunk unless there is a subquery being built, in
+          // which case continue appending logic.
           if (subquery.length) {
             chunk += '[' + JSON.stringify(token) + ',';
           } else {
@@ -243,17 +232,24 @@ module.exports = {
       // Add the last chunk onto the stack
       if (chunk) {
         var write = subquery.length ? false : true;
-        writeChunk(chunk, wrappedChunk, results, write);
-      }
+        writeChunk(chunk, wrappedChunk, write);
 
-      return results;
+        // Ensure the results don't end with a trailing comma
+        if (results.charAt(results.length - 1) === ',') {
+          results = results.slice(0, -1);
+        }
+      }
     };
 
-    // Kick off the analyzer. Could run one or more times depending on the use
-    // of subqueries.
-    var analyzedTokens = analyzer(tokens);
+    // Kick off the analyzer.
+    analyzer(tokens);
 
-    return exits.success(analyzedTokens);
+    try {
+      var parsedTokens = JSON.parse('[' + results + ']');
+      return exits.success(parsedTokens);
+    } catch (err) {
+      return exits.error(new Error('Could not analyze the token set. This is most likely a problem with the analyzer and not the query.'));
+    }
   }
 
 };
