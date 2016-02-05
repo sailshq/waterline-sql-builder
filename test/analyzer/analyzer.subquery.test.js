@@ -278,58 +278,6 @@ describe('Analyzer ::', function() {
     });
 
     describe('used as table sub query', function() {
-      it('should generate a valid group when used as a value in a FROM', function(done) {
-        var tokens = tokenize({
-          select: ['name', 'age'],
-          from: {
-            select: ['age'],
-            from: 'users',
-            where: {
-              age: 21
-            }
-          }
-        });
-
-        Analyzer({
-          tokens: tokens
-        })
-        .exec(function(err, result) {
-          assert(!err);
-
-          assert.deepEqual(result, [
-            [
-              { type: 'IDENTIFIER', value: 'SELECT' },
-              { type: 'VALUE', value: 'name' }
-            ],
-            [
-              { type: 'IDENTIFIER', value: 'SELECT' },
-              { type: 'VALUE', value: 'age' }
-            ],
-            [
-              { type: 'IDENTIFIER', value: 'FROM' },
-              { type: 'SUBQUERY', value: null },
-              [
-                [
-                  { type: 'IDENTIFIER', value: 'SELECT' },
-                  { type: 'VALUE', value: 'age' }
-                ],
-                [
-                  { type: 'IDENTIFIER', value: 'FROM' },
-                  { type: 'VALUE', value: 'users' }
-                ],
-                [
-                  { type: 'IDENTIFIER', value: 'WHERE' },
-                  { type: 'KEY', value: 'age' },
-                  { type: 'VALUE', value: 21 }
-                ]
-              ]
-            ]
-          ]);
-
-          return done();
-        });
-      });
-
       it('should generate a valid group when used as a value in a FROM with an AS alias', function(done) {
         var tokens = tokenize({
           select: ['name', 'age'],

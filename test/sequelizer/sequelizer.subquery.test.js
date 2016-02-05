@@ -130,30 +130,6 @@ describe('Sequelizer ::', function() {
     });
 
     describe('used as table sub query', function() {
-      it('should generate a valid query when used as a value in a FROM', function(done) {
-        var tree = analyze({
-          select: ['name', 'age'],
-          from: {
-            select: ['age'],
-            from: 'users',
-            where: {
-              age: 21
-            }
-          }
-        });
-
-        Sequelizer({
-          dialect: 'postgresql',
-          tree: tree
-        })
-        .exec(function(err, result) {
-          assert(!err);
-          assert.equal(result.sql, 'select "name", "age" from (select "age" from "users" where "age" = $1)');
-          assert.deepEqual(result.bindings, [21]);
-          return done();
-        });
-      });
-
       it('should generate a valid query when used as a value in a FROM with an AS alias', function(done) {
         var tree = analyze({
           select: ['name', 'age'],
