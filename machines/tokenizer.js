@@ -137,6 +137,7 @@ module.exports = {
             return;
           }
 
+          // If the identifier is an IN
           if (identifiers[key] === 'IN') {
             processIn(obj[key]);
             return;
@@ -148,6 +149,7 @@ module.exports = {
             return;
           }
 
+          // If the identifier is a NOT
           if (identifiers[key] === 'NOT') {
             processNot(obj[key]);
             return;
@@ -259,11 +261,13 @@ module.exports = {
           //  ║ ║ ║ ╠═╣║╣ ╠╦╝
           //  ╚═╝ ╩ ╩ ╩╚═╝╩╚═
 
+          // If the identifier is a LIMIT
           if (identifiers[key] === 'LIMIT') {
             processPagination(obj[key], 'LIMIT');
             return;
           }
 
+          // If the indetifier is an OFFSER
           if (identifiers[key] === 'OFFSET') {
             processPagination(obj[key], 'OFFSET');
             return;
