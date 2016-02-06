@@ -630,7 +630,6 @@ module.exports = {
     //
     // Takes an array of subqueries and build a UNION or UNION ALL statement
     var processUnion = function processUnion(tokens, query, unionType) {
-      var unions = [];
       _.each(tokens, function buildUnionSubquery(token, idx) {
         // Build a standalone knex query builder
         var subQueryBuilder = knex.queryBuilder();
@@ -638,16 +637,13 @@ module.exports = {
         // Pass the token to the parser
         tokenParser(subQueryBuilder, token);
 
-        // Append an AS clause so that the query gets wrapped
+        // Append an AS clause so that the query gets wrapped if union was used
         var str = 'u_' + idx;
         subQueryBuilder.as(str);
 
-        // Build up the array of subqueries
-        unions.push(subQueryBuilder);
+        // Add the subquery to the main query
+        buildQueryPiece(unionType, subQueryBuilder, query);
       });
-
-      // Build the UNION query
-      buildQueryPiece(unionType, unions, query);
     };
 
 
@@ -935,6 +931,12 @@ module.exports = {
       // Handle UNION statements
       if (options.identifier === 'UNION' && _.isArray(expr)) {
         processUnion(expr, options.query, 'union');
+        return;
+      }
+
+      // Handle UNIONALL statements
+      if (options.identifier === 'UNIONALL' && _.isArray(expr)) {
+        processUnion(expr, options.query, 'unionAll');
         return;
       }
 

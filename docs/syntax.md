@@ -1799,7 +1799,42 @@ select * from "users" where "firstName" = 'Bob' union (select * from "users" whe
 
 ## Union All
 
-**NOT SUPPORTED**
+Accepts an array of subqueries and will `union all` them together.
+
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  where: {
+    firstName: 'Bob'
+  },
+  unionAll: [
+    {
+      select: '*',
+      from: 'users',
+      where: {
+        lastName: 'Smith'
+      }
+    },
+    {
+      select: '*',
+      from: 'users',
+      where: {
+        middleName: 'Allen'
+      }
+    }
+  ]
+}
+```
+
+**Outputs:**
+
+```sql
+-- PostgreSQL
+select * from "users" where "firstName" = 'Bob' union all (select * from "users" where "lastName" = 'Smith') as "u_0" union all (select * from "users" where "middleName" = 'Allen') as "u_1"
+```
 
 
 ## Insert

@@ -127,7 +127,7 @@ module.exports = {
         //  ╚═╝╝╚╝╩╚═╝╝╚╝
         //
         // If the token is a union, toggle the flag and wrap with an array
-        if (token.type === 'IDENTIFIER' && token.value === 'UNION') {
+        if (token.type === 'IDENTIFIER' && (token.value === 'UNION' || token.value === 'UNIONALL')) {
           union = true;
         }
 
@@ -180,7 +180,7 @@ module.exports = {
           var write = subquery.length ? false : true;
 
           // If there was a union open, close it before writing the chunk
-          if (union && token.value !== 'UNION' && !subquery.length) {
+          if (union && token.value !== 'UNION' && token.value !== 'UNIONALL' && !subquery.length) {
             // Remove any trailing commas
             if (chunk.charAt(chunk.length - 1) === ',') {
               chunk = chunk.slice(0, -1);

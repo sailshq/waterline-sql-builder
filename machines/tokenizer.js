@@ -76,6 +76,7 @@ module.exports = {
       'rightOuterJoin': 'JOIN',
       'fullOuterJoin': 'JOIN',
       'union': 'UNION',
+      'unionAll': 'UNIONALL',
       'as': 'AS',
       '>': 'OPERATOR',
       '<': 'OPERATOR',
@@ -309,7 +310,13 @@ module.exports = {
 
           // If the identifier is a UNION
           if (identifiers[key] === 'UNION') {
-            processUnion(obj[key]);
+            processUnion(obj[key], 'UNION');
+            return;
+          }
+
+          // If the identifier is a UNIONALL
+          if (identifiers[key] === 'UNIONALL') {
+            processUnion(obj[key], 'UNIONALL');
             return;
           }
 
@@ -968,10 +975,10 @@ module.exports = {
     //  ╔═╗╦═╗╔═╗╔═╗╔═╗╔═╗╔═╗  ╦ ╦╔╗╔╦╔═╗╔╗╔
     //  ╠═╝╠╦╝║ ║║  ║╣ ╚═╗╚═╗  ║ ║║║║║║ ║║║║
     //  ╩  ╩╚═╚═╝╚═╝╚═╝╚═╝╚═╝  ╚═╝╝╚╝╩╚═╝╝╚╝
-    var processUnion = function processUnion(values) {
+    var processUnion = function processUnion(values, type) {
       results.push({
         type: 'IDENTIFIER',
-        value: 'UNION'
+        value: type
       });
 
       _.each(values, function processUnionValue(value, idx) {
