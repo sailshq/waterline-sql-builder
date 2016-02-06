@@ -75,6 +75,7 @@ module.exports = {
       'rightJoin': 'JOIN',
       'rightOuterJoin': 'JOIN',
       'fullOuterJoin': 'JOIN',
+      'union': 'UNION',
       'as': 'AS',
       '>': 'OPERATOR',
       '<': 'OPERATOR',
@@ -299,6 +300,16 @@ module.exports = {
           // If the identifier is a JOIN, add it's token and process the joins
           if (identifiers[key] === 'JOIN') {
             processJoin(obj[key], key);
+            return;
+          }
+
+          //  ╦ ╦╔╗╔╦╔═╗╔╗╔╔═╗
+          //  ║ ║║║║║║ ║║║║╚═╗
+          //  ╚═╝╝╚╝╩╚═╝╝╚╝╚═╝
+
+          // If the identifier is a UNION
+          if (identifiers[key] === 'UNION') {
+            processUnion(obj[key]);
             return;
           }
 
@@ -950,6 +961,34 @@ module.exports = {
       results.push({
         type: 'VALUE',
         value: value
+      });
+    };
+
+
+    //  ╔═╗╦═╗╔═╗╔═╗╔═╗╔═╗╔═╗  ╦ ╦╔╗╔╦╔═╗╔╗╔
+    //  ╠═╝╠╦╝║ ║║  ║╣ ╚═╗╚═╗  ║ ║║║║║║ ║║║║
+    //  ╩  ╩╚═╚═╝╚═╝╚═╝╚═╝╚═╝  ╚═╝╝╚╝╩╚═╝╝╚╝
+    var processUnion = function processUnion(values) {
+      results.push({
+        type: 'IDENTIFIER',
+        value: 'UNION'
+      });
+
+      _.each(values, function processUnionValue(value, idx) {
+        // Start each union subquery with an ENDGROUP
+        results.push({
+          type: 'GROUP',
+          value: idx
+        });
+
+        // Build the subquery
+        checkForSubquery(value);
+
+        // Close each subquery with an ENDGROUP token
+        results.push({
+          type: 'ENDGROUP',
+          value: idx
+        });
       });
     };
 

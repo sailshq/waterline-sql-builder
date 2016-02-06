@@ -114,11 +114,23 @@ module.exports = {
       // Hold the flag for wrapping a chunk
       var wrappedChunk = false;
 
+      // Hold the token array for unions
+      var union = false;
+
       // Hold the flag array for wrapping a subquery
       var subquery = [];
 
       // Process the token list in order
       _.each(tokens, function analyzeToken(token) {
+        //  ╦ ╦╔╗╔╦╔═╗╔╗╔
+        //  ║ ║║║║║║ ║║║║
+        //  ╚═╝╝╚╝╩╚═╝╝╚╝
+        //
+        // If the token is a union, toggle the flag and wrap with an array
+        if (token.type === 'IDENTIFIER' && token.value === 'UNION') {
+          union = true;
+        }
+
         //  ╔═╗╦ ╦╔╗ ╔═╗ ╦ ╦╔═╗╦═╗╦ ╦
         //  ╚═╗║ ║╠╩╗║═╬╗║ ║║╣ ╠╦╝╚╦╝
         //  ╚═╝╚═╝╚═╝╚═╝╚╚═╝╚═╝╩╚═ ╩
@@ -127,7 +139,12 @@ module.exports = {
         // on the chunk.
         if (token.type === 'SUBQUERY') {
           subquery.push(true);
-          chunk += JSON.stringify(token) + ', [';
+
+          // Don't wrap subqueries inside UNION queries
+          if (!union) {
+            chunk += JSON.stringify(token) + ', [';
+          }
+
           return;
         }
 
@@ -140,8 +157,12 @@ module.exports = {
           }
 
           // Double close here to also close up the identifier that opened the
-          // subquery.
-          chunk += ']],';
+          // subquery, unless it's inside a UNION query
+          if (union) {
+            chunk += ']';
+          } else {
+            chunk += ']],';
+          }
 
           return;
         }
@@ -158,6 +179,20 @@ module.exports = {
           // be written to the results until the end. It should be closed though.
           var write = subquery.length ? false : true;
 
+          // If there was a union open, close it before writing the chunk
+          if (union && token.value !== 'UNION' && !subquery.length) {
+            // Remove any trailing commas
+            if (chunk.charAt(chunk.length - 1) === ',') {
+              chunk = chunk.slice(0, -1);
+            }
+
+            // Close the chunk
+            chunk += ']';
+
+            // Toggle the union flag off
+            union = false;
+          }
+
           // If there is an active chunk write it
           if (chunk) {
             chunk = writeChunk(chunk, wrappedChunk, write);
@@ -167,6 +202,12 @@ module.exports = {
           // which case continue appending logic.
           if (subquery.length) {
             chunk += '[' + JSON.stringify(token) + ',';
+
+            // If there is a union query being opened, wrap it in an extra bracket
+          } else if (union) {
+            chunk = '[' + JSON.stringify(token) + ',[';
+
+            // Otherwise just open a new chunk
           } else {
             chunk = '[' + JSON.stringify(token) + ',';
           }
@@ -232,6 +273,14 @@ module.exports = {
       // Add the last chunk onto the stack
       if (chunk) {
         var write = subquery.length ? false : true;
+
+        if (union && !subquery.length) {
+          if (chunk.charAt(chunk.length - 1) === ',') {
+            chunk = chunk.slice(0, -1);
+          }
+          chunk += ']';
+        }
+
         writeChunk(chunk, wrappedChunk, write);
 
         // Ensure the results don't end with a trailing comma
