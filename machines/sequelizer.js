@@ -624,6 +624,33 @@ module.exports = {
     };
 
 
+    //  ╔═╗╦═╗╔═╗╔═╗╔═╗╔═╗╔═╗  ╦ ╦╔╗╔╦╔═╗╔╗╔╔═╗
+    //  ╠═╝╠╦╝║ ║║  ║╣ ╚═╗╚═╗  ║ ║║║║║║ ║║║║╚═╗
+    //  ╩  ╩╚═╚═╝╚═╝╚═╝╚═╝╚═╝  ╚═╝╝╚╝╩╚═╝╝╚╝╚═╝
+    //
+    // Takes an array of subqueries and build a UNION or UNION ALL statement
+    var processUnion = function processUnion(tokens, query, unionType) {
+      var unions = [];
+      _.each(tokens, function buildUnionSubquery(token, idx) {
+        // Build a standalone knex query builder
+        var subQueryBuilder = knex.queryBuilder();
+
+        // Pass the token to the parser
+        tokenParser(subQueryBuilder, token);
+
+        // Append an AS clause so that the query gets wrapped
+        var str = 'u_' + idx;
+        subQueryBuilder.as(str);
+
+        // Build up the array of subqueries
+        unions.push(subQueryBuilder);
+      });
+
+      // Build the UNION query
+      buildQueryPiece(unionType, unions, query);
+    };
+
+
     //  ╔═╗╦═╗╔╦╗╔═╗╦═╗  ╔╗ ╦ ╦  ╔╗ ╦ ╦╦╦  ╔╦╗╔═╗╦═╗
     //  ║ ║╠╦╝ ║║║╣ ╠╦╝  ╠╩╗╚╦╝  ╠╩╗║ ║║║   ║║║╣ ╠╦╝
     //  ╚═╝╩╚══╩╝╚═╝╩╚═  ╚═╝ ╩   ╚═╝╚═╝╩╩═╝═╩╝╚═╝╩╚═
@@ -905,6 +932,12 @@ module.exports = {
         return;
       }
 
+      // Handle UNION statements
+      if (options.identifier === 'UNION' && _.isArray(expr)) {
+        processUnion(expr, options.query, 'union');
+        return;
+      }
+
       // Process value and use the appropriate Knex function
       if (expr.type === 'VALUE') {
         processValue(expr, idx, options);
@@ -977,7 +1010,7 @@ module.exports = {
     //   ╩ ╩╚═╚═╝╚═╝  ╩  ╩ ╩╩╚═╚═╝╚═╝╩╚═
     //
     // Parses a group of tokens in the tree
-    var treeParser = function treeParser(tokenGroup, key, query) {
+    var treeParser = function treeParser(tokenGroup, query) {
       // Build up the default options
       var options = {
         identifier: undefined,
@@ -987,7 +1020,8 @@ module.exports = {
         expression: [],
         query: query,
         tokenGroup: tokenGroup,
-        subQuery: false
+        subQuery: false,
+        union: false
       };
 
       // Loop through each item in the group and build up the expression
@@ -1006,8 +1040,8 @@ module.exports = {
     //
     // Loop through each token group in the tree and add to the query
     var tokenParser = function tokenParser(query, tree) {
-      _.forEach(tree, function parseTree(tokenGroup, key) {
-        treeParser(tokenGroup, key, query);
+      _.forEach(tree, function parseTree(tokenGroup) {
+        treeParser(tokenGroup, query);
       });
     };
 
