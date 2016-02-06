@@ -1759,7 +1759,42 @@ select * from "users" limit '10' offset '30'
 
 ## Union
 
-**NOT SUPPORTED**
+Accepts an array of subqueries and will `union` them together.
+
+**Example:**
+
+```javascript
+{
+  select: '*',
+  from: 'users',
+  where: {
+    firstName: 'Bob'
+  },
+  union: [
+    {
+      select: '*',
+      from: 'users',
+      where: {
+        lastName: 'Smith'
+      }
+    },
+    {
+      select: '*',
+      from: 'users',
+      where: {
+        middleName: 'Allen'
+      }
+    }
+  ]
+}
+```
+
+**Outputs:**
+
+```sql
+-- PostgreSQL
+select * from "users" where "firstName" = 'Bob' union (select * from "users" where "lastName" = 'Smith') as "u_0" union (select * from "users" where "middleName" = 'Allen') as "u_1"
+```
 
 
 ## Union All
