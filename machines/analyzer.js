@@ -216,6 +216,10 @@ module.exports = {
           if (_.indexOf(WRAPPED_TOKENS, token.value) > -1) {
             wrappedChunk = true;
             chunk += '[';
+
+            // Otherwise ensure that the wrapped chunk is closed
+          } else {
+            wrappedChunk = false;
           }
 
           return;
