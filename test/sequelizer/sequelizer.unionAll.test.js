@@ -35,7 +35,7 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result.sql, 'select * from "users" where "firstName" = $1 union all (select * from "users" where "lastName" = $2) as "u_0" union all (select * from "users" where "middleName" = $3) as "u_1"');
+        assert.equal(result.sql, 'select * from "users" where "firstName" = $1 union all (select * from "users" where "lastName" = $2) union all (select * from "users" where "middleName" = $3)');
         assert.deepEqual(result.bindings, ['Bob', 'Smith', 'Allen']);
         return done();
       });

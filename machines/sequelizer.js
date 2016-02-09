@@ -630,19 +630,18 @@ module.exports = {
     //
     // Takes an array of subqueries and build a UNION or UNION ALL statement
     var processUnion = function processUnion(tokens, query, unionType) {
-      _.each(tokens, function buildUnionSubquery(token, idx) {
+      _.each(tokens, function buildUnionSubquery(token) {
         // Build a standalone knex query builder
         var subQueryBuilder = knex.queryBuilder();
 
         // Pass the token to the parser
         tokenParser(subQueryBuilder, token);
 
-        // Append an AS clause so that the query gets wrapped if union was used
-        var str = 'u_' + idx;
-        subQueryBuilder.as(str);
+        // Set the fn to run - either UNION or UNIONALL
+        var fn = unionType === 'UNIONALL' ? 'unionAll' : 'union';
 
         // Add the subquery to the main query
-        buildQueryPiece(unionType, subQueryBuilder, query);
+        buildQueryPiece(fn, [subQueryBuilder, true], query);
       });
     };
 
@@ -929,14 +928,9 @@ module.exports = {
       }
 
       // Handle UNION statements
-      if (options.identifier === 'UNION' && _.isArray(expr)) {
-        processUnion(expr, options.query, 'union');
-        return;
-      }
-
-      // Handle UNIONALL statements
-      if (options.identifier === 'UNIONALL' && _.isArray(expr)) {
-        processUnion(expr, options.query, 'unionAll');
+      if (expr.type === 'UNION') {
+        options.union = true;
+        options.unionType = expr.value;
         return;
       }
 
@@ -970,6 +964,15 @@ module.exports = {
           'RIGHTOUTERJOIN',
           'FULLOUTERJOIN'
         ];
+
+        // If the expression is an array of UNION subqueries, process each
+        // one and toggle the UNION flag.
+        if (options.union) {
+          processUnion(expr, options.query, options.unionType);
+          options.union = false;
+          options.unionType = undefined;
+          return;
+        }
 
         // If the expression is a subQuery then process it standalone query
         // and pass it in as the expression value
