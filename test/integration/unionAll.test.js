@@ -30,27 +30,27 @@ describe('Query Generation ::', function() {
         outcomes: [
           {
             dialect: 'postgresql',
-            sql: 'select * from "users" where "firstName" = $1 union all (select * from "users" where "lastName" = $2) as "u_0" union all (select * from "users" where "middleName" = $3) as "u_1"',
+            sql: 'select * from "users" where "firstName" = $1 union all (select * from "users" where "lastName" = $2) union all (select * from "users" where "middleName" = $3)',
             bindings: ['Bob', 'Smith', 'Allen']
           },
           {
             dialect: 'mysql',
-            sql: 'select * from `users` where `firstName` = ? union all (select * from `users` where `lastName` = ?) as `u_0` union all (select * from `users` where `middleName` = ?) as `u_1`',
+            sql: 'select * from `users` where `firstName` = ? union all (select * from `users` where `lastName` = ?) union all (select * from `users` where `middleName` = ?)',
             bindings: ['Bob', 'Smith', 'Allen']
           },
           {
             dialect: 'sqlite3',
-            sql: 'select * from "users" where "firstName" = ? union all (select * from "users" where "lastName" = ?) as "u_0" union all (select * from "users" where "middleName" = ?) as "u_1"',
+            sql: 'select * from "users" where "firstName" = ? union all (select * from "users" where "lastName" = ?) union all (select * from "users" where "middleName" = ?)',
             bindings: ['Bob', 'Smith', 'Allen']
           },
           {
             dialect: 'oracle',
-            sql: 'select * from "users" where "firstName" = :1 union all (select * from "users" where "lastName" = :2) "u_0" union all (select * from "users" where "middleName" = :3) "u_1"',
+            sql: 'select * from "users" where "firstName" = :1 union all (select * from "users" where "lastName" = :2) union all (select * from "users" where "middleName" = :3)',
             bindings: ['Bob', 'Smith', 'Allen']
           },
           {
             dialect: 'mariadb',
-            sql: 'select * from `users` where `firstName` = ? union all (select * from `users` where `lastName` = ?) as `u_0` union all (select * from `users` where `middleName` = ?) as `u_1`',
+            sql: 'select * from `users` where `firstName` = ? union all (select * from `users` where `lastName` = ?) union all (select * from `users` where `middleName` = ?)',
             bindings: ['Bob', 'Smith', 'Allen']
           }
         ]

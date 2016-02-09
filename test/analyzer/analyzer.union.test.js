@@ -50,7 +50,7 @@ describe('Analyzer ::', function() {
             { type: 'VALUE', value: 'Bob' }
           ],
           [
-            { type: 'IDENTIFIER', value: 'UNION' },
+            { type: 'UNION', value: 'UNION' },
             [
               [
                 [
