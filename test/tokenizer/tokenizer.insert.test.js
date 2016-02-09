@@ -19,8 +19,10 @@ describe('Tokenizer ::', function() {
           { type: 'IDENTIFIER', value: 'INSERT' },
           { type: 'KEY', value: 'title' },
           { type: 'VALUE', value: 'Slaughterhouse Five' },
+          { type: 'ENDIDENTIFIER', value: 'INSERT' },
           { type: 'IDENTIFIER', value: 'INTO' },
-          { type: 'VALUE', value: 'books' }
+          { type: 'VALUE', value: 'books' },
+          { type: 'ENDIDENTIFIER', value: 'INTO' }
         ]);
 
         return done();

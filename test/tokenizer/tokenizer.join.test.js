@@ -25,10 +25,13 @@ describe('Tokenizer ::', function() {
         assert.deepEqual(result, [
           { type: 'IDENTIFIER', value: 'SELECT' },
           { type: 'VALUE', value: 'users.id' },
+          { type: 'ENDIDENTIFIER', value: 'SELECT' },
           { type: 'IDENTIFIER', value: 'SELECT' },
           { type: 'VALUE', value: 'contacts.phone' },
+          { type: 'ENDIDENTIFIER', value: 'SELECT' },
           { type: 'IDENTIFIER', value: 'FROM' },
           { type: 'VALUE', value: 'users' },
+          { type: 'ENDIDENTIFIER', value: 'FROM' },
           { type: 'IDENTIFIER', value: 'JOIN' },
           { type: 'KEY', value: 'TABLE' },
           { type: 'VALUE', value: 'contacts' },
@@ -39,7 +42,8 @@ describe('Tokenizer ::', function() {
           { type: 'KEY', value: 'TABLE_KEY' },
           { type: 'VALUE', value: 'contacts' },
           { type: 'KEY', value: 'COLUMN_KEY' },
-          { type: 'VALUE', value: 'user_id' }
+          { type: 'VALUE', value: 'user_id' },
+          { type: 'ENDIDENTIFIER', value: 'JOIN' }
         ]);
 
         return done();
@@ -75,10 +79,13 @@ describe('Tokenizer ::', function() {
         assert.deepEqual(result, [
           { type: 'IDENTIFIER', value: 'SELECT' },
           { type: 'VALUE', value: 'users.id' },
+          { type: 'ENDIDENTIFIER', value: 'SELECT' },
           { type: 'IDENTIFIER', value: 'SELECT' },
           { type: 'VALUE', value: 'contacts.phone' },
+          { type: 'ENDIDENTIFIER', value: 'SELECT' },
           { type: 'IDENTIFIER', value: 'FROM' },
           { type: 'VALUE', value: 'users' },
+          { type: 'ENDIDENTIFIER', value: 'FROM' },
           { type: 'IDENTIFIER', value: 'JOIN' },
           { type: 'KEY', value: 'TABLE' },
           { type: 'VALUE', value: 'contacts' },
@@ -90,6 +97,7 @@ describe('Tokenizer ::', function() {
           { type: 'VALUE', value: 'contacts' },
           { type: 'KEY', value: 'COLUMN_KEY' },
           { type: 'VALUE', value: 'user_id' },
+          { type: 'ENDIDENTIFIER', value: 'JOIN' },
           { type: 'IDENTIFIER', value: 'JOIN' },
           { type: 'KEY', value: 'TABLE' },
           { type: 'VALUE', value: 'carriers' },
@@ -100,7 +108,8 @@ describe('Tokenizer ::', function() {
           { type: 'KEY', value: 'TABLE_KEY' },
           { type: 'VALUE', value: 'carriers' },
           { type: 'KEY', value: 'COLUMN_KEY' },
-          { type: 'VALUE', value: 'user_id' }
+          { type: 'VALUE', value: 'user_id' },
+          { type: 'ENDIDENTIFIER', value: 'JOIN' }
         ]);
 
         return done();
@@ -129,10 +138,13 @@ describe('Tokenizer ::', function() {
         assert.deepEqual(result, [
           { type: 'IDENTIFIER', value: 'SELECT' },
           { type: 'VALUE', value: 'users.id' },
+          { type: 'ENDIDENTIFIER', value: 'SELECT' },
           { type: 'IDENTIFIER', value: 'SELECT' },
           { type: 'VALUE', value: 'contacts.phone' },
+          { type: 'ENDIDENTIFIER', value: 'SELECT' },
           { type: 'IDENTIFIER', value: 'FROM' },
           { type: 'VALUE', value: 'users' },
+          { type: 'ENDIDENTIFIER', value: 'FROM' },
           { type: 'IDENTIFIER', value: 'INNERJOIN' },
           { type: 'KEY', value: 'TABLE' },
           { type: 'VALUE', value: 'contacts' },
@@ -143,7 +155,8 @@ describe('Tokenizer ::', function() {
           { type: 'KEY', value: 'TABLE_KEY' },
           { type: 'VALUE', value: 'contacts' },
           { type: 'KEY', value: 'COLUMN_KEY' },
-          { type: 'VALUE', value: 'user_id' }
+          { type: 'VALUE', value: 'user_id' },
+          { type: 'ENDIDENTIFIER', value: 'INNERJOIN' }
         ]);
 
         return done();
@@ -180,8 +193,10 @@ describe('Tokenizer ::', function() {
         assert.deepEqual(result, [
           { type: 'IDENTIFIER', value: 'SELECT' },
           { type: 'VALUE', value: '*' },
+          { type: 'ENDIDENTIFIER', value: 'SELECT' },
           { type: 'IDENTIFIER', value: 'FROM' },
           { type: 'VALUE', value: 'users' },
+          { type: 'ENDIDENTIFIER', value: 'FROM' },
           { type: 'IDENTIFIER', value: 'JOIN' },
           { type: 'KEY', value: 'TABLE' },
           { type: 'VALUE', value: 'accounts' },
@@ -202,7 +217,8 @@ describe('Tokenizer ::', function() {
           { type: 'KEY', value: 'TABLE_KEY' },
           { type: 'VALUE', value: 'users' },
           { type: 'KEY', value: 'COLUMN_KEY' },
-          { type: 'VALUE', value: 'id' }
+          { type: 'VALUE', value: 'id' },
+          { type: 'ENDIDENTIFIER', value: 'JOIN' }
         ]);
 
         return done();
@@ -237,8 +253,10 @@ describe('Tokenizer ::', function() {
         assert.deepEqual(result, [
           { type: 'IDENTIFIER', value: 'SELECT' },
           { type: 'VALUE', value: '*' },
+          { type: 'ENDIDENTIFIER', value: 'SELECT' },
           { type: 'IDENTIFIER', value: 'FROM' },
           { type: 'VALUE', value: 'users' },
+          { type: 'ENDIDENTIFIER', value: 'FROM' },
           { type: 'IDENTIFIER', value: 'JOIN' },
           { type: 'KEY', value: 'TABLE' },
           { type: 'VALUE', value: 'accounts' },
@@ -259,7 +277,8 @@ describe('Tokenizer ::', function() {
           { type: 'KEY', value: 'TABLE_KEY' },
           { type: 'VALUE', value: 'users' },
           { type: 'KEY', value: 'COLUMN_KEY' },
-          { type: 'VALUE', value: 'id' }
+          { type: 'VALUE', value: 'id' },
+          { type: 'ENDIDENTIFIER', value: 'JOIN' }
         ]);
 
         return done();

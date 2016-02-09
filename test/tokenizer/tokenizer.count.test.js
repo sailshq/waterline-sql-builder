@@ -18,8 +18,10 @@ describe('Tokenizer ::', function() {
         assert.deepEqual(result,  [
           { type: 'IDENTIFIER', value: 'COUNT' },
           { type: 'VALUE', value: ['active'] },
+          { type: 'ENDIDENTIFIER', value: 'COUNT' },
           { type: 'IDENTIFIER', value: 'FROM' },
-          { type: 'VALUE', value: 'users' }
+          { type: 'VALUE', value: 'users' },
+          { type: 'ENDIDENTIFIER', value: 'FROM' }
         ]);
 
         return done();

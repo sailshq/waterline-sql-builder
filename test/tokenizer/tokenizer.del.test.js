@@ -18,11 +18,14 @@ describe('Tokenizer ::', function() {
 
         assert.deepEqual(result, [
           { type: 'IDENTIFIER', value: 'DELETE' },
+          { type: 'ENDIDENTIFIER', value: 'DELETE' },
           { type: 'IDENTIFIER', value: 'FROM' },
           { type: 'VALUE', value: 'accounts' },
+          { type: 'ENDIDENTIFIER', value: 'FROM' },
           { type: 'IDENTIFIER', value: 'WHERE' },
           { type: 'KEY', value: 'activated' },
-          { type: 'VALUE', value: false }
+          { type: 'VALUE', value: false },
+          { type: 'ENDIDENTIFIER', value: 'WHERE' }
         ]);
 
         return done();

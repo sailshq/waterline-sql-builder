@@ -26,20 +26,24 @@ describe('Tokenizer ::', function() {
         assert.deepEqual(result,  [
           { type: 'IDENTIFIER', value: 'SELECT' },
           { type: 'VALUE', value: '*' },
+          { type: 'ENDIDENTIFIER', value: 'SELECT' },
           { type: 'IDENTIFIER', value: 'WHERE' },
           { type: 'CONDITION', value: 'OR' },
           { type: 'GROUP', value: 0 },
           { type: 'KEY', value: 'id' },
           { type: 'OPERATOR', value: '>' },
           { type: 'VALUE', value: 10 },
+          { type: 'ENDOPERATOR', value: '>' },
           { type: 'ENDGROUP', value: 0 },
           { type: 'GROUP', value: 1 },
           { type: 'KEY', value: 'name' },
           { type: 'VALUE', value: 'Tester' },
           { type: 'ENDGROUP', value: 1 },
           { type: 'ENDCONDITION', value: 'OR' },
+          { type: 'ENDIDENTIFIER', value: 'WHERE' },
           { type: 'IDENTIFIER', value: 'FROM' },
-          { type: 'VALUE', value: 'users' }
+          { type: 'VALUE', value: 'users' },
+          { type: 'ENDIDENTIFIER', value: 'FROM' }
         ]);
 
         return done();
@@ -72,6 +76,7 @@ describe('Tokenizer ::', function() {
         assert.deepEqual(result,  [
           { type: 'IDENTIFIER', value: 'SELECT' },
           { type: 'VALUE', value: '*' },
+          { type: 'ENDIDENTIFIER', value: 'SELECT' },
           { type: 'IDENTIFIER', value: 'WHERE' },
           { type: 'CONDITION', value: 'OR' },
           { type: 'GROUP', value: 0 },
@@ -84,6 +89,7 @@ describe('Tokenizer ::', function() {
           { type: 'KEY', value: 'id' },
           { type: 'OPERATOR', value: '>' },
           { type: 'VALUE', value: 10 },
+          { type: 'ENDOPERATOR', value: '>' },
           { type: 'ENDGROUP', value: 1 },
           { type: 'ENDCONDITION', value: 'OR' },
           { type: 'ENDGROUP', value: 0 },
@@ -92,8 +98,10 @@ describe('Tokenizer ::', function() {
           { type: 'VALUE', value: 'Tester' },
           { type: 'ENDGROUP', value: 1 },
           { type: 'ENDCONDITION', value: 'OR' },
+          { type: 'ENDIDENTIFIER', value: 'WHERE' },
           { type: 'IDENTIFIER', value: 'FROM' },
-          { type: 'VALUE', value: 'users' }
+          { type: 'VALUE', value: 'users' },
+          { type: 'ENDIDENTIFIER', value: 'FROM' }
         ]);
 
         return done();

@@ -17,11 +17,14 @@ describe('Tokenizer ::', function() {
         assert.deepEqual(result,  [
           { type: 'IDENTIFIER', value: 'SELECT' },
           { type: 'VALUE', value: '*' },
+          { type: 'ENDIDENTIFIER', value: 'SELECT' },
           { type: 'IDENTIFIER', value: 'FROM' },
           { type: 'VALUE', value: 'users' },
+          { type: 'ENDIDENTIFIER', value: 'FROM' },
           { type: 'IDENTIFIER', value: 'ORDERBY' },
           { type: 'KEY', value: 'name' },
-          { type: 'VALUE', value: 'desc' }
+          { type: 'VALUE', value: 'desc' },
+          { type: 'ENDIDENTIFIER', value: 'ORDERBY' }
         ]);
 
         return done();

@@ -17,10 +17,13 @@ describe('Tokenizer ::', function() {
         assert.deepEqual(result, [
           { type: 'IDENTIFIER', value: 'SELECT' },
           { type: 'VALUE', value: '*' },
+          { type: 'ENDIDENTIFIER', value: 'SELECT' },
           { type: 'IDENTIFIER', value: 'FROM' },
           { type: 'VALUE', value: 'users' },
+          { type: 'ENDIDENTIFIER', value: 'FROM' },
           { type: 'IDENTIFIER', value: 'GROUPBY' },
-          { type: 'VALUE', value: ['count'] }
+          { type: 'VALUE', value: ['count'] },
+          { type: 'ENDIDENTIFIER', value: 'GROUPBY' }
         ]);
 
         return done();
@@ -42,8 +45,10 @@ describe('Tokenizer ::', function() {
         assert.deepEqual(result,  [
           { type: 'IDENTIFIER', value: 'MIN' },
           { type: 'VALUE', value: ['active'] },
+          { type: 'ENDIDENTIFIER', value: 'MIN' },
           { type: 'IDENTIFIER', value: 'FROM' },
-          { type: 'VALUE', value: 'users' }
+          { type: 'VALUE', value: 'users' },
+          { type: 'ENDIDENTIFIER', value: 'FROM' }
         ]);
 
         return done();
@@ -65,8 +70,10 @@ describe('Tokenizer ::', function() {
         assert.deepEqual(result,  [
           { type: 'IDENTIFIER', value: 'MAX' },
           { type: 'VALUE', value: ['active'] },
+          { type: 'ENDIDENTIFIER', value: 'MAX' },
           { type: 'IDENTIFIER', value: 'FROM' },
-          { type: 'VALUE', value: 'users' }
+          { type: 'VALUE', value: 'users' },
+          { type: 'ENDIDENTIFIER', value: 'FROM' }
         ]);
 
         return done();
@@ -88,8 +95,10 @@ describe('Tokenizer ::', function() {
         assert.deepEqual(result,  [
           { type: 'IDENTIFIER', value: 'SUM' },
           { type: 'VALUE', value: ['active'] },
+          { type: 'ENDIDENTIFIER', value: 'SUM' },
           { type: 'IDENTIFIER', value: 'FROM' },
-          { type: 'VALUE', value: 'users' }
+          { type: 'VALUE', value: 'users' },
+          { type: 'ENDIDENTIFIER', value: 'FROM' }
         ]);
 
         return done();
@@ -111,8 +120,10 @@ describe('Tokenizer ::', function() {
         assert.deepEqual(result,  [
           { type: 'IDENTIFIER', value: 'AVG' },
           { type: 'VALUE', value: ['active'] },
+          { type: 'ENDIDENTIFIER', value: 'AVG' },
           { type: 'IDENTIFIER', value: 'FROM' },
-          { type: 'VALUE', value: 'users' }
+          { type: 'VALUE', value: 'users' },
+          { type: 'ENDIDENTIFIER', value: 'FROM' }
         ]);
 
         return done();

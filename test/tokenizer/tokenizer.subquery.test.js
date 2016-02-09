@@ -31,16 +31,20 @@ describe('Tokenizer ::', function() {
           assert.deepEqual(result,  [
             { type: 'IDENTIFIER', value: 'SELECT' },
             { type: 'VALUE', value: '*' },
+            { type: 'ENDIDENTIFIER', value: 'SELECT' },
             { type: 'IDENTIFIER', value: 'FROM' },
             { type: 'VALUE', value: 'accounts' },
+            { type: 'ENDIDENTIFIER', value: 'FROM' },
             { type: 'IDENTIFIER', value: 'WHERE' },
             { type: 'KEY', value: 'id' },
             { type: 'CONDITION', value: 'IN' },
             { type: 'SUBQUERY', value: null },
             { type: 'IDENTIFIER', value: 'SELECT' },
             { type: 'VALUE', value: 'id' },
+            { type: 'ENDIDENTIFIER', value: 'SELECT' },
             { type: 'IDENTIFIER', value: 'FROM' },
             { type: 'VALUE', value: 'users' },
+            { type: 'ENDIDENTIFIER', value: 'FROM' },
             { type: 'IDENTIFIER', value: 'WHERE' },
             { type: 'CONDITION', value: 'OR' },
             { type: 'GROUP', value: 0 },
@@ -52,7 +56,10 @@ describe('Tokenizer ::', function() {
             { type: 'VALUE', value: 'John' },
             { type: 'ENDGROUP', value: 1 },
             { type: 'ENDCONDITION', value: 'OR' },
-            { type: 'ENDSUBQUERY', value: null }
+            { type: 'ENDIDENTIFIER', value: 'WHERE' },
+            { type: 'ENDSUBQUERY', value: null },
+            { type: 'ENDCONDITION', value: 'IN' },
+            { type: 'ENDIDENTIFIER', value: 'WHERE' }
           ]);
 
           return done();
@@ -88,8 +95,10 @@ describe('Tokenizer ::', function() {
           assert.deepEqual(result,  [
             { type: 'IDENTIFIER', value: 'SELECT' },
             { type: 'VALUE', value: '*' },
+            { type: 'ENDIDENTIFIER', value: 'SELECT' },
             { type: 'IDENTIFIER', value: 'FROM' },
             { type: 'VALUE', value: 'accounts' },
+            { type: 'ENDIDENTIFIER', value: 'FROM' },
             { type: 'IDENTIFIER', value: 'WHERE' },
             { type: 'CONDITION', value: 'NOT' },
             { type: 'KEY', value: 'id' },
@@ -97,8 +106,10 @@ describe('Tokenizer ::', function() {
             { type: 'SUBQUERY', value: null },
             { type: 'IDENTIFIER', value: 'SELECT' },
             { type: 'VALUE', value: 'id' },
+            { type: 'ENDIDENTIFIER', value: 'SELECT' },
             { type: 'IDENTIFIER', value: 'FROM' },
             { type: 'VALUE', value: 'users' },
+            { type: 'ENDIDENTIFIER', value: 'FROM' },
             { type: 'IDENTIFIER', value: 'WHERE' },
             { type: 'CONDITION', value: 'OR' },
             { type: 'GROUP', value: 0 },
@@ -110,7 +121,10 @@ describe('Tokenizer ::', function() {
             { type: 'VALUE', value: 'John' },
             { type: 'ENDGROUP', value: 1 },
             { type: 'ENDCONDITION', value: 'OR' },
-            { type: 'ENDSUBQUERY', value: null }
+            { type: 'ENDIDENTIFIER', value: 'WHERE' },
+            { type: 'ENDSUBQUERY', value: null },
+            { type: 'ENDCONDITION', value: 'IN' },
+            { type: 'ENDIDENTIFIER', value: 'WHERE' }
           ]);
 
           return done();
@@ -142,12 +156,15 @@ describe('Tokenizer ::', function() {
           assert.deepEqual(result,  [
             { type: 'IDENTIFIER', value: 'SELECT' },
             { type: 'VALUE', value: 'name' },
+            { type: 'ENDIDENTIFIER', value: 'SELECT' },
             { type: 'IDENTIFIER', value: 'SELECT' },
             { type: 'SUBQUERY', value: null },
             { type: 'IDENTIFIER', value: 'SELECT' },
             { type: 'VALUE', value: 'username' },
+            { type: 'ENDIDENTIFIER', value: 'SELECT' },
             { type: 'IDENTIFIER', value: 'FROM' },
             { type: 'VALUE', value: 'users' },
+            { type: 'ENDIDENTIFIER', value: 'FROM' },
             { type: 'IDENTIFIER', value: 'WHERE' },
             { type: 'CONDITION', value: 'OR' },
             { type: 'GROUP', value: 0 },
@@ -159,13 +176,18 @@ describe('Tokenizer ::', function() {
             { type: 'VALUE', value: 'John' },
             { type: 'ENDGROUP', value: 1 },
             { type: 'ENDCONDITION', value: 'OR' },
+            { type: 'ENDIDENTIFIER', value: 'WHERE' },
             { type: 'IDENTIFIER', value: 'AS' },
             { type: 'VALUE', value: 'username' },
+            { type: 'ENDIDENTIFIER', value: 'AS' },
             { type: 'ENDSUBQUERY', value: null },
+            { type: 'ENDIDENTIFIER', value: 'SELECT' },
             { type: 'IDENTIFIER', value: 'SELECT' },
             { type: 'VALUE', value: 'age' },
+            { type: 'ENDIDENTIFIER', value: 'SELECT' },
             { type: 'IDENTIFIER', value: 'FROM' },
-            { type: 'VALUE', value: 'accounts' }
+            { type: 'VALUE', value: 'accounts' },
+            { type: 'ENDIDENTIFIER', value: 'FROM' }
           ]);
 
           return done();
@@ -194,21 +216,28 @@ describe('Tokenizer ::', function() {
           assert.deepEqual(result,  [
             { type: 'IDENTIFIER', value: 'SELECT' },
             { type: 'VALUE', value: 'name' },
+            { type: 'ENDIDENTIFIER', value: 'SELECT' },
             { type: 'IDENTIFIER', value: 'SELECT' },
             { type: 'VALUE', value: 'age' },
+            { type: 'ENDIDENTIFIER', value: 'SELECT' },
             { type: 'IDENTIFIER', value: 'FROM' },
             { type: 'VALUE', value: 'accounts' },
+            { type: 'ENDIDENTIFIER', value: 'FROM' },
             { type: 'IDENTIFIER', value: 'WHERE' },
             { type: 'KEY', value: 'username' },
             { type: 'SUBQUERY', value: null },
             { type: 'IDENTIFIER', value: 'SELECT' },
             { type: 'VALUE', value: 'username' },
+            { type: 'ENDIDENTIFIER', value: 'SELECT' },
             { type: 'IDENTIFIER', value: 'FROM' },
             { type: 'VALUE', value: 'users' },
+            { type: 'ENDIDENTIFIER', value: 'FROM' },
             { type: 'IDENTIFIER', value: 'WHERE' },
             { type: 'KEY', value: 'color' },
             { type: 'VALUE', value: 'accounts.color' },
-            { type: 'ENDSUBQUERY', value: null }
+            { type: 'ENDIDENTIFIER', value: 'WHERE' },
+            { type: 'ENDSUBQUERY', value: null },
+            { type: 'ENDIDENTIFIER', value: 'WHERE' }
           ]);
 
           return done();
@@ -237,20 +266,27 @@ describe('Tokenizer ::', function() {
           assert.deepEqual(result,  [
             { type: 'IDENTIFIER', value: 'SELECT' },
             { type: 'VALUE', value: 'name' },
+            { type: 'ENDIDENTIFIER', value: 'SELECT' },
             { type: 'IDENTIFIER', value: 'SELECT' },
             { type: 'VALUE', value: 'age' },
+            { type: 'ENDIDENTIFIER', value: 'SELECT' },
             { type: 'IDENTIFIER', value: 'FROM' },
             { type: 'SUBQUERY', value: null },
             { type: 'IDENTIFIER', value: 'SELECT' },
             { type: 'VALUE', value: 'age' },
+            { type: 'ENDIDENTIFIER', value: 'SELECT' },
             { type: 'IDENTIFIER', value: 'FROM' },
             { type: 'VALUE', value: 'users' },
+            { type: 'ENDIDENTIFIER', value: 'FROM' },
             { type: 'IDENTIFIER', value: 'WHERE' },
             { type: 'KEY', value: 'age' },
             { type: 'VALUE', value: 21 },
+            { type: 'ENDIDENTIFIER', value: 'WHERE' },
             { type: 'IDENTIFIER', value: 'AS' },
             { type: 'VALUE', value: 'userage' },
-            { type: 'ENDSUBQUERY', value: null }
+            { type: 'ENDIDENTIFIER', value: 'AS' },
+            { type: 'ENDSUBQUERY', value: null },
+            { type: 'ENDIDENTIFIER', value: 'FROM' }
           ]);
 
           return done();

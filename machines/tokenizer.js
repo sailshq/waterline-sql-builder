@@ -280,17 +280,7 @@ module.exports = {
             if (!isSubQuery) {
               return;
             }
-
-            results.push({
-              type: 'IDENTIFIER',
-              value: 'AS'
-            });
-
-            results.push({
-              type: 'VALUE',
-              value: obj[key]
-            });
-
+            processAs(obj[key]);
             return;
           }
 
@@ -434,6 +424,12 @@ module.exports = {
         type: 'VALUE',
         value: value
       });
+
+      // Add the operator to the results
+      results.push({
+        type: 'ENDOPERATOR',
+        value: operator
+      });
     };
 
 
@@ -456,6 +452,12 @@ module.exports = {
             value: value.distinct
           });
 
+          // Add the enddistinct to the results
+          results.push({
+            type: 'ENDIDENTIFIER',
+            value: 'DISTINCT'
+          });
+
           return;
         }
       }
@@ -472,6 +474,12 @@ module.exports = {
         results.push({
           type: 'VALUE',
           value: value
+        });
+
+        // Add the ENDSELECT to the results
+        results.push({
+          type: 'ENDIDENTIFIER',
+          value: 'SELECT'
         });
 
         return;
@@ -498,8 +506,6 @@ module.exports = {
             type: 'VALUE',
             value: val
           });
-
-          return;
         }
 
         // Check if the object is a sub-query
@@ -514,6 +520,12 @@ module.exports = {
             });
           }
         }
+
+        // Add the ENDSELECT to the results
+        results.push({
+          type: 'ENDIDENTIFIER',
+          value: 'SELECT'
+        });
       });
     };
 
@@ -534,6 +546,11 @@ module.exports = {
             type: 'VALUE',
             value: value.schema
           });
+
+          results.push({
+            type: 'ENDIDENTIFIER',
+            value: 'SCHEMA'
+          });
         }
 
         // Add the FROM identifier
@@ -552,6 +569,11 @@ module.exports = {
           });
         }
 
+        results.push({
+          type: 'ENDIDENTIFIER',
+          value: 'FROM'
+        });
+
         return;
       }
 
@@ -564,6 +586,11 @@ module.exports = {
       results.push({
         type: 'VALUE',
         value: value
+      });
+
+      results.push({
+        type: 'ENDIDENTIFIER',
+        value: 'FROM'
       });
     };
 
@@ -591,9 +618,12 @@ module.exports = {
             value: value[key]
           });
         });
-
-        return;
       }
+
+      results.push({
+        type: 'ENDIDENTIFIER',
+        value: 'INSERT'
+      });
     };
 
 
@@ -609,6 +639,11 @@ module.exports = {
       results.push({
         type: 'VALUE',
         value: value
+      });
+
+      results.push({
+        type: 'ENDIDENTIFIER',
+        value: 'INTO'
       });
     };
 
@@ -636,9 +671,12 @@ module.exports = {
             value: value[key]
           });
         });
-
-        return;
       }
+
+      results.push({
+        type: 'ENDIDENTIFIER',
+        value: 'UPDATE'
+      });
     };
 
 
@@ -655,6 +693,11 @@ module.exports = {
         type: 'VALUE',
         value: value
       });
+
+      results.push({
+        type: 'ENDIDENTIFIER',
+        value: 'USING'
+      });
     };
 
 
@@ -664,6 +707,11 @@ module.exports = {
     var processDelete = function processDelete() {
       results.push({
         type: 'IDENTIFIER',
+        value: 'DELETE'
+      });
+
+      results.push({
+        type: 'ENDIDENTIFIER',
         value: 'DELETE'
       });
     };
@@ -691,6 +739,11 @@ module.exports = {
       results.push({
         type: 'VALUE',
         value: value
+      });
+
+      results.push({
+        type: 'ENDCONDITION',
+        value: 'NOT'
       });
     };
 
@@ -725,6 +778,11 @@ module.exports = {
           });
         }
       }
+
+      results.push({
+        type: 'ENDCONDITION',
+        value: 'IN'
+      });
     };
 
 
@@ -739,6 +797,11 @@ module.exports = {
       });
 
       tokenizeObject(value);
+
+      results.push({
+        type: 'ENDIDENTIFIER',
+        value: 'WHERE'
+      });
     };
 
 
@@ -900,6 +963,11 @@ module.exports = {
             results = results.concat(joinResults);
           })();
         }
+
+        results.push({
+          type: 'ENDIDENTIFIER',
+          value: joinType.toUpperCase()
+        });
       });
     };
 
@@ -916,6 +984,11 @@ module.exports = {
       results.push({
         type: 'VALUE',
         value: value
+      });
+
+      results.push({
+        type: 'ENDIDENTIFIER',
+        value: 'GROUPBY'
       });
     };
 
@@ -937,6 +1010,11 @@ module.exports = {
       _.each(values, function tokenizeSet(tokenSet) {
         tokenizeObject(tokenSet);
       });
+
+      results.push({
+        type: 'ENDIDENTIFIER',
+        value: 'ORDERBY'
+      });
     };
 
 
@@ -952,6 +1030,11 @@ module.exports = {
       results.push({
         type: 'VALUE',
         value: value
+      });
+
+      results.push({
+        type: 'ENDIDENTIFIER',
+        value: aggregation
       });
     };
 
@@ -969,6 +1052,11 @@ module.exports = {
         type: 'VALUE',
         value: value
       });
+
+      results.push({
+        type: 'ENDIDENTIFIER',
+        value: operator
+      });
     };
 
 
@@ -977,7 +1065,7 @@ module.exports = {
     //  ╩  ╩╚═╚═╝╚═╝╚═╝╚═╝╚═╝  ╚═╝╝╚╝╩╚═╝╝╚╝
     var processUnion = function processUnion(values, type) {
       results.push({
-        type: 'IDENTIFIER',
+        type: 'UNION',
         value: type
       });
 
@@ -996,6 +1084,32 @@ module.exports = {
           type: 'ENDGROUP',
           value: idx
         });
+      });
+
+      results.push({
+        type: 'ENDUNION',
+        value: type
+      });
+    };
+
+
+    //  ╔═╗╦═╗╔═╗╔═╗╔═╗╔═╗╔═╗  ╔═╗╔═╗
+    //  ╠═╝╠╦╝║ ║║  ║╣ ╚═╗╚═╗  ╠═╣╚═╗
+    //  ╩  ╩╚═╚═╝╚═╝╚═╝╚═╝╚═╝  ╩ ╩╚═╝
+    var processAs = function processAs(value) {
+      results.push({
+        type: 'IDENTIFIER',
+        value: 'AS'
+      });
+
+      results.push({
+        type: 'VALUE',
+        value: value
+      });
+
+      results.push({
+        type: 'ENDIDENTIFIER',
+        value: 'AS'
       });
     };
 
