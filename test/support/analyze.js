@@ -3,15 +3,14 @@
  * For use with Sequelizer tests.
  */
 
-var Tokenizer = require('../../index').tokenizer;
-var Analyzer = require('../../index').analyzer;
+var Parser = require('machinepack-waterline-query-parser');
 
 module.exports = function(expression) {
-  var tokens = Tokenizer({
+  var tokens = Parser.tokenizer({
     expression: expression
   }).execSync();
 
-  var tree = Analyzer({
+  var tree = Parser.analyzer({
     tokens: tokens
   }).execSync();
 

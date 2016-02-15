@@ -45,14 +45,15 @@ module.exports = {
 
   fn: function generateSql(inputs, exits) {
     var Pack = require('../index');
+    var Parser = require('machinepack-waterline-query-parser');
 
     // Tokenize the values
-    var tokens = Pack.tokenizer({
+    var tokens = Parser.tokenizer({
       expression: inputs.query
     }).execSync();
 
     // Analyze the tokens
-    var tree = Pack.analyzer({
+    var tree = Parser.analyzer({
       tokens: tokens
     }).execSync();
 

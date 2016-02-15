@@ -18,7 +18,8 @@
   "dependencies": {
     "knex": "0.9.0",
     "lodash": "4.0.0",
-    "machine": "10.4.0"
+    "machine": "10.4.0",
+    "machinepack-waterline-query-parser": "particlebanana/machinepack-waterline-query-parser"
   },
   "devDependencies": {
     "async": "1.5.2",
@@ -31,8 +32,6 @@
     "machineDir": "machines/",
     "machines": [
       "generate-sql",
-      "tokenizer",
-      "analyzer",
       "sequelizer"
     ],
     "testsUrl": "https://travis-ci.org/particlebanana/waterline-query-builder"
