@@ -19,7 +19,7 @@
     "knex": "0.9.0",
     "lodash": "4.0.0",
     "machine": "10.4.0",
-    "machinepack-waterline-query-parser": "particlebanana/machinepack-waterline-query-parser#bf2ef5eeb2cd51ff5c1ca860524ba398969f62ca"
+    "machinepack-waterline-query-parser": "particlebanana/machinepack-waterline-query-parser#b1c8d09bdf3f514070ee70e3054f74d3007cc75d"
   },
   "devDependencies": {
     "async": "1.5.2",
