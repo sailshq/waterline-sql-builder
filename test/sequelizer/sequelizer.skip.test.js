@@ -3,12 +3,12 @@ var analyze = require('../support/analyze');
 var assert = require('assert');
 
 describe('Sequelizer ::', function() {
-  describe('OFFSET statements', function() {
-    it('should generate a simple query with a OFFSET statement', function(done) {
+  describe('SKIP statements', function() {
+    it('should generate a simple query with a SKIP statement', function(done) {
       var tree = analyze({
         select: '*',
         from: 'users',
-        offset: 10
+        skip: 10
       });
 
       Sequelizer({
