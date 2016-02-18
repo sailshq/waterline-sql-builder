@@ -1,13 +1,13 @@
 var Test = require('../support/test-runner');
 
 describe('Query Generation ::', function() {
-  describe('OFFSET statements', function() {
-    it('should generate a simple query with a OFFSET statement', function(done) {
+  describe('SKIP statements', function() {
+    it('should generate a simple query with a SKIP statement', function(done) {
       Test({
         query: {
           select: '*',
           from: 'users',
-          offset: 10
+          skip: 10
         },
         outcomes: [
           {

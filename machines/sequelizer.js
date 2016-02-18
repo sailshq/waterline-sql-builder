@@ -778,7 +778,7 @@ module.exports = {
           buildQueryPiece('limit', expr.value, options.query);
           break;
 
-        case 'OFFSET':
+        case 'SKIP':
           buildQueryPiece('offset', expr.value, options.query);
           break;
 
