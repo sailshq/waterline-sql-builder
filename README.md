@@ -1,5 +1,5 @@
 # Waterline Query Builder
 
-A helper for building queries.
+A helper for building SQL queries based on [Knex](http://knexjs.org).
 
-Refer to [Syntax Docs](/docs/syntax.md) for more information.
+Refer to [Waterline Query Docs](https://github.com/particlebanana/waterline-query-docs) for more information.

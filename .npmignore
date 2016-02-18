@@ -14,5 +14,5 @@ CONTRIBUTING.md
 *.swp
 *.swn
 *.swm
-.jshintrc
+.eslintrc
 .editorconfig
