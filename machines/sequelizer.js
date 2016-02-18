@@ -152,7 +152,7 @@ module.exports = {
     // to have the parent function figured out before it get's here so I don't
     // need to mess around with all this modifiers stuff so much. It feels
     // very brittle.
-    var buildKnexGroupingFn = function buildKnexGroupingFn(expressionGroup, query) {
+    var buildKnexGroupingFn = function buildKnexGroupingFn(expressionGroup, modifier, query) {
       // Figure out what the function should be by examining the first item
       // in the expression group. If it has any modifiers or combinators, grab
       // them. We do this so we know if the grouping should be negated or not.
@@ -161,8 +161,13 @@ module.exports = {
         strip: ['NOT', 'AND']
       });
 
-      // Default the fn value to `orWhere`
+      // Default the fn value to `orWhere` unless an AND modifier was
+      // specifically set
       var fn = 'orWhere';
+
+      if (modifier && _.isArray(modifier) && _.first(modifier) === 'AND') {
+        fn = 'andWhere';
+      }
 
       // Check the modifier to see if a different function other than
       // WHERE should be used. The most common is NOT.
@@ -323,6 +328,13 @@ module.exports = {
           return;
         }
 
+        // If there is a AND condition, add the condition as the first item in
+        // the expression.
+        if (groupedExpr.type === 'CONDITION' && groupedExpr.value === 'AND') {
+          expression.unshift(groupedExpr.value);
+          return;
+        }
+
         // If the grouped expression is a nested array, this represents a nested
         // OR statement. So instead of building the query outright, we want to
         // collect all the pieces that make it up and call the Knex grouping
@@ -410,8 +422,12 @@ module.exports = {
         var queryExpression = _.first(expressionGroup);
         var modifiers = checkForModifiers(queryExpression);
 
-        // Default the fn value to `orWhere`
+        // Default the fn value to `orWhere` unless an AND modifier was passed in
         var fn = 'orWhere';
+
+        if (modifier && _.isArray(modifier) && _.first(modifier) === 'AND') {
+          fn = 'andWhere';
+        }
 
         // Check the modifier to see if a different function other than
         // OR WHERE should be used. The most common is OR WHERE NOT IN.
@@ -444,7 +460,7 @@ module.exports = {
       }
 
       // Otherwise build the grouping function
-      buildKnexGroupingFn(expressionGroup, query);
+      buildKnexGroupingFn(expressionGroup, modifier, query);
     };
 
 
@@ -901,6 +917,13 @@ module.exports = {
         return;
       }
 
+      // AND Modifier
+      if (expr.type === 'CONDITION' && expr.value === 'AND') {
+        options.modifier = options.modifier || [];
+        options.modifier.push(expr.value);
+        return;
+      }
+
       // Handle sets of values being inserted
       if (options.identifier === 'INSERT' && (expr.type === 'KEY' || expr.type === 'VALUE')) {
         options.expression = insertBuilder(expr, options.expression, options.query);
@@ -1001,7 +1024,7 @@ module.exports = {
 
         var isJoin = _.indexOf(joinTypes, options.identifier);
         if (isJoin === -1) {
-          processGroup(expr, false, options.expression, undefined, options.query);
+          processGroup(expr, false, options.expression, options.modifier, options.query);
           return;
         }
 
