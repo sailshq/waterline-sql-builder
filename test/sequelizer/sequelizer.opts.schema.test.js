@@ -3,11 +3,14 @@ var analyze = require('../support/analyze');
 var assert = require('assert');
 
 describe('Sequelizer ::', function() {
-  describe('FROM statements', function() {
-    it('should generate a simple query with a FROM statement', function(done) {
+  describe('OPTS', function() {
+    it('should support schemas', function(done) {
       var tree = analyze({
-        select: '*',
-        from: 'books'
+        select: ['title', 'author', 'year'],
+        from: 'books',
+        opts: {
+          schema: 'foo'
+        }
       });
 
       Sequelizer({
@@ -16,7 +19,7 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result.sql, 'select * from "books"');
+        assert.equal(result.sql, 'select "title", "author", "year" from "foo"."books"');
         return done();
       });
     });
