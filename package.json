@@ -16,8 +16,8 @@
   "author": "Cody Stoltman <particlebanana@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "knex": "0.9.0",
-    "lodash": "4.0.0",
+    "knex": "0.11.9",
+    "lodash": "3.10.1",
     "machine": "10.4.0",
     "machinepack-waterline-query-parser": "particlebanana/machinepack-waterline-query-parser#b1c8d09bdf3f514070ee70e3054f74d3007cc75d"
   },
