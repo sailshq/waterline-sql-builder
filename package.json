@@ -19,7 +19,7 @@
     "knex": "0.11.9",
     "lodash": "3.10.1",
     "machine": "12.4.0",
-    "machinepack-waterline-query-parser": "treelinehq/machinepack-waterline-query-parser"
+    "waterline-query-parser": "treelinehq/waterline-query-parser"
   },
   "devDependencies": {
     "async": "2.0.1",

@@ -3,7 +3,7 @@
  * For use with Sequelizer tests.
  */
 
-var Parser = require('machinepack-waterline-query-parser');
+var Parser = require('waterline-query-parser');
 
 module.exports = function(expression) {
   var tokens = Parser.tokenizer({
