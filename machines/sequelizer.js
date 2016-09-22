@@ -52,6 +52,20 @@ module.exports = {
     });
 
 
+    // Lodash 3.10 version of _.fromPairs from Lodash 4.0
+    var fromPairs = function fromPairs(pairs) {
+      var index = -1;
+      var length = pairs ? pairs.length : 0;
+      var result = {};
+
+      while (++index < length) {
+        var pair = pairs[index];
+        result[pair[0]] = pair[1];
+      }
+      return result;
+    };
+
+
     //  ███████╗███████╗ ██████╗ ██╗   ██╗███████╗██╗     ██╗███████╗███████╗██████╗
     //  ██╔════╝██╔════╝██╔═══██╗██║   ██║██╔════╝██║     ██║╚══███╔╝██╔════╝██╔══██╗
     //  ███████╗█████╗  ██║   ██║██║   ██║█████╗  ██║     ██║  ███╔╝ █████╗  ██████╔╝
@@ -89,7 +103,7 @@ module.exports = {
       var modifiers = [];
 
       // Default to removing the values from the array
-      // var strip = options && options.strip ? options.strip : true;
+      options = options || {};
       options = _.defaults(options, { strip: true });
 
       // Normalize strip attibutes
@@ -819,7 +833,7 @@ module.exports = {
           options.nextExpr = options.tokenGroup[idx + 1];
           if (!options.nextExpr || options.nextExpr.type === 'IDENTIFIER') {
             // Flatten the expression
-            options.expression = _.fromPairs(options.expression);
+            options.expression = fromPairs(options.expression);
             buildQueryPiece('insert', options.expression, options.query);
 
             // Also add a 'returning' value
@@ -835,7 +849,7 @@ module.exports = {
           options.nextExpr = options.tokenGroup[idx + 1];
           if (!options.nextExpr || options.nextExpr.type === 'IDENTIFIER') {
             // Flatten the expression
-            options.expression = _.fromPairs(options.expression);
+            options.expression = fromPairs(options.expression);
             buildQueryPiece('update', options.expression, options.query);
 
             // Also add a 'returning' value
