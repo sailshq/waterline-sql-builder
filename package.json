@@ -19,7 +19,7 @@
     "knex": "0.11.9",
     "lodash": "3.10.1",
     "machine": "12.4.0",
-    "machinepack-waterline-query-parser": "particlebanana/machinepack-waterline-query-parser#b1c8d09bdf3f514070ee70e3054f74d3007cc75d"
+    "machinepack-waterline-query-parser": "treelinehq/machinepack-waterline-query-parser"
   },
   "devDependencies": {
     "async": "2.0.1",
@@ -34,10 +34,10 @@
       "generate-sql",
       "sequelizer"
     ],
-    "testsUrl": "https://travis-ci.org/particlebanana/waterline-query-builder"
+    "testsUrl": "https://travis-ci.org/treelinehq/waterline-query-builder"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:particlebanana/waterline-query-builder.git"
+    "url": "git@github.com:treelinehq/waterline-query-builder.git"
   }
 }
