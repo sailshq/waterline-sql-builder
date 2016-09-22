@@ -31,8 +31,8 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'oracle',
-            sql: 'update "books" set "status" = :1 where "publishedDate" > :2',
-            bindings: ['archived', 2000]
+            sql: 'update "books" set "status" = :1 where "publishedDate" > :2 returning ROWID into :3',
+            bindings: ['archived', 2000, { 'columnName': 'id' }]
           },
           {
             dialect: 'mariadb',
@@ -72,8 +72,8 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'oracle',
-            sql: 'update "user" set "age" = :1 where "type" = :2',
-            bindings: [10, 'test']
+            sql: 'update "user" set "age" = :1 where "type" = :2 returning ROWID into :3',
+            bindings: [10, 'test', { 'columnName': 'id' }]
           },
           {
             dialect: 'mariadb',
@@ -100,7 +100,7 @@ describe('Query Generation ::', function() {
           {
             dialect: 'postgresql',
             sql: 'update "books" set "active" = $1, "status" = $2 where "publishedDate" > $3 returning "id"',
-            bindings: [false, 'archived', 2000]
+            bindings: ['false', 'archived', '2000']
           },
           {
             dialect: 'mysql',
@@ -114,8 +114,8 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'oracle',
-            sql: 'update "books" set "active" = :1, "status" = :2 where "publishedDate" > :3',
-            bindings: ['0', 'archived', 2000]
+            sql: 'update "books" set "active" = :1, "status" = :2 where "publishedDate" > :3 returning ROWID into :4',
+            bindings: ['0', 'archived', 2000, { 'columnName': 'id' }]
           },
           {
             dialect: 'mariadb',
