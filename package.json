@@ -16,16 +16,16 @@
   "author": "Cody Stoltman <particlebanana@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "knex": "0.9.0",
-    "lodash": "4.0.0",
-    "machine": "10.4.0",
+    "knex": "0.11.9",
+    "lodash": "3.10.1",
+    "machine": "12.4.0",
     "machinepack-waterline-query-parser": "particlebanana/machinepack-waterline-query-parser#b1c8d09bdf3f514070ee70e3054f74d3007cc75d"
   },
   "devDependencies": {
-    "async": "1.5.2",
-    "eslint": "1.10.3",
-    "espree": "3.0.1",
-    "mocha": "2.3.4"
+    "async": "2.0.1",
+    "eslint": "3.5.0",
+    "espree": "3.3.0",
+    "mocha": "3.0.2"
   },
   "machinepack": {
     "friendlyName": "SQL Builder",

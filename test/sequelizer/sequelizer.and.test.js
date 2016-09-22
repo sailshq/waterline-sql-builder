@@ -57,7 +57,7 @@ describe('Sequelizer ::', function() {
                 },
                 {
                   price: {
-                    '<': 10.00
+                    '<': 10.01
                   }
                 }
               ]
@@ -73,7 +73,7 @@ describe('Sequelizer ::', function() {
       .exec(function(err, result) {
         assert(!err);
         assert.equal(result.sql, 'select * from "users" where ("firstName" = $1 or "lastName" = $2) and ("qty" > $3 or "price" < $4)');
-        assert.deepEqual(result.bindings, ['John', 'Smith', '100', '10.00']);
+        assert.deepEqual(result.bindings, ['John', 'Smith', '100', '10.01']);
         return done();
       });
     });

@@ -74,7 +74,7 @@ describe('Query Generation ::', function() {
                   },
                   {
                     price: {
-                      '<': 10.00
+                      '<': 10.01
                     }
                   }
                 ]
@@ -86,27 +86,27 @@ describe('Query Generation ::', function() {
           {
             dialect: 'postgresql',
             sql: 'select * from "users" where ("firstName" = $1 or "lastName" = $2) and ("qty" > $3 or "price" < $4)',
-            bindings: ['John', 'Smith', '100', '10.00']
+            bindings: ['John', 'Smith', '100', '10.01']
           },
           {
             dialect: 'mysql',
             sql: 'select * from `users` where (`firstName` = ? or `lastName` = ?) and (`qty` > ? or `price` < ?)',
-            bindings: ['John', 'Smith', '100', '10.00']
+            bindings: ['John', 'Smith', '100', '10.01']
           },
           {
             dialect: 'sqlite3',
             sql: 'select * from "users" where ("firstName" = ? or "lastName" = ?) and ("qty" > ? or "price" < ?)',
-            bindings: ['John', 'Smith', '100', '10.00']
+            bindings: ['John', 'Smith', '100', '10.01']
           },
           {
             dialect: 'oracle',
             sql: 'select * from "users" where ("firstName" = :1 or "lastName" = :2) and ("qty" > :3 or "price" < :4)',
-            bindings: ['John', 'Smith', '100', '10.00']
+            bindings: ['John', 'Smith', '100', '10.01']
           },
           {
             dialect: 'mariadb',
             sql: 'select * from `users` where (`firstName` = ? or `lastName` = ?) and (`qty` > ? or `price` < ?)',
-            bindings: ['John', 'Smith', '100', '10.00']
+            bindings: ['John', 'Smith', '100', '10.01']
           }
         ]
       }, done);

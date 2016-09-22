@@ -15,7 +15,7 @@ describe('Query Generation ::', function() {
           {
             dialect: 'postgresql',
             sql: 'delete from "accounts" where "activated" = $1 returning "id"',
-            bindings: [false]
+            bindings: ['false']
           },
           {
             dialect: 'mysql',
