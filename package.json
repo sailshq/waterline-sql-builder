@@ -1,5 +1,5 @@
 {
-  "name": "machinepack-sql-builder",
+  "name": "waterline-query-builder",
   "version": "1.0.0",
   "description": "Generate SQL queries.",
   "scripts": {
