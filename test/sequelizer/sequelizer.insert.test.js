@@ -18,7 +18,7 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err);
-        assert.equal(result.sql, 'insert into "books" ("title") values ($1) returning "id"');
+        assert.equal(result.sql, 'insert into "books" ("title") values ($1)');
         assert.deepEqual(result.bindings, ['Slaughterhouse Five']);
         return done();
       });
@@ -39,7 +39,7 @@ describe('Sequelizer ::', function() {
       })
       .exec(function(err, result) {
         assert(!err, err);
-        assert.equal(result.sql, 'insert into "books" ("author", "title") values ($1, $2) returning "id"');
+        assert.equal(result.sql, 'insert into "books" ("author", "title") values ($1, $2)');
         assert.deepEqual(result.bindings, ['Kurt Vonnegut', 'Slaughterhouse Five']);
         return done();
       });

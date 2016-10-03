@@ -812,6 +812,16 @@ module.exports = {
           buildQueryPiece('offset', expr.value, options.query);
           break;
 
+        case 'RETURNING':
+          // If the value is an array, wrap it in an additional array so the
+          // .apply() call works correctly.
+          if (_.isArray(expr.value)) {
+            expr.value = [expr.value];
+          }
+
+          buildQueryPiece('returning', expr.value, options.query);
+          break;
+
         case 'ORDERBY':
 
           // Look ahead and see if the next expression is an Identifier.
@@ -835,9 +845,6 @@ module.exports = {
             // Flatten the expression
             options.expression = fromPairs(options.expression);
             buildQueryPiece('insert', options.expression, options.query);
-
-            // Also add a 'returning' value
-            buildQueryPiece('returning', 'id', options.query);
           }
           break;
 
