@@ -448,11 +448,11 @@ module.exports = {
         if (modifiers.modifier.length) {
           if (modifiers.modifier.length === 1) {
             if (_.first(modifiers.modifier) === 'NOT') {
-              fn = 'orWhereNot';
+              fn = fn === 'orWhere' ? 'orWhereNot' : 'andWhereNot';
             }
 
             if (_.first(modifiers.modifier) === 'IN') {
-              fn = 'orWhereIn';
+              fn = fn === 'orWhere' ? 'orWhereIn' : 'andWhereIn';
             }
           }
 
@@ -464,7 +464,7 @@ module.exports = {
             var second = _.first(_.pullAt(modifiers.modifier, 0));
 
             if (first === 'NOT' && second === 'IN') {
-              fn = 'orWhereNotIn';
+              fn = fn === 'orWhere' ? 'orWhereNotIn' : 'andWhereNotIn';
             }
           }
         }

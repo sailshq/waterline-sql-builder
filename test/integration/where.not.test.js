@@ -192,5 +192,53 @@ describe('Query Generation ::', function() {
         ]
       }, done);
     });
+
+    it('should generate a query when an AND array is used', function(done) {
+      Test({
+        query: {
+          select: '*',
+          from: 'users',
+          where: {
+            and: [
+              {
+                name: 'John'
+              },
+              {
+                not: {
+                  title: 'Admin'
+                }
+              }
+            ]
+          }
+        },
+        outcomes: [
+          {
+            dialect: 'postgresql',
+            sql: 'select * from "users" where "name" = $1 and not "title" = $2',
+            bindings: ['John', 'Admin']
+          },
+          {
+            dialect: 'mysql',
+            sql: 'select * from `users` where `name` = ? and not `title` = ?',
+            bindings: ['John', 'Admin']
+          },
+          {
+            dialect: 'sqlite3',
+            sql: 'select * from "users" where "name" = ? and not "title" = ?',
+            bindings: ['John', 'Admin']
+          },
+          {
+            dialect: 'oracle',
+            sql: 'select * from "users" where "name" = :1 and not "title" = :2',
+            bindings: ['John', 'Admin']
+          },
+          {
+            dialect: 'mariadb',
+            sql: 'select * from `users` where `name` = ? and not `title` = ?',
+            bindings: ['John', 'Admin']
+          }
+        ]
+      }, done);
+    });
   });
 });
