@@ -122,5 +122,35 @@ describe('Sequelizer ::', function() {
         return done();
       });
     });
+
+    it('should generate a query when AND arrays are used', function(done) {
+      var tree = analyze({
+        select: '*',
+        from: 'users',
+        where: {
+          and: [
+            {
+              name: 'John'
+            },
+            {
+              not: {
+                title: 'Admin'
+              }
+            }
+          ]
+        }
+      });
+
+      Sequelizer({
+        dialect: 'postgresql',
+        tree: tree
+      })
+      .exec(function(err, result) {
+        assert(!err);
+        assert.equal(result.sql, 'select * from "users" where "name" = $1 and not "title" = $2');
+        assert.deepEqual(result.bindings, ['John', 'Admin']);
+        return done();
+      });
+    });
   });
 });
