@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Generate SQL queries.",
   "scripts": {
-    "test": "node ./node_modules/mocha/bin/mocha --recursive",
-    "fasttest": "node ./node_modules/mocha/bin/mocha --recursive",
+    "test": "node ./node_modules/mocha/bin/mocha test/unit --recursive",
+    "fasttest": "node ./node_modules/mocha/bin/mocha test/unit --recursive",
     "pretest": "npm run lint",
     "lint": "eslint machines test"
   },
