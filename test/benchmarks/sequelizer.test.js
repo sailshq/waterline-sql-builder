@@ -1,6 +1,8 @@
 var runBenchmarks = require('../support/benchmark-runner');
 var analyze = require('../support/analyze');
-var Sequelizer = require('../../index').sequelizer;
+var sqlBuilder = require('../../index')({
+  dialect: 'postgres'
+});
 
 //  ╔╗ ╔═╗╔╗╔╔═╗╦ ╦╔╦╗╔═╗╦═╗╦╔═╔═╗
 //  ╠╩╗║╣ ║║║║  ╠═╣║║║╠═╣╠╦╝╠╩╗╚═╗
@@ -49,31 +51,19 @@ describe('Benchmark :: Sequelizer', function() {
   it('should be performant enough', function() {
     runBenchmarks('Sequelizer.execSync()', [
       function sequelizerSelect() {
-        Sequelizer({
-          dialect: 'postgresql',
-          tree: trees.select
-        }).execSync();
+        sqlBuilder.sequelizer(trees.select);
       },
 
       function sequelizerInsert() {
-        Sequelizer({
-          dialect: 'postgresql',
-          tree: trees.insert
-        }).execSync();
+        sqlBuilder.sequelizer(trees.insert);
       },
 
       function sequelizerUpdate() {
-        Sequelizer({
-          dialect: 'postgresql',
-          tree: trees.update
-        }).execSync();
+        sqlBuilder.sequelizer(trees.update);
       },
 
       function sequelizerDelete() {
-        Sequelizer({
-          dialect: 'postgresql',
-          tree: trees.delete
-        }).execSync();
+        sqlBuilder.sequelizer(trees.delete);
       }
     ]);
   });

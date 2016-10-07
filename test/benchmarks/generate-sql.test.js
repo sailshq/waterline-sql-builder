@@ -1,5 +1,7 @@
 var runBenchmarks = require('../support/benchmark-runner');
-var generator = require('../../index').generateSql;
+var sqlBuilder = require('../../index')({
+  dialect: 'postgres'
+});
 
 //  ╔╗ ╔═╗╔╗╔╔═╗╦ ╦╔╦╗╔═╗╦═╗╦╔═╔═╗
 //  ╠╩╗║╣ ║║║║  ╠═╣║║║╠═╣╠╦╝╠╩╗╚═╗
@@ -13,53 +15,41 @@ describe('Benchmark :: Generate SQL', function() {
   it('should be performant enough', function() {
     runBenchmarks('Sequelizer.execSync()', [
       function generateSelect() {
-        generator({
-          dialect: 'postgres',
-          query: {
-            select: '*',
-            from: 'books'
-          }
-        }).execSync();
+        sqlBuilder.sequelizer({
+          select: '*',
+          from: 'books'
+        });
       },
 
       function generateInsert() {
-        generator({
-          dialect: 'postgres',
-          query: {
-            insert: {
-              title: 'Slaughterhouse Five'
-            },
-            into: 'books'
-          }
-        }).execSync();
+        sqlBuilder.sequelizer({
+          insert: {
+            title: 'Slaughterhouse Five'
+          },
+          into: 'books'
+        });
       },
 
       function generateUpdate() {
-        generator({
-          dialect: 'postgres',
-          query: {
-            update: {
-              status: 'archived'
-            },
-            where: {
-              publishedDate: { '>': 2000 }
-            },
-            using: 'books'
-          }
-        }).execSync();
+        sqlBuilder.sequelizer({
+          update: {
+            status: 'archived'
+          },
+          where: {
+            publishedDate: { '>': 2000 }
+          },
+          using: 'books'
+        });
       },
 
       function generateDestroy() {
-        generator({
-          dialect: 'postgres',
-          query: {
-            del: true,
-            from: 'accounts',
-            where: {
-              activated: false
-            }
+        sqlBuilder.sequelizer({
+          del: true,
+          from: 'accounts',
+          where: {
+            activated: false
           }
-        }).execSync();
+        });
       },
     ]);
   });

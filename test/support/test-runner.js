@@ -5,30 +5,25 @@
 
 var assert = require('assert');
 var async = require('async');
-var Pack = require('../../index');
+var GeneratorFn = require('../../index');
 
 module.exports = function(test, cb) {
   var testDialect = function testDialect(outcome, next) {
-    Pack.generateSql({
-      dialect: outcome.dialect,
-      query: test.query
-    }).exec({
-      success: function(results) {
-        try {
-          assert.equal(results.sql, outcome.sql, outcome.dialect);
-          if (outcome.bindings) {
-            assert.deepEqual(results.bindings, outcome.bindings, outcome.dialect);
-          }
-        } catch (e) {
-          e.dialect = outcome.dialect;
-          return cb(e);
-        }
+    var generator = GeneratorFn({ dialect: outcome.dialect });
+    var results = generator.generate(test.query);
 
-        return next();
-      },
-      error: function(err) {
-        return next(err);
+    try {
+      assert.equal(results.sql, outcome.sql, outcome.dialect);
+      if (outcome.bindings) {
+        assert.deepEqual(results.bindings, outcome.bindings, outcome.dialect);
       }
+    } catch (e) {
+      e.dialect = outcome.dialect;
+      return cb(e);
+    }
+
+    return async.setImmediate(function() {
+      next();
     });
   };
 
