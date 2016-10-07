@@ -1,10 +1,10 @@
-var Sequelizer = require('../../../index').sequelizer;
+var Sequelizer = require('../../../index')({ dialect: 'postgres' }).sequelizer;
 var analyze = require('../../support/analyze');
 var assert = require('assert');
 
 describe('Sequelizer ::', function() {
   describe('DISTINCT statements', function() {
-    it('should generate a distinct query', function(done) {
+    it('should generate a distinct query', function() {
       var tree = analyze({
         select: {
           distinct: ['firstName', 'lastName']
@@ -12,15 +12,8 @@ describe('Sequelizer ::', function() {
         from: 'customers'
       });
 
-      Sequelizer({
-        dialect: 'postgresql',
-        tree: tree
-      })
-      .exec(function(err, result) {
-        assert(!err);
-        assert.equal(result.sql, 'select distinct "firstName", "lastName" from "customers"');
-        return done();
-      });
+      var result = Sequelizer(tree);
+      assert.equal(result.sql, 'select distinct "firstName", "lastName" from "customers"');
     });
   });
 });

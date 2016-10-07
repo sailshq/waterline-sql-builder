@@ -1,10 +1,10 @@
-var Sequelizer = require('../../../index').sequelizer;
+var Sequelizer = require('../../../index')({ dialect: 'postgres' }).sequelizer;
 var analyze = require('../../support/analyze');
 var assert = require('assert');
 
 describe('Sequelizer ::', function() {
   describe('JOIN statements', function() {
-    it('should generate a query when a JOIN statement is added', function(done) {
+    it('should generate a query when a JOIN statement is added', function() {
       var tree = analyze({
         select: ['users.id', 'contacts.phone'],
         from: 'users',
@@ -19,18 +19,11 @@ describe('Sequelizer ::', function() {
         ]
       });
 
-      Sequelizer({
-        dialect: 'postgresql',
-        tree: tree
-      })
-      .exec(function(err, result) {
-        assert(!err);
-        assert.equal(result.sql, 'select "users"."id", "contacts"."phone" from "users" inner join "contacts" on "users"."id" = "contacts"."user_id"');
-        return done();
-      });
+      var result = Sequelizer(tree);
+      assert.equal(result.sql, 'select "users"."id", "contacts"."phone" from "users" inner join "contacts" on "users"."id" = "contacts"."user_id"');
     });
 
-    it('should generate a query when a multiple JOIN statements are added', function(done) {
+    it('should generate a query when a multiple JOIN statements are added', function() {
       var tree = analyze({
         select: ['users.id', 'contacts.phone', 'carriers.name'],
         from: 'users',
@@ -52,18 +45,11 @@ describe('Sequelizer ::', function() {
         ]
       });
 
-      Sequelizer({
-        dialect: 'postgresql',
-        tree: tree
-      })
-      .exec(function(err, result) {
-        assert(!err);
-        assert.equal(result.sql, 'select "users"."id", "contacts"."phone", "carriers"."name" from "users" inner join "contacts" on "users"."id" = "contacts"."user_id" inner join "carriers" on "users"."id" = "carriers"."user_id"');
-        return done();
-      });
+      var result = Sequelizer(tree);
+      assert.equal(result.sql, 'select "users"."id", "contacts"."phone", "carriers"."name" from "users" inner join "contacts" on "users"."id" = "contacts"."user_id" inner join "carriers" on "users"."id" = "carriers"."user_id"');
     });
 
-    it('should generate a query when an INNERJOIN statement is added', function(done) {
+    it('should generate a query when an INNERJOIN statement is added', function() {
       var tree = analyze({
         select: ['users.id', 'contacts.phone'],
         from: 'users',
@@ -78,18 +64,11 @@ describe('Sequelizer ::', function() {
         ]
       });
 
-      Sequelizer({
-        dialect: 'postgresql',
-        tree: tree
-      })
-      .exec(function(err, result) {
-        assert(!err);
-        assert.equal(result.sql, 'select "users"."id", "contacts"."phone" from "users" inner join "contacts" on "users"."id" = "contacts"."user_id"');
-        return done();
-      });
+      var result = Sequelizer(tree);
+      assert.equal(result.sql, 'select "users"."id", "contacts"."phone" from "users" inner join "contacts" on "users"."id" = "contacts"."user_id"');
     });
 
-    it('should generate a query when an OUTERJOIN statement is added', function(done) {
+    it('should generate a query when an OUTERJOIN statement is added', function() {
       var tree = analyze({
         select: ['users.id', 'contacts.phone'],
         from: 'users',
@@ -104,18 +83,11 @@ describe('Sequelizer ::', function() {
         ]
       });
 
-      Sequelizer({
-        dialect: 'postgresql',
-        tree: tree
-      })
-      .exec(function(err, result) {
-        assert(!err);
-        assert.equal(result.sql, 'select "users"."id", "contacts"."phone" from "users" outer join "contacts" on "users"."id" = "contacts"."user_id"');
-        return done();
-      });
+      var result = Sequelizer(tree);
+      assert.equal(result.sql, 'select "users"."id", "contacts"."phone" from "users" outer join "contacts" on "users"."id" = "contacts"."user_id"');
     });
 
-    it('should generate a query when grouped OR joins are added', function(done) {
+    it('should generate a query when grouped OR joins are added', function() {
       var tree = analyze({
         select: '*',
         from: 'users',
@@ -138,18 +110,11 @@ describe('Sequelizer ::', function() {
         ]
       });
 
-      Sequelizer({
-        dialect: 'postgresql',
-        tree: tree
-      })
-      .exec(function(err, result) {
-        assert(!err);
-        assert.equal(result.sql, 'select * from "users" inner join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"');
-        return done();
-      });
+      var result = Sequelizer(tree);
+      assert.equal(result.sql, 'select * from "users" inner join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"');
     });
 
-    it('should generate a query when grouped AND joins are added', function(done) {
+    it('should generate a query when grouped AND joins are added', function() {
       var tree = analyze({
         select: '*',
         from: 'users',
@@ -170,18 +135,11 @@ describe('Sequelizer ::', function() {
         ]
       });
 
-      Sequelizer({
-        dialect: 'postgresql',
-        tree: tree
-      })
-      .exec(function(err, result) {
-        assert(!err);
-        assert.equal(result.sql, 'select * from "users" inner join "accounts" on "accounts"."id" = "users"."account_id" and "accounts"."owner_id" = "users"."id"');
-        return done();
-      });
+      var result = Sequelizer(tree);
+      assert.equal(result.sql, 'select * from "users" inner join "accounts" on "accounts"."id" = "users"."account_id" and "accounts"."owner_id" = "users"."id"');
     });
 
-    it('should generate a query when multiple grouped OR joins are added', function(done) {
+    it('should generate a query when multiple grouped OR joins are added', function() {
       var tree = analyze({
         select: '*',
         from: 'users',
@@ -219,15 +177,8 @@ describe('Sequelizer ::', function() {
         ]
       });
 
-      Sequelizer({
-        dialect: 'postgresql',
-        tree: tree
-      })
-      .exec(function(err, result) {
-        assert(!err);
-        assert.equal(result.sql, 'select * from "users" inner join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id" inner join "carriers" on "carriers"."id" = "users"."account_id" or "carriers"."owner_id" = "users"."id"');
-        return done();
-      });
+      var result = Sequelizer(tree);
+      assert.equal(result.sql, 'select * from "users" inner join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id" inner join "carriers" on "carriers"."id" = "users"."account_id" or "carriers"."owner_id" = "users"."id"');
     });
   });
 });

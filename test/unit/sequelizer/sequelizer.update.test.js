@@ -1,10 +1,10 @@
-var Sequelizer = require('../../../index').sequelizer;
+var Sequelizer = require('../../../index')({ dialect: 'postgres' }).sequelizer;
 var analyze = require('../../support/analyze');
 var assert = require('assert');
 
 describe('Sequelizer ::', function() {
   describe('UPDATE statements', function() {
-    it('should generate a simple query with an UPDATE statement', function(done) {
+    it('should generate a simple query with an UPDATE statement', function() {
       var tree = analyze({
         update: {
           status: 'archived'
@@ -15,19 +15,12 @@ describe('Sequelizer ::', function() {
         using: 'books'
       });
 
-      Sequelizer({
-        dialect: 'postgresql',
-        tree: tree
-      })
-      .exec(function(err, result) {
-        assert(!err);
-        assert.equal(result.sql, 'update "books" set "status" = $1 where "publishedDate" > $2 returning "id"');
-        assert.deepEqual(result.bindings, ['archived', '2000']);
-        return done();
-      });
+      var result = Sequelizer(tree);
+      assert.equal(result.sql, 'update "books" set "status" = $1 where "publishedDate" > $2 returning "id"');
+      assert.deepEqual(result.bindings, ['archived', '2000']);
     });
 
-    it('should generate a query with multiple values being inserted', function(done) {
+    it('should generate a query with multiple values being inserted', function() {
       var tree = analyze({
         update: {
           status: 'archived',
@@ -39,19 +32,12 @@ describe('Sequelizer ::', function() {
         using: 'books'
       });
 
-      Sequelizer({
-        dialect: 'postgresql',
-        tree: tree
-      })
-      .exec(function(err, result) {
-        assert(!err, err);
-        assert.equal(result.sql, 'update "books" set "active" = $1, "status" = $2 where "publishedDate" > $3 returning "id"');
-        assert.deepEqual(result.bindings, ['false', 'archived', '2000']);
-        return done();
-      });
+      var result = Sequelizer(tree);
+      assert.equal(result.sql, 'update "books" set "active" = $1, "status" = $2 where "publishedDate" > $3 returning "id"');
+      assert.deepEqual(result.bindings, ['false', 'archived', '2000']);
     });
 
-    it('should generate a query with a NULL value for input', function(done) {
+    it('should generate a query with a NULL value for input', function() {
       var tree = analyze({
         update: {
           status: null
@@ -59,16 +45,9 @@ describe('Sequelizer ::', function() {
         using: 'books'
       });
 
-      Sequelizer({
-        dialect: 'postgresql',
-        tree: tree
-      })
-      .exec(function(err, result) {
-        assert(!err, err);
-        assert.equal(result.sql, 'update "books" set "status" = $1 returning "id"');
-        assert.deepEqual(result.bindings, [null]);
-        return done();
-      });
+      var result = Sequelizer(tree);
+      assert.equal(result.sql, 'update "books" set "status" = $1 returning "id"');
+      assert.deepEqual(result.bindings, [null]);
     });
   });
 });

@@ -1,11 +1,11 @@
-var Sequelizer = require('../../../index').sequelizer;
+var Sequelizer = require('../../../index')({ dialect: 'postgres' }).sequelizer;
 var analyze = require('../../support/analyze');
 var assert = require('assert');
 
 describe('Sequelizer ::', function() {
   describe('Subqueries', function() {
     describe('used as a predicate', function() {
-      it('should generate a valid query for an IN subquery', function(done) {
+      it('should generate a valid query for an IN subquery', function() {
         var tree = analyze({
           select: '*',
           where: {
@@ -25,19 +25,12 @@ describe('Sequelizer ::', function() {
           from: 'accounts'
         });
 
-        Sequelizer({
-          dialect: 'postgresql',
-          tree: tree
-        })
-        .exec(function(err, result) {
-          assert(!err);
-          assert.equal(result.sql, 'select * from "accounts" where "id" in (select "id" from "users" where "status" = $1 or "name" = $2)');
-          assert.deepEqual(result.bindings, ['active', 'John']);
-          return done();
-        });
+        var result = Sequelizer(tree);
+        assert.equal(result.sql, 'select * from "accounts" where "id" in (select "id" from "users" where "status" = $1 or "name" = $2)');
+        assert.deepEqual(result.bindings, ['active', 'John']);
       });
 
-      it('should generate a valid query for a NOT IN subquery', function(done) {
+      it('should generate a valid query for a NOT IN subquery', function() {
         var tree = analyze({
           select: '*',
           from: 'accounts',
@@ -59,21 +52,14 @@ describe('Sequelizer ::', function() {
           }
         });
 
-        Sequelizer({
-          dialect: 'postgresql',
-          tree: tree
-        })
-        .exec(function(err, result) {
-          assert(!err);
-          assert.equal(result.sql, 'select * from "accounts" where "id" not in (select "id" from "users" where "status" = $1 or "name" = $2)');
-          assert.deepEqual(result.bindings, ['active', 'John']);
-          return done();
-        });
+        var result = Sequelizer(tree);
+        assert.equal(result.sql, 'select * from "accounts" where "id" not in (select "id" from "users" where "status" = $1 or "name" = $2)');
+        assert.deepEqual(result.bindings, ['active', 'John']);
       });
     });
 
     describe('used as scalar values', function() {
-      it('should generate a valid query when used inside a SELECT', function(done) {
+      it('should generate a valid query when used inside a SELECT', function() {
         var tree = analyze({
           select: ['name', {
             select: ['username'],
@@ -89,19 +75,12 @@ describe('Sequelizer ::', function() {
           from: 'accounts'
         });
 
-        Sequelizer({
-          dialect: 'postgresql',
-          tree: tree
-        })
-        .exec(function(err, result) {
-          assert(!err);
-          assert.equal(result.sql, 'select "name", (select "username" from "users" where "status" = $1 or "name" = $2) as "username", "age" from "accounts"');
-          assert.deepEqual(result.bindings, ['active', 'John']);
-          return done();
-        });
+        var result = Sequelizer(tree);
+        assert.equal(result.sql, 'select "name", (select "username" from "users" where "status" = $1 or "name" = $2) as "username", "age" from "accounts"');
+        assert.deepEqual(result.bindings, ['active', 'John']);
       });
 
-      it('should generate a valid query when used as a value in a WHERE', function(done) {
+      it('should generate a valid query when used as a value in a WHERE', function() {
         var tree = analyze({
           select: ['name', 'age'],
           from: 'accounts',
@@ -116,21 +95,14 @@ describe('Sequelizer ::', function() {
           }
         });
 
-        Sequelizer({
-          dialect: 'postgresql',
-          tree: tree
-        })
-        .exec(function(err, result) {
-          assert(!err);
-          assert.equal(result.sql, 'select "name", "age" from "accounts" where "username" = (select "username" from "users" where "color" = $1)');
-          assert.deepEqual(result.bindings, ['accounts.color']);
-          return done();
-        });
+        var result = Sequelizer(tree);
+        assert.equal(result.sql, 'select "name", "age" from "accounts" where "username" = (select "username" from "users" where "color" = $1)');
+        assert.deepEqual(result.bindings, ['accounts.color']);
       });
     });
 
     describe('used as table sub query', function() {
-      it('should generate a valid query when used as a value in a FROM with an AS alias', function(done) {
+      it('should generate a valid query when used as a value in a FROM with an AS alias', function() {
         var tree = analyze({
           select: ['name', 'age'],
           from: {
@@ -143,16 +115,9 @@ describe('Sequelizer ::', function() {
           }
         });
 
-        Sequelizer({
-          dialect: 'postgresql',
-          tree: tree
-        })
-        .exec(function(err, result) {
-          assert(!err);
-          assert.equal(result.sql, 'select "name", "age" from (select "age" from "users" where "age" = $1) as "userage"');
-          assert.deepEqual(result.bindings, [21]);
-          return done();
-        });
+        var result = Sequelizer(tree);
+        assert.equal(result.sql, 'select "name", "age" from (select "age" from "users" where "age" = $1) as "userage"');
+        assert.deepEqual(result.bindings, [21]);
       });
     });
   });

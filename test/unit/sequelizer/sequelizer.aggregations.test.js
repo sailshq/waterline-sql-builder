@@ -1,28 +1,21 @@
-var Sequelizer = require('../../../index').sequelizer;
+var Sequelizer = require('../../../index')({ dialect: 'postgres' }).sequelizer;
 var analyze = require('../../support/analyze');
 var assert = require('assert');
 
 describe('Sequelizer ::', function() {
   describe('Aggregations', function() {
-    it('should generate a group by query', function(done) {
+    it('should generate a group by query', function() {
       var tree = analyze({
         select: '*',
         from: 'users',
         groupBy: ['count']
       });
 
-      Sequelizer({
-        dialect: 'postgresql',
-        tree: tree
-      })
-      .exec(function(err, result) {
-        assert(!err);
-        assert.equal(result.sql, 'select * from "users" group by "count"');
-        return done();
-      });
+      var result = Sequelizer(tree);
+      assert.equal(result.sql, 'select * from "users" group by "count"');
     });
 
-    it('should generate a MIN query', function(done) {
+    it('should generate a MIN query', function() {
       var tree = analyze({
         min: [
           'active'
@@ -30,18 +23,11 @@ describe('Sequelizer ::', function() {
         from: 'users'
       });
 
-      Sequelizer({
-        dialect: 'postgresql',
-        tree: tree
-      })
-      .exec(function(err, result) {
-        assert(!err);
-        assert.equal(result.sql, 'select min("active") from "users"');
-        return done();
-      });
+      var result = Sequelizer(tree);
+      assert.equal(result.sql, 'select min("active") from "users"');
     });
 
-    it('should generate a MAX query', function(done) {
+    it('should generate a MAX query', function() {
       var tree = analyze({
         max: [
           'active'
@@ -49,18 +35,11 @@ describe('Sequelizer ::', function() {
         from: 'users'
       });
 
-      Sequelizer({
-        dialect: 'postgresql',
-        tree: tree
-      })
-      .exec(function(err, result) {
-        assert(!err);
-        assert.equal(result.sql, 'select max("active") from "users"');
-        return done();
-      });
+      var result = Sequelizer(tree);
+      assert.equal(result.sql, 'select max("active") from "users"');
     });
 
-    it('should generate a SUM query', function(done) {
+    it('should generate a SUM query', function() {
       var tree = analyze({
         sum: [
           'active'
@@ -68,18 +47,11 @@ describe('Sequelizer ::', function() {
         from: 'users'
       });
 
-      Sequelizer({
-        dialect: 'postgresql',
-        tree: tree
-      })
-      .exec(function(err, result) {
-        assert(!err);
-        assert.equal(result.sql, 'select sum("active") from "users"');
-        return done();
-      });
+      var result = Sequelizer(tree);
+      assert.equal(result.sql, 'select sum("active") from "users"');
     });
 
-    it('should generate a AVG query', function(done) {
+    it('should generate a AVG query', function() {
       var tree = analyze({
         avg: [
           'active'
@@ -87,15 +59,8 @@ describe('Sequelizer ::', function() {
         from: 'users'
       });
 
-      Sequelizer({
-        dialect: 'postgresql',
-        tree: tree
-      })
-      .exec(function(err, result) {
-        assert(!err);
-        assert.equal(result.sql, 'select avg("active") from "users"');
-        return done();
-      });
+      var result = Sequelizer(tree);
+      assert.equal(result.sql, 'select avg("active") from "users"');
     });
   });
 });

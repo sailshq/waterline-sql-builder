@@ -1,10 +1,10 @@
-var Sequelizer = require('../../../index').sequelizer;
+var Sequelizer = require('../../../index')({ dialect: 'postgres' }).sequelizer;
 var analyze = require('../../support/analyze');
 var assert = require('assert');
 
 describe('Sequelizer ::', function() {
   describe('COUNT statements', function() {
-    it('should generate a count query', function(done) {
+    it('should generate a count query', function() {
       var tree = analyze({
         count: [
           'active'
@@ -12,15 +12,8 @@ describe('Sequelizer ::', function() {
         from: 'users'
       });
 
-      Sequelizer({
-        dialect: 'postgresql',
-        tree: tree
-      })
-      .exec(function(err, result) {
-        assert(!err);
-        assert.equal(result.sql, 'select count("active") from "users"');
-        return done();
-      });
+      var result = Sequelizer(tree);
+      assert.equal(result.sql, 'select count("active") from "users"');
     });
   });
 });
