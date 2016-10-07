@@ -1,10 +1,10 @@
-var Sequelizer = require('../../../index').sequelizer;
+var Sequelizer = require('../../../index')({ dialect: 'postgres' }).sequelizer;
 var analyze = require('../../support/analyze');
 var assert = require('assert');
 
 describe('Sequelizer ::', function() {
   describe('Various Operators', function() {
-    it('should generate a query for LIKE operators', function(done) {
+    it('should generate a query for LIKE operators', function() {
       var tree = analyze({
         select: '*',
         from: 'users',
@@ -26,16 +26,9 @@ describe('Sequelizer ::', function() {
         }
       });
 
-      Sequelizer({
-        dialect: 'postgresql',
-        tree: tree
-      })
-      .exec(function(err, result) {
-        assert(!err);
-        assert.equal(result.sql, 'select * from "users" where "name" like $1 or "id" not in ($2, $3, $4)');
-        assert.deepEqual(result.bindings, ['%Test%', '1', '2', '3']);
-        return done();
-      });
+      var result = Sequelizer(tree);
+      assert.equal(result.sql, 'select * from "users" where "name" like $1 or "id" not in ($2, $3, $4)');
+      assert.deepEqual(result.bindings, ['%Test%', '1', '2', '3']);
     });
   });
 });

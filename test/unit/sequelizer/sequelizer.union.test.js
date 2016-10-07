@@ -1,10 +1,10 @@
-var Sequelizer = require('../../../index').sequelizer;
+var Sequelizer = require('../../../index')({ dialect: 'postgres' }).sequelizer;
 var analyze = require('../../support/analyze');
 var assert = require('assert');
 
 describe('Sequelizer ::', function() {
   describe('UNION statements', function() {
-    it('should generate a simple query with a UNION statement', function(done) {
+    it('should generate a simple query with a UNION statement', function() {
       var tree = analyze({
         select: '*',
         from: 'users',
@@ -29,16 +29,9 @@ describe('Sequelizer ::', function() {
         ]
       });
 
-      Sequelizer({
-        dialect: 'postgresql',
-        tree: tree
-      })
-      .exec(function(err, result) {
-        assert(!err);
-        assert.equal(result.sql, 'select * from "users" where "firstName" = $1 union (select * from "users" where "lastName" = $2) union (select * from "users" where "middleName" = $3)');
-        assert.deepEqual(result.bindings, ['Bob', 'Smith', 'Allen']);
-        return done();
-      });
+      var result = Sequelizer(tree);
+      assert.equal(result.sql, 'select * from "users" where "firstName" = $1 union (select * from "users" where "lastName" = $2) union (select * from "users" where "middleName" = $3)');
+      assert.deepEqual(result.bindings, ['Bob', 'Smith', 'Allen']);
     });
   });
 });
