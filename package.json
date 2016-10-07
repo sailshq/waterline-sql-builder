@@ -1,7 +1,7 @@
 {
-  "name": "waterline-query-builder",
+  "name": "waterline-sql-builder",
   "version": "1.0.0",
-  "description": "Generate SQL queries.",
+  "description": "Generate SQL queries from Waterline statements.",
   "scripts": {
     "test": "node ./node_modules/mocha/bin/mocha test/unit --recursive",
     "fasttest": "node ./node_modules/mocha/bin/mocha test/unit --recursive",
@@ -11,15 +11,20 @@
   },
   "keywords": [
     "sql",
-    "machines",
-    "machinepack"
+    "waterline",
+    "sails",
+    "postgresql",
+    "postgres",
+    "mysql",
+    "oracle",
+    "mssql"
   ],
   "author": "Cody Stoltman <particlebanana@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "knex": "0.11.9",
     "lodash": "3.10.1",
-    "machine": "12.4.0",
+    "machine": "^12.4.0",
     "waterline-query-parser": "treelinehq/waterline-query-parser"
   },
   "devDependencies": {
@@ -31,6 +36,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:treelinehq/waterline-query-builder.git"
+    "url": "git@github.com:treelinehq/waterline-sql-builder.git"
   }
 }
