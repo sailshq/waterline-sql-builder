@@ -29,6 +29,7 @@ var sql = sqlBuilder.generate({
   },
   from: 'users'
 });
+```
 
 ```
 {
