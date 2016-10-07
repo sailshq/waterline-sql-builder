@@ -34,10 +34,11 @@ module.exports = {
     success: {
       variableName: 'result',
       description: 'The generated SQL statement.',
-      example: {
-        sql: 'select * from "books"',
-        bindings: ['===']
-      }
+      example: '==='
+      // example: {
+      //   sql: 'select * from "books"',
+      //   bindings: ['===']
+      // }
     }
 
   },

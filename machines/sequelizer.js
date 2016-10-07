@@ -23,8 +23,10 @@ module.exports = {
 
     tree: {
       description: 'A tokenized tree representing the query values.',
-      example: [[]],
-      required: true
+      required: true,
+      readOnly: true,
+      example: '==='
+      // example: [[]],
     }
 
   },
@@ -35,10 +37,11 @@ module.exports = {
     success: {
       variableName: 'result',
       description: 'A SQL string generated from the tree.',
-      example: {
-        sql: 'select * from "books"',
-        bindings: ['===']
-      }
+      example: '==='
+      // example: {
+      //   sql: 'select * from "books"',
+      //   bindings: ['===']
+      // }
     }
 
   },
