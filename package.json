@@ -29,15 +29,6 @@
     "espree": "3.3.0",
     "mocha": "3.0.2"
   },
-  "machinepack": {
-    "friendlyName": "SQL Builder",
-    "machineDir": "machines/",
-    "machines": [
-      "generate-sql",
-      "sequelizer"
-    ],
-    "testsUrl": "https://travis-ci.org/treelinehq/waterline-query-builder"
-  },
   "repository": {
     "type": "git",
     "url": "git@github.com:treelinehq/waterline-query-builder.git"

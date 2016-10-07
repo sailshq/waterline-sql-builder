@@ -1,4 +1,4 @@
-module.exports = {
+module.exports = require('machine').build({
 
 
   friendlyName: 'Sequelizer',
@@ -15,10 +15,10 @@ module.exports = {
 
   inputs: {
 
-    dialect: {
-      description: 'The SQL dialect to use when generating the query',
-      example: 'postgresql',
-      defaultsTo: 'postgresql'
+    knex: {
+      description: 'An instance of Knex that has been built up with a dialect.',
+      readOnly: true,
+      example: '==='
     },
 
     tree: {
@@ -26,7 +26,6 @@ module.exports = {
       required: true,
       readOnly: true,
       example: '==='
-      // example: [[]],
     }
 
   },
@@ -37,11 +36,10 @@ module.exports = {
     success: {
       variableName: 'result',
       description: 'A SQL string generated from the tree.',
-      example: '==='
-      // example: {
-      //   sql: 'select * from "books"',
-      //   bindings: ['===']
-      // }
+      example: {
+        sql: 'select * from "books"',
+        bindings: '==='
+      }
     }
 
   },
@@ -49,11 +47,6 @@ module.exports = {
 
   fn: function sequelizer(inputs, exits) {
     var _ = require('lodash');
-    var knex = require('knex')({
-      dialect: inputs.dialect,
-      useNullAsDefault: true
-    });
-
 
     // Lodash 3.10 version of _.fromPairs from Lodash 4.0
     var fromPairs = function fromPairs(pairs) {
@@ -665,7 +658,7 @@ module.exports = {
     var processUnion = function processUnion(tokens, query, unionType) {
       _.each(tokens, function buildUnionSubquery(token) {
         // Build a standalone knex query builder
-        var subQueryBuilder = knex.queryBuilder();
+        var subQueryBuilder = inputs.knex.queryBuilder();
 
         // Pass the token to the parser
         tokenParser(subQueryBuilder, token);
@@ -1025,7 +1018,7 @@ module.exports = {
         // and pass it in as the expression value
         if (options.subQuery) {
           // Build a standalone knex query builder and pass it the expression
-          var subQueryBuilder = knex.queryBuilder();
+          var subQueryBuilder = inputs.knex.queryBuilder();
           tokenParser(subQueryBuilder, expr);
 
           // Toggle off the subquery flag
@@ -1099,7 +1092,7 @@ module.exports = {
 
     // Run the token parser
     var knexQuery = (function parseTree(tree) {
-      var query = knex.queryBuilder();
+      var query = inputs.knex.queryBuilder();
       tokenParser(query, tree);
       return query;
     })(inputs.tree);
@@ -1116,4 +1109,4 @@ module.exports = {
     return exits.success({ sql: text, bindings: _SQL.bindings });
   }
 
-};
+});
