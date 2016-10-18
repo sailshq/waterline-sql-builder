@@ -15,14 +15,14 @@ describe('Benchmark :: Generate SQL', function() {
   it('should be performant enough', function() {
     runBenchmarks('Sequelizer.execSync()', [
       function generateSelect() {
-        sqlBuilder.sequelizer({
+        sqlBuilder.generate({
           select: '*',
           from: 'books'
         });
       },
 
       function generateInsert() {
-        sqlBuilder.sequelizer({
+        sqlBuilder.generate({
           insert: {
             title: 'Slaughterhouse Five'
           },
@@ -31,7 +31,7 @@ describe('Benchmark :: Generate SQL', function() {
       },
 
       function generateUpdate() {
-        sqlBuilder.sequelizer({
+        sqlBuilder.generate({
           update: {
             status: 'archived'
           },
@@ -43,7 +43,7 @@ describe('Benchmark :: Generate SQL', function() {
       },
 
       function generateDestroy() {
-        sqlBuilder.sequelizer({
+        sqlBuilder.generate({
           del: true,
           from: 'accounts',
           where: {
