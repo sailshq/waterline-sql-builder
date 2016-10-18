@@ -6,13 +6,7 @@
 var Parser = require('waterline-query-parser');
 
 module.exports = function(expression) {
-  var tokens = Parser.tokenizer({
-    expression: expression
-  }).execSync();
-
-  var tree = Parser.analyzer({
-    tokens: tokens
-  }).execSync();
-
+  var tokens = Parser.tokenizer(expression);
+  var tree = Parser.analyzer(tokens);
   return tree;
 };

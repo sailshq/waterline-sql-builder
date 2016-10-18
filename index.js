@@ -17,7 +17,7 @@
 
 var Knex = require('knex');
 var Parser = require('waterline-query-parser');
-var Sequelizer = require('./machines/sequelizer');
+var Sequelizer = require('./lib/sequelizer');
 
 module.exports = function sqlBuilder(options) {
   if (!options.dialect) {
@@ -40,20 +40,16 @@ module.exports = function sqlBuilder(options) {
     // query parser to generate a token tree and then build up a SQL string.
     generate: function generate(query) {
       // Tokenize the values
-      var tokens = Parser.tokenizer({
-        expression: query
-      }).execSync();
+      var tokens = Parser.tokenizer(query);
 
       // Analyze the tokens
-      var tree = Parser.analyzer({
-        tokens: tokens
-      }).execSync();
+      var tree = Parser.analyzer(tokens);
 
       // Generate the SQL
       var sql = Sequelizer({
         knex: knexInstance,
         tree: tree
-      }).execSync();
+      });
 
       return sql;
     },
@@ -66,7 +62,7 @@ module.exports = function sqlBuilder(options) {
       return Sequelizer({
         knex: knexInstance,
         tree: tree
-      }).execSync();
+      });
     }
   };
 };
