@@ -3,10 +3,10 @@
  * For use with Sequelizer tests.
  */
 
-var Parser = require('waterline-query-parser');
+var Utils = require('waterline-utils');
 
 module.exports = function(expression) {
-  var tokens = Parser.tokenizer(expression);
-  var tree = Parser.analyzer(tokens);
+  var tokens = Utils.query.tokenizer(expression);
+  var tree = Utils.query.analyzer(tokens);
   return tree;
 };

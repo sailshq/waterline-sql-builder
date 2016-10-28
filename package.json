@@ -24,7 +24,7 @@
   "dependencies": {
     "knex": "0.11.9",
     "lodash": "3.10.1",
-    "waterline-query-parser": "treelinehq/waterline-query-parser"
+    "waterline-utils": "treelinehq/waterline-utils"
   },
   "devDependencies": {
     "async": "2.0.1",
