@@ -33,23 +33,6 @@ describe('Sequelizer ::', function() {
       assert.deepEqual(result.bindings, ['100']);
     });
 
-    it('should generate a valid query when multiple operators are used', function() {
-      var tree = analyze({
-        select: '*',
-        where: {
-          votes: {
-            '>': 100,
-            '<': 200
-          }
-        },
-        from: 'users'
-      });
-
-      var result = Sequelizer(tree);
-      assert.equal(result.sql, 'select * from "users" where "votes" > $1 and "votes" < $2');
-      assert.deepEqual(result.bindings, ['100', '200']);
-    });
-
     it('should generate a valid query when multiple columns and operators are used', function() {
       var tree = analyze({
         select: '*',
