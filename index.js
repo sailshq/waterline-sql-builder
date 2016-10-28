@@ -16,7 +16,7 @@
 // the many supported drivers or run independently.
 
 var Knex = require('knex');
-var Parser = require('waterline-query-parser');
+var Utils = require('waterline-utils');
 var Sequelizer = require('./lib/sequelizer');
 
 module.exports = function sqlBuilder(options) {
@@ -40,10 +40,10 @@ module.exports = function sqlBuilder(options) {
     // query parser to generate a token tree and then build up a SQL string.
     generate: function generate(query) {
       // Tokenize the values
-      var tokens = Parser.tokenizer(query);
+      var tokens = Utils.query.tokenizer(query);
 
       // Analyze the tokens
-      var tree = Parser.analyzer(tokens);
+      var tree = Utils.query.analyzer(tokens);
 
       // Generate the SQL
       var sql = Sequelizer({
