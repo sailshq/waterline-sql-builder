@@ -7,7 +7,7 @@ describe('Sequelizer ::', function() {
     describe('used as a predicate', function() {
       it('should generate a valid query for an IN subquery', function() {
         var tree = analyze({
-          select: '*',
+          select: ['*'],
           where: {
             id: {
               in: {
@@ -32,7 +32,7 @@ describe('Sequelizer ::', function() {
 
       it('should generate a valid query for a NOT IN subquery', function() {
         var tree = analyze({
-          select: '*',
+          select: ['*'],
           from: 'accounts',
           where: {
             not: {

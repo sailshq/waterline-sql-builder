@@ -6,7 +6,7 @@ describe('Sequelizer ::', function() {
   describe('Grouping statements with OR', function() {
     it('should generate a query when an OR statement is used', function() {
       var tree = analyze({
-        select: '*',
+        select: ['*'],
         where: {
           or: [
             {
@@ -27,7 +27,7 @@ describe('Sequelizer ::', function() {
 
     it('should generate a query when nested OR statements are used', function() {
       var tree = analyze({
-        select: '*',
+        select: ['*'],
         where: {
           or: [
             {

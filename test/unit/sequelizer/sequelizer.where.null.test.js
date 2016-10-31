@@ -6,7 +6,7 @@ describe('Sequelizer ::', function() {
   describe('WHERE NULL statements', function() {
     it('should generate a query with a simple WHERE statement', function() {
       var tree = analyze({
-        select: '*',
+        select: ['*'],
         from: 'users',
         where: {
           updatedAt: null

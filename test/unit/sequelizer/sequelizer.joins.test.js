@@ -89,7 +89,7 @@ describe('Sequelizer ::', function() {
 
     it('should generate a query when grouped OR joins are added', function() {
       var tree = analyze({
-        select: '*',
+        select: ['*'],
         from: 'users',
         join: [
           {
@@ -116,7 +116,7 @@ describe('Sequelizer ::', function() {
 
     it('should generate a query when grouped AND joins are added', function() {
       var tree = analyze({
-        select: '*',
+        select: ['*'],
         from: 'users',
         join: [
           {
@@ -141,7 +141,7 @@ describe('Sequelizer ::', function() {
 
     it('should generate a query when multiple grouped OR joins are added', function() {
       var tree = analyze({
-        select: '*',
+        select: ['*'],
         from: 'users',
         join: [
           {

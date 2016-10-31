@@ -21,7 +21,7 @@ describe('Sequelizer ::', function() {
 
     it('should generate a valid query when operators are used', function() {
       var tree = analyze({
-        select: '*',
+        select: ['*'],
         where: {
           votes: { '>': 100 }
         },
@@ -35,7 +35,7 @@ describe('Sequelizer ::', function() {
 
     it('should generate a valid query when multiple columns and operators are used', function() {
       var tree = analyze({
-        select: '*',
+        select: ['*'],
         where: {
           votes: { '>': 100 },
           age: { '<': 50 }

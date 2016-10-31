@@ -6,9 +6,9 @@ describe('Sequelizer ::', function() {
   describe('Aggregations', function() {
     it('should generate a group by query', function() {
       var tree = analyze({
-        select: '*',
+        select: ['*'],
         from: 'users',
-        groupBy: ['count']
+        groupBy: 'count'
       });
 
       var result = Sequelizer(tree);
@@ -17,9 +17,7 @@ describe('Sequelizer ::', function() {
 
     it('should generate a MIN query', function() {
       var tree = analyze({
-        min: [
-          'active'
-        ],
+        min: 'active',
         from: 'users'
       });
 
@@ -29,9 +27,7 @@ describe('Sequelizer ::', function() {
 
     it('should generate a MAX query', function() {
       var tree = analyze({
-        max: [
-          'active'
-        ],
+        max: 'active',
         from: 'users'
       });
 
@@ -41,9 +37,7 @@ describe('Sequelizer ::', function() {
 
     it('should generate a SUM query', function() {
       var tree = analyze({
-        sum: [
-          'active'
-        ],
+        sum: 'active',
         from: 'users'
       });
 
@@ -53,9 +47,7 @@ describe('Sequelizer ::', function() {
 
     it('should generate a AVG query', function() {
       var tree = analyze({
-        avg: [
-          'active'
-        ],
+        avg: 'active',
         from: 'users'
       });
 

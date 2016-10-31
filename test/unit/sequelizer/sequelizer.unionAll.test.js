@@ -6,21 +6,21 @@ describe('Sequelizer ::', function() {
   describe('UNION ALL statements', function() {
     it('should generate a simple query with a UNION statement', function() {
       var tree = analyze({
-        select: '*',
+        select: ['*'],
         from: 'users',
         where: {
           firstName: 'Bob'
         },
         unionAll: [
           {
-            select: '*',
+            select: ['*'],
             from: 'users',
             where: {
               lastName: 'Smith'
             }
           },
           {
-            select: '*',
+            select: ['*'],
             from: 'users',
             where: {
               middleName: 'Allen'
