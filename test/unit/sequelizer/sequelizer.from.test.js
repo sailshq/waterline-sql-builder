@@ -6,7 +6,7 @@ describe('Sequelizer ::', function() {
   describe('FROM statements', function() {
     it('should generate a simple query with a FROM statement', function() {
       var tree = analyze({
-        select: '*',
+        select: ['*'],
         from: 'books'
       });
 

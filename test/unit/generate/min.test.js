@@ -5,9 +5,7 @@ describe('Query Generation ::', function() {
     it('should generate a min query', function(done) {
       Test({
         query: {
-          min: [
-            'active'
-          ],
+          min: 'active',
           from: 'users'
         },
         outcomes: [

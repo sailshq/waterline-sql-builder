@@ -6,7 +6,7 @@ describe('Sequelizer ::', function() {
   describe('LIMIT statements', function() {
     it('should generate a simple query with a LIMIT statement', function() {
       var tree = analyze({
-        select: '*',
+        select: ['*'],
         from: 'users',
         limit: 10
       });

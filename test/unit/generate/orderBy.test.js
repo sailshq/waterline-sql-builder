@@ -5,7 +5,7 @@ describe('Query Generation ::', function() {
     it('should generate a simple query with a FROM statement', function(done) {
       Test({
         query: {
-          select: '*',
+          select: ['*'],
           from: 'users',
           orderBy: [{ name: 'desc' }, { age: 'asc' }]
         },

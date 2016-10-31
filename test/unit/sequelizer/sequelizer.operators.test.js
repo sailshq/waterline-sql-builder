@@ -6,7 +6,7 @@ describe('Sequelizer ::', function() {
   describe('Various Operators', function() {
     it('should generate a query for LIKE operators', function() {
       var tree = analyze({
-        select: '*',
+        select: ['*'],
         from: 'users',
         where: {
           or: [

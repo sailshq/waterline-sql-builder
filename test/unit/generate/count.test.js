@@ -5,9 +5,7 @@ describe('Query Generation ::', function() {
     it('should generate a count query', function(done) {
       Test({
         query: {
-          count: [
-            'active'
-          ],
+          count: 'active',
           from: 'users'
         },
         outcomes: [

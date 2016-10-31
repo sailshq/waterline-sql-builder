@@ -8,10 +8,18 @@ describe('Query Generation ::', function() {
           select: ['id'],
           from: 'users',
           where: {
-            not: {
-              firstName: 'Test',
-              lastName: 'User'
-            }
+            and: [
+              {
+                not: {
+                  firstName: 'Test'
+                }
+              },
+              {
+                not: {
+                  lastName: 'User'
+                }
+              }
+            ]
           }
         },
         outcomes: [
@@ -108,12 +116,16 @@ describe('Query Generation ::', function() {
     it('should generate a query when operators are used', function(done) {
       Test({
         query: {
-          select: '*',
+          select: ['*'],
           from: 'users',
           where: {
-            not: {
-              votes: { '>': 100 }
-            }
+            and: [
+              {
+                not: {
+                  votes: { '>': 100 }
+                }
+              }
+            ]
           }
         },
         outcomes: [
@@ -149,7 +161,7 @@ describe('Query Generation ::', function() {
     it('should generate a query when multiple operators are used', function(done) {
       Test({
         query: {
-          select: '*',
+          select: ['*'],
           from: 'users',
           where: {
             or: [
@@ -196,7 +208,7 @@ describe('Query Generation ::', function() {
     it('should generate a query when an AND array is used', function(done) {
       Test({
         query: {
-          select: '*',
+          select: ['*'],
           from: 'users',
           where: {
             and: [

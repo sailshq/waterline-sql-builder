@@ -6,7 +6,7 @@ describe('Sequelizer ::', function() {
   describe('SKIP statements', function() {
     it('should generate a simple query with a SKIP statement', function() {
       var tree = analyze({
-        select: '*',
+        select: ['*'],
         from: 'users',
         skip: 10
       });

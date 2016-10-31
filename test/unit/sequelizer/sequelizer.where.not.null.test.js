@@ -6,12 +6,16 @@ describe('Sequelizer ::', function() {
   describe('WHERE NOT NULL statements', function() {
     it('should generate a query with a simple WHERE statement', function() {
       var tree = analyze({
-        select: '*',
+        select: ['*'],
         from: 'users',
         where: {
-          not: {
-            updatedAt: null
-          }
+          and: [
+            {
+              not: {
+                updatedAt: null
+              }
+            }
+          ]
         }
       });
 

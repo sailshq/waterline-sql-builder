@@ -102,7 +102,7 @@ describe('Query Generation ::', function() {
     it('should be able to group joins', function(done) {
       Test({
         query: {
-          select: '*',
+          select: ['*'],
           from: 'users',
           join: [
             {

@@ -6,10 +6,14 @@ describe('Query Generation ::', function() {
       it('should generate a query when a NULL value is used', function(done) {
         Test({
           query: {
-            select: '*',
+            select: ['*'],
             from: 'users',
             where: {
-              updatedAt: null
+              and: [
+                {
+                  updatedAt: null
+                }
+              ]
             }
           },
           outcomes: [
@@ -47,12 +51,16 @@ describe('Query Generation ::', function() {
       it('should generate a query when a NOT NULL value is used', function(done) {
         Test({
           query: {
-            select: '*',
+            select: ['*'],
             from: 'users',
             where: {
-              not: {
-                updatedAt: null
-              }
+              and: [
+                {
+                  not: {
+                    updatedAt: null
+                  }
+                }
+              ]
             }
           },
           outcome: 'select * from "users" where "updatedAt" is not null'

@@ -6,9 +6,7 @@ describe('Sequelizer ::', function() {
   describe('COUNT statements', function() {
     it('should generate a count query', function() {
       var tree = analyze({
-        count: [
-          'active'
-        ],
+        count: 'active',
         from: 'users'
       });
 

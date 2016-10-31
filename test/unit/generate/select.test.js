@@ -5,7 +5,7 @@ describe('Query Generation ::', function() {
     it('should generate a select * query', function(done) {
       Test({
         query: {
-          select: '*',
+          select: ['*'],
           from: 'books'
         },
         outcomes: [

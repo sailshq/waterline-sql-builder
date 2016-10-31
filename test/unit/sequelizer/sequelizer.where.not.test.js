@@ -9,10 +9,18 @@ describe('Sequelizer ::', function() {
         select: ['id'],
         from: 'users',
         where: {
-          not: {
-            firstName: 'Test',
-            lastName: 'User'
-          }
+          and: [
+            {
+              not: {
+                firstName: 'Test'
+              }
+            },
+            {
+              not: {
+                lastName: 'User'
+              }
+            }
+          ]
         }
       });
 
@@ -23,7 +31,7 @@ describe('Sequelizer ::', function() {
 
     it('should generate a query with nested WHERE NOT statements', function() {
       var tree = analyze({
-        select: '*',
+        select: ['*'],
         from: 'users',
         where: {
           or: [
@@ -59,12 +67,16 @@ describe('Sequelizer ::', function() {
 
     it('should generate a query when operators are used', function() {
       var tree = analyze({
-        select: '*',
+        select: ['*'],
         from: 'users',
         where: {
-          not: {
-            votes: { '>': 100 }
-          }
+          and: [
+            {
+              not: {
+                votes: { '>': 100 }
+              }
+            }
+          ]
         }
       });
 
@@ -75,7 +87,7 @@ describe('Sequelizer ::', function() {
 
     it('should generate a query when multiple operators are used', function() {
       var tree = analyze({
-        select: '*',
+        select: ['*'],
         from: 'users',
         where: {
           or: [
@@ -97,7 +109,7 @@ describe('Sequelizer ::', function() {
 
     it('should generate a query when AND arrays are used', function() {
       var tree = analyze({
-        select: '*',
+        select: ['*'],
         from: 'users',
         where: {
           and: [

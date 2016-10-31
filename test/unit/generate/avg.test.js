@@ -5,9 +5,7 @@ describe('Query Generation ::', function() {
     it('should generate a avg query', function(done) {
       Test({
         query: {
-          avg: [
-            'active'
-          ],
+          avg: 'active',
           from: 'users'
         },
         outcomes: [

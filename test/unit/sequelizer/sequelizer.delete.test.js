@@ -9,7 +9,11 @@ describe('Sequelizer ::', function() {
         del: true,
         from: 'accounts',
         where: {
-          activated: false
+          and: [
+            {
+              activated: false
+            }
+          ]
         }
       });
 

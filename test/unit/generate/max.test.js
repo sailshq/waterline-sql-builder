@@ -5,9 +5,7 @@ describe('Query Generation ::', function() {
     it('should generate a max query', function(done) {
       Test({
         query: {
-          max: [
-            'active'
-          ],
+          max: 'active',
           from: 'users'
         },
         outcomes: [

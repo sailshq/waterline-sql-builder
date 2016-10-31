@@ -5,9 +5,7 @@ describe('Query Generation ::', function() {
     it('should generate a sum query', function(done) {
       Test({
         query: {
-          sum: [
-            'active'
-          ],
+          sum: 'active',
           from: 'users'
         },
         outcomes: [

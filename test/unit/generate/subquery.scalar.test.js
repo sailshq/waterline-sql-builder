@@ -55,13 +55,17 @@ describe('Query Generation ::', function() {
             select: ['name', 'age'],
             from: 'accounts',
             where: {
-              username: {
-                select: ['username'],
-                from: 'users',
-                where: {
-                  color: 'accounts.color'
+              and: [
+                {
+                  username: {
+                    select: ['username'],
+                    from: 'users',
+                    where: {
+                      color: 'accounts.color'
+                    }
+                  }
                 }
-              }
+              ]
             }
           },
           outcomes: [

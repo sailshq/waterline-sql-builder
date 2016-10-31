@@ -9,7 +9,13 @@ describe('Query Generation ::', function() {
             status: 'archived'
           },
           where: {
-            publishedDate: { '>': 2000 }
+            and: [
+              {
+                publishedDate: {
+                  '>': 2000
+                }
+              }
+            ]
           },
           using: 'books'
         },
@@ -47,7 +53,11 @@ describe('Query Generation ::', function() {
       Test({
         query: {
           where: {
-            type: 'test'
+            and: [
+              {
+                type: 'test'
+              }
+            ]
           },
           using: 'user',
           update: {
@@ -92,7 +102,13 @@ describe('Query Generation ::', function() {
             active: false
           },
           where: {
-            publishedDate: { '>': 2000 }
+            and: [
+              {
+                publishedDate: {
+                  '>': 2000
+                }
+              }
+            ]
           },
           using: 'books'
         },

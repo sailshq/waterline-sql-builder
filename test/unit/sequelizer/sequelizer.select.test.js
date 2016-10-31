@@ -6,7 +6,7 @@ describe('Sequelizer ::', function() {
   describe('SELECT statements', function() {
     it('should generate a query for select "*"', function() {
       var tree = analyze({
-        select: '*',
+        select: ['*'],
         from: 'books'
       });
 

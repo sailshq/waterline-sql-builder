@@ -5,7 +5,7 @@ describe('Query Generation ::', function() {
     it('should generate a query when an OR statement is present', function(done) {
       Test({
         query: {
-          select: '*',
+          select: ['*'],
           where: {
             or: [
               {
@@ -51,7 +51,7 @@ describe('Query Generation ::', function() {
     it('should generate a query when a nested OR statement is used', function(done) {
       Test({
         query: {
-          select: '*',
+          select: ['*'],
           where: {
             or: [
               {

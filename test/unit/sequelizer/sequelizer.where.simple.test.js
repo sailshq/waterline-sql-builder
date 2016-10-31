@@ -8,8 +8,14 @@ describe('Sequelizer ::', function() {
       var tree = analyze({
         select: ['id'],
         where: {
-          firstName: 'Test',
-          lastName: 'User'
+          and: [
+            {
+              firstName: 'Test'
+            },
+            {
+              lastName: 'User'
+            }
+          ]
         },
         from: 'users'
       });
@@ -21,9 +27,15 @@ describe('Sequelizer ::', function() {
 
     it('should generate a valid query when operators are used', function() {
       var tree = analyze({
-        select: '*',
+        select: ['*'],
         where: {
-          votes: { '>': 100 }
+          and: [
+            {
+              votes: {
+                '>': 100
+              }
+            }
+          ]
         },
         from: 'users'
       });
@@ -35,10 +47,20 @@ describe('Sequelizer ::', function() {
 
     it('should generate a valid query when multiple columns and operators are used', function() {
       var tree = analyze({
-        select: '*',
+        select: ['*'],
         where: {
-          votes: { '>': 100 },
-          age: { '<': 50 }
+          and: [
+            {
+              votes: {
+                '>': 100
+              }
+            },
+            {
+              age: {
+                '<': 50
+              }
+            }
+          ]
         },
         from: 'users'
       });

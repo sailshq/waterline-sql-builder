@@ -9,11 +9,15 @@ describe('Sequelizer ::', function() {
         select: ['name'],
         from: 'users',
         where: {
-          not: {
-            id: {
-              in: [1, 2, 3]
+          and: [
+            {
+              not: {
+                id: {
+                  in: [1, 2, 3]
+                }
+              }
             }
-          }
+          ]
         }
       });
 

@@ -5,7 +5,7 @@ describe('Query Generation ::', function() {
     it('should generate a simple query with a LIMIT statement', function(done) {
       Test({
         query: {
-          select: 'id',
+          select: ['id'],
           from: 'users',
           limit: 10
         },
