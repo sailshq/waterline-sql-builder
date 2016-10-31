@@ -9,10 +9,18 @@ describe('Sequelizer ::', function() {
         select: ['id'],
         from: 'users',
         where: {
-          not: {
-            firstName: 'Test',
-            lastName: 'User'
-          }
+          and: [
+            {
+              not: {
+                firstName: 'Test'
+              }
+            },
+            {
+              not: {
+                lastName: 'User'
+              }
+            }
+          ]
         }
       });
 
@@ -62,9 +70,13 @@ describe('Sequelizer ::', function() {
         select: ['*'],
         from: 'users',
         where: {
-          not: {
-            votes: { '>': 100 }
-          }
+          and: [
+            {
+              not: {
+                votes: { '>': 100 }
+              }
+            }
+          ]
         }
       });
 

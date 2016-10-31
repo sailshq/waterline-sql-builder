@@ -9,18 +9,22 @@ describe('Sequelizer ::', function() {
         var tree = analyze({
           select: ['*'],
           where: {
-            id: {
-              in: {
-                select: ['id'],
-                from: 'users',
-                where: {
-                  or: [
-                    { status: 'active' },
-                    { name: 'John' }
-                  ]
+            and: [
+              {
+                id: {
+                  in: {
+                    select: ['id'],
+                    from: 'users',
+                    where: {
+                      or: [
+                        { status: 'active' },
+                        { name: 'John' }
+                      ]
+                    }
+                  }
                 }
               }
-            }
+            ]
           },
           from: 'accounts'
         });
@@ -35,20 +39,24 @@ describe('Sequelizer ::', function() {
           select: ['*'],
           from: 'accounts',
           where: {
-            not: {
-              id: {
-                in: {
-                  select: ['id'],
-                  from: 'users',
-                  where: {
-                    or: [
-                      { status: 'active' },
-                      { name: 'John' }
-                    ]
+            and: [
+              {
+                not: {
+                  id: {
+                    in: {
+                      select: ['id'],
+                      from: 'users',
+                      where: {
+                        or: [
+                          { status: 'active' },
+                          { name: 'John' }
+                        ]
+                      }
+                    }
                   }
                 }
               }
-            }
+            ]
           }
         });
 
@@ -85,13 +93,17 @@ describe('Sequelizer ::', function() {
           select: ['name', 'age'],
           from: 'accounts',
           where: {
-            username: {
-              select: ['username'],
-              from: 'users',
-              where: {
-                color: 'accounts.color'
+            and: [
+              {
+                username: {
+                  select: ['username'],
+                  from: 'users',
+                  where: {
+                    color: 'accounts.color'
+                  }
+                }
               }
-            }
+            ]
           }
         });
 
@@ -109,7 +121,11 @@ describe('Sequelizer ::', function() {
             select: ['age'],
             from: 'users',
             where: {
-              age: 21
+              and: [
+                {
+                  age: 21
+                }
+              ]
             },
             as: 'userage'
           }

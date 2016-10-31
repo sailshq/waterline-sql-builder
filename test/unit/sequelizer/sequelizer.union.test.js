@@ -9,21 +9,33 @@ describe('Sequelizer ::', function() {
         select: ['*'],
         from: 'users',
         where: {
-          firstName: 'Bob'
+          and: [
+            {
+              firstName: 'Bob'
+            }
+          ]
         },
         union: [
           {
             select: ['*'],
             from: 'users',
             where: {
-              lastName: 'Smith'
+              and: [
+                {
+                  lastName: 'Smith'
+                }
+              ]
             }
           },
           {
             select: ['*'],
             from: 'users',
             where: {
-              middleName: 'Allen'
+              and: [
+                {
+                  middleName: 'Allen'
+                }
+              ]
             }
           }
         ]

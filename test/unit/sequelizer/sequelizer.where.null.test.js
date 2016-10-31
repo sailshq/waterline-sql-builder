@@ -9,7 +9,11 @@ describe('Sequelizer ::', function() {
         select: ['*'],
         from: 'users',
         where: {
-          updatedAt: null
+          and: [
+            {
+              updatedAt: null
+            }
+          ]
         }
       });
 

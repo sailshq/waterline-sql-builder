@@ -8,8 +8,14 @@ describe('Sequelizer ::', function() {
       var tree = analyze({
         select: ['id'],
         where: {
-          firstName: 'Test',
-          lastName: 'User'
+          and: [
+            {
+              firstName: 'Test'
+            },
+            {
+              lastName: 'User'
+            }
+          ]
         },
         from: 'users'
       });
@@ -23,7 +29,13 @@ describe('Sequelizer ::', function() {
       var tree = analyze({
         select: ['*'],
         where: {
-          votes: { '>': 100 }
+          and: [
+            {
+              votes: {
+                '>': 100
+              }
+            }
+          ]
         },
         from: 'users'
       });
@@ -37,8 +49,18 @@ describe('Sequelizer ::', function() {
       var tree = analyze({
         select: ['*'],
         where: {
-          votes: { '>': 100 },
-          age: { '<': 50 }
+          and: [
+            {
+              votes: {
+                '>': 100
+              }
+            },
+            {
+              age: {
+                '<': 50
+              }
+            }
+          ]
         },
         from: 'users'
       });

@@ -9,9 +9,13 @@ describe('Sequelizer ::', function() {
         select: ['*'],
         from: 'users',
         where: {
-          not: {
-            updatedAt: null
-          }
+          and: [
+            {
+              not: {
+                updatedAt: null
+              }
+            }
+          ]
         }
       });
 

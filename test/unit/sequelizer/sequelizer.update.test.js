@@ -10,7 +10,11 @@ describe('Sequelizer ::', function() {
           status: 'archived'
         },
         where: {
-          publishedDate: { '>': 2000 }
+          and: [
+            {
+              publishedDate: { '>': 2000 }
+            }
+          ]
         },
         using: 'books'
       });
@@ -27,7 +31,13 @@ describe('Sequelizer ::', function() {
           active: false
         },
         where: {
-          publishedDate: { '>': 2000 }
+          and: [
+            {
+              publishedDate: {
+                '>': 2000
+              }
+            }
+          ]
         },
         using: 'books'
       });
