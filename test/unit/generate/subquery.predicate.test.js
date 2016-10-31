@@ -6,20 +6,24 @@ describe('Query Generation ::', function() {
       it('should generate a valid query for an IN subquery', function(done) {
         Test({
           query: {
-            select: '*',
+            select: ['*'],
             where: {
-              id: {
-                in: {
-                  select: ['id'],
-                  from: 'users',
-                  where: {
-                    or: [
-                      { status: 'active' },
-                      { name: 'John' }
-                    ]
+              and: [
+                {
+                  id: {
+                    in: {
+                      select: ['id'],
+                      from: 'users',
+                      where: {
+                        or: [
+                          { status: 'active' },
+                          { name: 'John' }
+                        ]
+                      }
+                    }
                   }
                 }
-              }
+              ]
             },
             from: 'accounts'
           },
@@ -56,23 +60,27 @@ describe('Query Generation ::', function() {
       it('should generate a valid query for a NOT IN subquery', function(done) {
         Test({
           query: {
-            select: '*',
+            select: ['*'],
             from: 'accounts',
             where: {
-              not: {
-                id: {
-                  in: {
-                    select: ['id'],
-                    from: 'users',
-                    where: {
-                      or: [
-                        { status: 'active' },
-                        { name: 'John' }
-                      ]
+              and: [
+                {
+                  not: {
+                    id: {
+                      in: {
+                        select: ['id'],
+                        from: 'users',
+                        where: {
+                          or: [
+                            { status: 'active' },
+                            { name: 'John' }
+                          ]
+                        }
+                      }
                     }
                   }
                 }
-              }
+              ]
             }
           },
           outcomes: [

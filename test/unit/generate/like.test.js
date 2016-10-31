@@ -5,7 +5,7 @@ describe('Query Generation ::', function() {
     it('should generate a LIKE query', function(done) {
       Test({
         query: {
-          select: '*',
+          select: ['*'],
           from: 'users',
           where: {
             or: [

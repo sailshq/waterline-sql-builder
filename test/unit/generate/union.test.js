@@ -5,24 +5,36 @@ describe('Query Generation ::', function() {
     it('should generate a UNION query', function(done) {
       Test({
         query: {
-          select: '*',
+          select: ['*'],
           from: 'users',
           where: {
-            firstName: 'Bob'
+            and: [
+              {
+                firstName: 'Bob'
+              }
+            ]
           },
           union: [
             {
-              select: '*',
+              select: ['*'],
               from: 'users',
               where: {
-                lastName: 'Smith'
+                and: [
+                  {
+                    lastName: 'Smith'
+                  }
+                ]
               }
             },
             {
-              select: '*',
+              select: ['*'],
               from: 'users',
               where: {
-                middleName: 'Allen'
+                and: [
+                  {
+                    middleName: 'Allen'
+                  }
+                ]
               }
             }
           ]

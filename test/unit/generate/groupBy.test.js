@@ -5,9 +5,9 @@ describe('Query Generation ::', function() {
     it('should generate a group by query', function(done) {
       Test({
         query: {
-          select: '*',
+          select: ['*'],
           from: 'users',
-          groupBy: ['count']
+          groupBy: 'count'
         },
         outcomes: [
           {

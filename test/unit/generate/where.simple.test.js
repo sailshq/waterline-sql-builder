@@ -7,8 +7,14 @@ describe('Query Generation ::', function() {
         query: {
           select: ['id'],
           where: {
-            firstName: 'Test',
-            lastName: 'User'
+            and: [
+              {
+                firstName: 'Test'
+              },
+              {
+                lastName: 'User'
+              }
+            ]
           },
           from: 'users'
         },
@@ -45,9 +51,15 @@ describe('Query Generation ::', function() {
     it('should generate a query when operators are used', function(done) {
       Test({
         query: {
-          select: '*',
+          select: ['*'],
           where: {
-            votes: { '>': 100 }
+            and: [
+              {
+                votes: {
+                  '>': 100
+                }
+              }
+            ]
           },
           from: 'users'
         },
@@ -84,9 +96,20 @@ describe('Query Generation ::', function() {
     it('should generate a query when multiple operators are used', function(done) {
       Test({
         query: {
-          select: '*',
+          select: ['*'],
           where: {
-            votes: { '>': 100, '<': 200 }
+            and: [
+              {
+                votes: {
+                  '>': 100
+                }
+              },
+              {
+                votes: {
+                  '<': 200
+                }
+              }
+            ]
           },
           from: 'users'
         },
@@ -123,10 +146,20 @@ describe('Query Generation ::', function() {
     it('should generate a query when multiple columns and operators are used', function(done) {
       Test({
         query: {
-          select: '*',
+          select: ['*'],
           where: {
-            votes: { '>': 100 },
-            age: { '<': 50 }
+            and: [
+              {
+                votes: {
+                  '>': 100
+                }
+              },
+              {
+                age: {
+                  '<': 50
+                }
+              }
+            ]
           },
           from: 'users'
         },

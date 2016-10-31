@@ -8,7 +8,11 @@ describe('Query Generation ::', function() {
           del: true,
           from: 'accounts',
           where: {
-            activated: false
+            and: [
+              {
+                activated: false
+              }
+            ]
           }
         },
         outcomes: [

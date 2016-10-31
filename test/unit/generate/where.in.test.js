@@ -8,9 +8,13 @@ describe('Query Generation ::', function() {
           select: ['name'],
           from: 'users',
           where: {
-            id: {
-              in: [1, 2, 3]
-            }
+            and: [
+              {
+                id: {
+                  in: [1, 2, 3]
+                }
+              }
+            ]
           }
         },
         outcomes: [

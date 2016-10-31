@@ -5,7 +5,7 @@ describe('Query Generation ::', function() {
     it('should generate a query when an AND statement is used as an array', function(done) {
       Test({
         query: {
-          select: '*',
+          select: ['*'],
           from: 'users',
           where: {
             and: [

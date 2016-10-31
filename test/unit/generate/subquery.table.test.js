@@ -11,7 +11,11 @@ describe('Query Generation ::', function() {
               select: ['age'],
               from: 'users',
               where: {
-                age: 21
+                and: [
+                  {
+                    age: 21
+                  }
+                ]
               },
               as: 'userage'
             }
