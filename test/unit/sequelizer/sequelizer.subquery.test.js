@@ -41,17 +41,15 @@ describe('Sequelizer ::', function() {
           where: {
             and: [
               {
-                not: {
-                  id: {
-                    in: {
-                      select: ['id'],
-                      from: 'users',
-                      where: {
-                        or: [
-                          { status: 'active' },
-                          { name: 'John' }
-                        ]
-                      }
+                id: {
+                  nin: {
+                    select: ['id'],
+                    from: 'users',
+                    where: {
+                      or: [
+                        { status: 'active' },
+                        { name: 'John' }
+                      ]
                     }
                   }
                 }

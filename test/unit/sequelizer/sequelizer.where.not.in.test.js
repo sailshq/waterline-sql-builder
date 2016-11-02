@@ -11,10 +11,8 @@ describe('Sequelizer ::', function() {
         where: {
           and: [
             {
-              not: {
-                id: {
-                  in: [1, 2, 3]
-                }
+              id: {
+                nin: [1, 2, 3]
               }
             }
           ]
@@ -33,17 +31,13 @@ describe('Sequelizer ::', function() {
         where: {
           or: [
             {
-              not: {
-                id: {
-                  in: [1, 2, 3]
-                }
+              id: {
+                nin: [1, 2, 3]
               }
             },
             {
-              not: {
-                id: {
-                  in: [4, 5, 6]
-                }
+              id: {
+                nin: [4, 5, 6]
               }
             }
           ]
@@ -62,18 +56,20 @@ describe('Sequelizer ::', function() {
         where: {
           or: [
             {
-              not: {
-                id: {
-                  in: [1, 2, 3]
+              and: [
+                {
+                  id: {
+                    nin: [1, 2, 3]
+                  }
+                },
+                {
+                  age: 21
                 }
-              },
-              age: 21
+              ]
             },
             {
-              not: {
-                id: {
-                  in: [4, 5, 6]
-                }
+              id: {
+                nin: [4, 5, 6]
               }
             }
           ]
