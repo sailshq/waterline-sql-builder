@@ -11,8 +11,8 @@ describe('Sequelizer ::', function() {
         where: {
           and: [
             {
-              not: {
-                updatedAt: null
+              updatedAt: {
+                not: null
               }
             }
           ]

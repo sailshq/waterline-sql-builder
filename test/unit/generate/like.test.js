@@ -15,10 +15,8 @@ describe('Query Generation ::', function() {
                 }
               },
               {
-                not: {
-                  id: {
-                    in: [1, 2, 3]
-                  }
+                id: {
+                  nin: [1, 2, 3]
                 }
               }
             ]
