@@ -30,5 +30,26 @@ describe('Sequelizer ::', function() {
       assert.equal(result.sql, 'insert into "books" ("author", "title") values ($1, $2)');
       assert.deepEqual(result.bindings, ['Kurt Vonnegut', 'Slaughterhouse Five']);
     });
+
+    it('should generate a query with an array of values being inserted', function() {
+      var tree = analyze({
+        insert: [
+          {
+            title: 'Slaughterhouse Five',
+            author: 'Kurt Vonnegut'
+          },
+          {
+            title: 'The Great Gatsby',
+            author: 'F. Scott Fitzgerald'
+          }
+        ],
+        into: 'books'
+      });
+
+      var result = Sequelizer(tree);
+
+      assert.equal(result.sql, 'insert into "books" ("author", "title") values ($1, $2), ($3, $4)');
+      assert.deepEqual(result.bindings, ['Kurt Vonnegut', 'Slaughterhouse Five', 'F. Scott Fitzgerald', 'The Great Gatsby']);
+    });
   });
 });

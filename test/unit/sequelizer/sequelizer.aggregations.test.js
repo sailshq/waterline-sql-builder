@@ -4,37 +4,6 @@ var assert = require('assert');
 
 describe('Sequelizer ::', function() {
   describe('Aggregations', function() {
-    it('should generate a group by query', function() {
-      var tree = analyze({
-        select: ['*'],
-        from: 'users',
-        groupBy: 'count'
-      });
-
-      var result = Sequelizer(tree);
-      assert.equal(result.sql, 'select * from "users" group by "count"');
-    });
-
-    it('should generate a MIN query', function() {
-      var tree = analyze({
-        min: 'active',
-        from: 'users'
-      });
-
-      var result = Sequelizer(tree);
-      assert.equal(result.sql, 'select min("active") from "users"');
-    });
-
-    it('should generate a MAX query', function() {
-      var tree = analyze({
-        max: 'active',
-        from: 'users'
-      });
-
-      var result = Sequelizer(tree);
-      assert.equal(result.sql, 'select max("active") from "users"');
-    });
-
     it('should generate a SUM query', function() {
       var tree = analyze({
         sum: 'active',
