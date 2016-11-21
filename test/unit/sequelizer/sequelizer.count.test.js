@@ -6,12 +6,12 @@ describe('Sequelizer ::', function() {
   describe('COUNT statements', function() {
     it('should generate a count query', function() {
       var tree = analyze({
-        count: 'active',
+        count: true,
         from: 'users'
       });
 
       var result = Sequelizer(tree);
-      assert.equal(result.sql, 'select count("active") from "users"');
+      assert.equal(result.sql, 'select count(*) from "users"');
     });
   });
 });
