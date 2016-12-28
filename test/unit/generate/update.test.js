@@ -116,7 +116,7 @@ describe('Query Generation ::', function() {
           {
             dialect: 'postgresql',
             sql: 'update "books" set "active" = $1, "status" = $2 where "publishedDate" > $3 returning "id"',
-            bindings: ['false', 'archived', '2000']
+            bindings: [false, 'archived', 2000]
           },
           {
             dialect: 'mysql',
