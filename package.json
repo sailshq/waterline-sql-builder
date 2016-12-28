@@ -22,7 +22,7 @@
   "author": "Cody Stoltman <particlebanana@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "knex": "0.11.9",
+    "knex": "0.12.6",
     "lodash": "3.10.1",
     "waterline-utils": "treelinehq/waterline-utils"
   },
