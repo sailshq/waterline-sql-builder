@@ -92,5 +92,58 @@ describe('Sequelizer ::', function() {
       assert.equal(result.sql, 'select * from "users" where ("firstName" like $1 and "type" = $2) or ("firstName" like $3 and "age" > $4 and "type" = $5)');
       assert.deepEqual(result.bindings, ['%user0%', 'or test', '%user1', '0', 'or test']);
     });
+
+    it('should generate a query when complex OR statements are used', function() {
+      var tree = analyze({
+        select: ['*'],
+        where: {
+          or: [
+            {
+              and: [
+                {
+                  lastName: 'smith'
+                },
+                {
+                  or: [
+                    {
+                      age: {
+                        '<=': 7
+                      }
+                    },
+                    {
+                      type: 'even'
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              and: [
+                {
+                  lastName: 'jones'
+                },
+                {
+                  or: [
+                    {
+                      type: 'odd'
+                    },
+                    {
+                      firstName: {
+                        like: '%6%'
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        from: 'users'
+      });
+
+      var result = Sequelizer(tree);
+      assert.equal(result.sql, 'select * from "users" where ("lastName" = $1 and ("age" <= $2 or "type" = $3)) or ("lastName" = $4 and ("type" = $5 or "firstName" like $6))');
+      assert.deepEqual(result.bindings, ['smith', 7, 'even', 'jones', 'odd', '%6%']);
+    });
   });
 });
