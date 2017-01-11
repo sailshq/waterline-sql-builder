@@ -236,7 +236,7 @@ describe('Sequelizer ::', function() {
                         {
                           or: [
                             { age: 1 },
-                            { age: { '<': 2} }
+                            { age: { '<': 2 } }
                           ]
                         }
                       ]
