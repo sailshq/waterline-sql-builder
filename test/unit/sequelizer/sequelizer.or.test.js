@@ -93,7 +93,7 @@ describe('Sequelizer ::', function() {
       assert.deepEqual(result.bindings, ['%user0%', 'or test', '%user1', '0', 'or test']);
     });
 
-    it('should generate a query when complex OR statements are used', function() {
+    it('should generate a query when complex multi-level nesting OR statements are used', function() {
       var tree = analyze({
         select: ['*'],
         where: {
@@ -144,6 +144,115 @@ describe('Sequelizer ::', function() {
       var result = Sequelizer(tree);
       assert.equal(result.sql, 'select * from "users" where ("lastName" = $1 and ("age" <= $2 or "type" = $3)) or ("lastName" = $4 and ("type" = $5 or "firstName" like $6))');
       assert.deepEqual(result.bindings, ['smith', 7, 'even', 'jones', 'odd', '%6%']);
+    });
+
+    it('should generate a query when complex even more multi-level nesting OR statements are used', function() {
+      var tree = analyze({
+        select: ['*'],
+        where: {
+          or: [
+            {
+              and: [
+                {
+                  lastName: 'smith'
+                },
+                {
+                  or: [
+                    { age: { '<=': 7 } },
+                    { type: 'even' }
+                  ]
+                }
+              ]
+            },
+            {
+              and: [
+                {
+                  lastName: 'jones'
+                },
+                {
+                  or: [
+                    {
+                      type: 'odd'
+                    },
+                    {
+                      and: [
+                        {
+                          firstName: { like: '%6%' }
+                        },
+                        {
+                          firstName: { like: '%nested' }
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        from: 'users'
+      });
+
+      var result = Sequelizer(tree);
+      assert.equal(result.sql, 'select * from "users" where ("lastName" = $1 and ("age" <= $2 or "type" = $3)) or ("lastName" = $4 and ("type" = $5 or ("firstName" like $6 and "firstName" like $7)))');
+      assert.deepEqual(result.bindings, ['smith', 7, 'even', 'jones', 'odd', '%6%', '%nested']);
+    });
+
+    it('should generate a query when complex even more super duper multi-level nesting OR statements are used', function() {
+      var tree = analyze({
+        select: ['*'],
+        where: {
+          or: [
+            {
+              and: [
+                {
+                  lastName: 'smith'
+                },
+                {
+                  or: [
+                    { age: { '<=': 7 } },
+                    { type: 'even' }
+                  ]
+                }
+              ]
+            },
+            {
+              and: [
+                {
+                  lastName: 'jones'
+                },
+                {
+                  or: [
+                    {
+                      type: 'odd'
+                    },
+                    {
+                      and: [
+                        {
+                          firstName: {
+                            like: '%6%'
+                          }
+                        },
+                        {
+                          or: [
+                            { age: 1 },
+                            { age: { '<': 2 } }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        from: 'users'
+      });
+
+      var result = Sequelizer(tree);
+      assert.equal(result.sql, 'select * from "users" where ("lastName" = $1 and ("age" <= $2 or "type" = $3)) or ("lastName" = $4 and ("type" = $5 or ("firstName" like $6 and ("age" = $7 or "age" < $8))))');
+      assert.deepEqual(result.bindings, ['smith', 7, 'even', 'jones', 'odd', '%6%', 1, 2]);
     });
   });
 });
