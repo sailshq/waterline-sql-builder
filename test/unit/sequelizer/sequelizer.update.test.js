@@ -20,7 +20,7 @@ describe('Sequelizer ::', function() {
       });
 
       var result = Sequelizer(tree);
-      assert.equal(result.sql, 'update "books" set "status" = $1 where "publishedDate" > $2 returning "id"');
+      assert.equal(result.sql, 'update "books" set "status" = $1 where "publishedDate" > $2');
       assert.deepEqual(result.bindings, ['archived', 2000]);
     });
 
@@ -43,7 +43,7 @@ describe('Sequelizer ::', function() {
       });
 
       var result = Sequelizer(tree);
-      assert.equal(result.sql, 'update "books" set "active" = $1, "status" = $2 where "publishedDate" > $3 returning "id"');
+      assert.equal(result.sql, 'update "books" set "active" = $1, "status" = $2 where "publishedDate" > $3');
       assert.deepEqual(result.bindings, [false, 'archived', 2000]);
     });
 
@@ -56,7 +56,7 @@ describe('Sequelizer ::', function() {
       });
 
       var result = Sequelizer(tree);
-      assert.equal(result.sql, 'update "books" set "status" = $1 returning "id"');
+      assert.equal(result.sql, 'update "books" set "status" = $1');
       assert.deepEqual(result.bindings, [null]);
     });
   });
