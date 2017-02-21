@@ -11,7 +11,7 @@ database. (The core Sails/Waterline adapters for SQL databases use this library 
 
 > Refer to [**Concepts > Models and ORM**](http://sailsjs.com/documentation/concepts/models-and-orm) for information on how to run queries from app-level code.
 > Or, if you are building a lower-level Node.js package, see [Waterline Query Docs](https://github.com/treelinehq/waterline-query-docs) for more information on Waterline statements (aka [stage 4 queries](https://github.com/balderdashy/waterline/blob/88bdfac31844e367a979661c4232fd5f521f3a33/ARCHITECTURE.md#stage-4-query)).
-> Keep in mind that [using Waterline statements from app-level code is _experimental_](http://sailsjs.com/documentation/reference/waterline-orm/datastores/send-statement) and should be treated accordingly.  While this package follows semver, from the perspective of application code, breaking changes could occur at any time (e.g. since this kind of usage is experimental, Waterline adapters could upgrade their `waterline-query-builder` dependency via a major version bump)
+> Keep in mind that [using Waterline statements from app-level code is _experimental_](http://sailsjs.com/documentation/reference/waterline-orm/datastores/send-statement) and should be treated accordingly.  While this package follows semver, from the perspective of application code, breaking changes could occur at any time (e.g. since this kind of usage is experimental, Waterline adapters could upgrade their `waterline-sql-builder` dependency via a major version bump)
 
 
 ## Usage
@@ -46,7 +46,7 @@ console.log(report);
 If you have questions or are having trouble, click [here](http://sailsjs.com/support).
 
 
-## Bugs &nbsp; [![NPM version](https://badge.fury.io/js/waterline-query-builder.svg)](http://npmjs.com/package/waterline-query-builder)
+## Bugs &nbsp; [![NPM version](https://badge.fury.io/js/waterline-sql-builder.svg)](http://npmjs.com/package/waterline-sql-builder)
 
 To report a bug, [click here](http://sailsjs.com/bugs).
 
@@ -55,7 +55,7 @@ To report a bug, [click here](http://sailsjs.com/bugs).
 
 Please observe the guidelines and conventions laid out in the [Sails project contribution guide](http://sailsjs.com/documentation/contributing) when opening issues or submitting pull requests.
 
-[![NPM](https://nodei.co/npm/waterline-query-builder.png?downloads=true)](http://npmjs.com/package/waterline-query-builder)
+[![NPM](https://nodei.co/npm/waterline-sql-builder.png?downloads=true)](http://npmjs.com/package/waterline-sql-builder)
 
 
 ## License
