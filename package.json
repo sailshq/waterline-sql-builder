@@ -1,12 +1,12 @@
 {
   "name": "waterline-sql-builder",
-  "version": "1.0.0-3",
-  "description": "Generate SQL queries from Waterline statements.",
+  "version": "1.0.0-5",
+  "description": "Generate SQL (stage 5 query) from a Waterline statement (stage 4 query).",
   "scripts": {
     "test": "node ./node_modules/mocha/bin/mocha test/unit --recursive",
     "fasttest": "node ./node_modules/mocha/bin/mocha test/unit --recursive",
     "pretest": "npm run lint",
-    "lint": "eslint machines test",
+    "lint": "node ./node_modules/eslint/bin/eslint **/*.js *.js",
     "benchmark": "node ./node_modules/mocha/bin/mocha test/benchmarks --recursive"
   },
   "keywords": [
@@ -17,20 +17,23 @@
     "postgres",
     "mysql",
     "oracle",
-    "mssql"
+    "mssql",
+    "knex"
   ],
-  "author": "Cody Stoltman <particlebanana@gmail.com>",
+  "author": "The Sails Company",
+  "contributors": [
+    "Cody Stoltman <@particlebanana>"
+  ],
   "license": "MIT",
   "dependencies": {
-    "knex": "0.12.6",
-    "lodash": "3.10.1",
-    "waterline-utils": "^1.0.0"
+    "knex": "0.12.7",
+    "@sailshq/lodash": "^3.10.2",
+    "waterline-utils": "^1.3.8"
   },
   "devDependencies": {
     "async": "2.0.1",
     "benchmark": "2.1.1",
     "eslint": "3.5.0",
-    "espree": "3.3.0",
     "mocha": "3.0.2"
   },
   "repository": {
