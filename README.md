@@ -1,6 +1,8 @@
 # Waterline SQL Builder
 
-Build SQL queries from Waterline statements (stage 4 queries). based on .
+Build SQL queries (stage 5 queries) from Waterline statements (stage 4 queries).
+
+> For more information, see https://github.com/balderdashy/waterline/blob/d782be4ba5b3daefc27850e90d81b01d3709c6bc/ARCHITECTURE.md#stage-4-query.
 
 ## Purpose
 
