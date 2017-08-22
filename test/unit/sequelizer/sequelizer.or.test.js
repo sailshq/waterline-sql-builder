@@ -93,6 +93,56 @@ describe('Sequelizer ::', function() {
       assert.deepEqual(result.bindings, ['%user0%', 'or test', '%user1', '0', 'or test']);
     });
 
+    it('should generate a query when complex OR statements are used with IN', function() {
+
+      var tree = analyze({
+        select: ['*'],
+        where: {
+          and: [{
+            inviteStatus: 'pending'
+          }, {
+            or: [{
+              entityId: 1,
+              inviteType: 'globalAdmin'
+            }, {
+              entityId: { in : [1] },
+              inviteType: 'localAdmin'
+            }]
+          }]
+        },
+        from: 'users'
+      });
+
+      var result = Sequelizer(tree);
+      assert.equal(result.sql, 'select * from "users" where "inviteStatus" = $1 and (("entityId" = $2 and "inviteType" = $3) or ("entityId" in ($4) and "inviteType" = $5))');
+      assert.deepEqual(result.bindings, ['pending', '1', 'globalAdmin', '1', 'localAdmin']);
+    });
+
+    it('should generate a query when complex OR statements are used with NOT IN', function() {
+
+      var tree = analyze({
+        select: ['*'],
+        where: {
+          and: [{
+            inviteStatus: 'pending'
+          }, {
+            or: [{
+              entityId: 1,
+              inviteType: 'globalAdmin'
+            }, {
+              entityId: { nin : [1] },
+              inviteType: 'localAdmin'
+            }]
+          }]
+        },
+        from: 'users'
+      });
+
+      var result = Sequelizer(tree);
+      assert.equal(result.sql, 'select * from "users" where "inviteStatus" = $1 and (("entityId" = $2 and "inviteType" = $3) or ("entityId" not in ($4) and "inviteType" = $5))');
+      assert.deepEqual(result.bindings, ['pending', '1', 'globalAdmin', '1', 'localAdmin']);
+    });
+
     it('should generate a query when complex multi-level nesting OR statements are used', function() {
       var tree = analyze({
         select: ['*'],
