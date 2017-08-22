@@ -24,6 +24,29 @@ describe('Sequelizer ::', function() {
       assert.deepEqual(result.bindings, ['1', '2', '3']);
     });
 
+    it('should generate a query when used in a conjunction', function() {
+      var tree = analyze({
+        select: ['name'],
+        from: 'users',
+        where: {
+          and: [
+            {
+              id: {
+                nin: [1, 2, 3]
+              },
+              age: {
+                nin: [30, 40, 50]
+              }
+            }
+          ]
+        }
+      });
+
+      var result = Sequelizer(tree);
+      assert.equal(result.sql, 'select "name" from "users" where ("id" not in ($1, $2, $3) and "age" not in ($4, $5, $6))');
+      assert.deepEqual(result.bindings, ['1', '2', '3', '30', '40', '50']);
+    });
+
     it('should generate a query when in an OR statement', function() {
       var tree = analyze({
         select: ['name'],
