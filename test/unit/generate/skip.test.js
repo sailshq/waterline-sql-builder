@@ -22,7 +22,7 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select * from "users" limit ? offset ?',
+            sql: 'select * from `users` limit ? offset ?',
             bindings: ['-1', '10']
           },
           {

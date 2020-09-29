@@ -30,7 +30,7 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select "name" from "users" where "id" in (?, ?, ?)',
+            sql: 'select `name` from `users` where `id` in (?, ?, ?)',
             bindings: ['1', '2', '3']
           },
           {
@@ -80,7 +80,7 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select "name" from "users" where "id" in (?, ?, ?) or "id" in (?, ?, ?)',
+            sql: 'select `name` from `users` where `id` in (?, ?, ?) or `id` in (?, ?, ?)',
             bindings: ['1', '2', '3', '4', '5', '6']
           },
           {

@@ -30,7 +30,7 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select "name" from "users" where "id" not in (?, ?, ?)',
+            sql: 'select `name` from `users` where `id` not in (?, ?, ?)',
             bindings: ['1', '2', '3']
           },
           {
@@ -80,7 +80,7 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select "name" from "users" where "id" not in (?, ?, ?) or "id" not in (?, ?, ?)',
+            sql: 'select `name` from `users` where `id` not in (?, ?, ?) or `id` not in (?, ?, ?)',
             bindings: ['1', '2', '3', '4', '5', '6']
           },
           {
@@ -131,7 +131,7 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select "name" from "users" where ("id" not in (?, ?, ?) and "age" = ?) or "id" not in (?, ?, ?)',
+            sql: 'select `name` from `users` where (`id` not in (?, ?, ?) and `age` = ?) or `id` not in (?, ?, ?)',
             bindings: ['1', '2', '3', '21', '4', '5', '6']
           },
           {

@@ -21,7 +21,7 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select * from "books"',
+            sql: 'select * from `books`',
             bindings: []
           },
           {
@@ -57,7 +57,7 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select "title", "author", "year" from "books"',
+            sql: 'select `title`, `author`, `year` from `books`',
             bindings: []
           },
           {
@@ -93,7 +93,7 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select "title" as "book_title", "author" as "book_author", "year" as "book_year" from "books"',
+            sql: 'select `title` as `book_title`, `author` as `book_author`, `year` as `book_year` from `books`',
             bindings: []
           },
           {

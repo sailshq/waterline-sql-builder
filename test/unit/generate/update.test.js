@@ -32,7 +32,7 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'update "books" set "status" = ? where "publishedDate" > ?',
+            sql: 'update `books` set `status` = ? where `publishedDate` > ?',
             bindings: ['archived', 2000]
           },
           {
@@ -77,7 +77,7 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'update "user" set "age" = ? where "type" = ?',
+            sql: 'update `user` set `age` = ? where `type` = ?',
             bindings: [10, 'test']
           },
           {

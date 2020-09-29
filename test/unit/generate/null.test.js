@@ -29,7 +29,7 @@ describe('Query Generation ::', function() {
             },
             {
               dialect: 'sqlite3',
-              sql: 'select * from "users" where "updatedAt" is null',
+              sql: 'select * from `users` where `updatedAt` is null',
               bindings: []
             },
             {

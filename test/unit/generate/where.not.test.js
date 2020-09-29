@@ -35,7 +35,7 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select "id" from "users" where "firstName" != ? and "lastName" != ?',
+            sql: 'select `id` from `users` where `firstName` != ? and `lastName` != ?',
             bindings: ['Test', 'User']
           },
           {
@@ -94,7 +94,7 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select * from "users" where ("id" != ? or "id" < ?) or "name" != ?',
+            sql: 'select * from `users` where (`id` != ? or `id` < ?) or `name` != ?',
             bindings: ['1', '10', 'Tester']
           },
           {
@@ -141,7 +141,7 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select * from "users" where "name" = ? or ("votes" > ? and "title" != ?)',
+            sql: 'select * from `users` where `name` = ? or (`votes` > ? and `title` != ?)',
             bindings: ['John', '100', 'Admin']
           },
           {
@@ -189,7 +189,7 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select * from "users" where "name" = ? and "title" != ?',
+            sql: 'select * from `users` where `name` = ? and `title` != ?',
             bindings: ['John', 'Admin']
           },
           {

@@ -33,7 +33,7 @@ describe('Query Generation ::', function() {
             },
             {
               dialect: 'sqlite3',
-              sql: 'select "name", "age" from (select "age" from "users" where "age" = ?) as "userage"',
+              sql: 'select `name`, `age` from (select `age` from `users` where `age` = ?) as `userage`',
               bindings: [21]
             },
             {

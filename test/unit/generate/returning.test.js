@@ -24,7 +24,7 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'insert into "books" ("title") values (?)',
+            sql: 'insert into `books` (`title`) values (?)',
             bindings: ['Slaughterhouse Five']
           },
           {
@@ -64,7 +64,7 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'insert into "books" ("author", "title") values (?, ?)',
+            sql: 'insert into `books` (`author`, `title`) values (?, ?)',
             bindings: ['Kurt Vonnegut', 'Slaughterhouse Five']
           },
           {
@@ -103,7 +103,7 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'insert into "books" ("title") values (?)',
+            sql: 'insert into `books` (`title`) values (?)',
             bindings: ['Slaughterhouse Five']
           },
           {

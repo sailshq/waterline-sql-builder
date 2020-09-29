@@ -21,7 +21,7 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select * from "books"',
+            sql: 'select * from `books`',
             bindings: []
           },
           {

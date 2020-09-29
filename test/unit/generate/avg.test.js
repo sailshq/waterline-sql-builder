@@ -21,7 +21,7 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select avg("active") from "users"',
+            sql: 'select avg(`active`) from `users`',
             bindings: []
           },
           {

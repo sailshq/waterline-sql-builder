@@ -31,7 +31,7 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select * from "users" where "id" > ? or "name" = ?',
+            sql: 'select * from `users` where `id` > ? or `name` = ?',
             bindings: ['10', 'Tester']
           },
           {
@@ -80,7 +80,7 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select * from "users" where ("id" = ? or "id" > ?) or "name" = ?',
+            sql: 'select * from `users` where (`id` = ? or `id` > ?) or `name` = ?',
             bindings: ['1', '10', 'Tester']
           },
           {

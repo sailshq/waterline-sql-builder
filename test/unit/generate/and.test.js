@@ -31,7 +31,7 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select * from "users" where "firstName" = ? and "lastName" = ?',
+            sql: 'select * from `users` where `firstName` = ? and `lastName` = ?',
             bindings: ['foo', 'bar']
           },
           {
@@ -95,7 +95,7 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select * from "users" where ("firstName" = ? or "lastName" = ?) and ("qty" > ? or "price" < ?)',
+            sql: 'select * from `users` where (`firstName` = ? or `lastName` = ?) and (`qty` > ? or `price` < ?)',
             bindings: ['John', 'Smith', '100', '10.01']
           },
           {

@@ -52,7 +52,7 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select * from "users" where "firstName" = ? union all (select * from "users" where "lastName" = ?) union all (select * from "users" where "middleName" = ?)',
+            sql: 'select * from `users` where `firstName` = ? union all (select * from `users` where `lastName` = ?) union all (select * from `users` where `middleName` = ?)',
             bindings: ['Bob', 'Smith', 'Allen']
           },
           {

@@ -22,7 +22,7 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select "id" from "users" limit ?',
+            sql: 'select `id` from `users` limit ?',
             bindings: ['10']
           },
           {
