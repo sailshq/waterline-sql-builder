@@ -37,7 +37,7 @@ describe('Query Generation ::', function() {
               bindings: [21]
             },
             {
-              dialect: 'oracle',
+              dialect: 'oracledb',
               sql: 'select "name", "age" from (select "age" from "users" where "age" = :1) "userage"',
               bindings: [21]
             },

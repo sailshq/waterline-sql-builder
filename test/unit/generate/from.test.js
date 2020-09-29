@@ -25,7 +25,7 @@ describe('Query Generation ::', function() {
             bindings: []
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select * from "books"',
             bindings: []
           },

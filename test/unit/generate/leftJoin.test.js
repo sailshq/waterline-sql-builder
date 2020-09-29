@@ -34,7 +34,7 @@ describe('Query Generation ::', function() {
             bindings: []
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select "users"."id", "contacts"."phone" from "users" left join "contacts" on "users"."id" = "contacts"."user_id"',
             bindings: []
           },

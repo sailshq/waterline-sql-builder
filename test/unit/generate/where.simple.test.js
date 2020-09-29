@@ -35,7 +35,7 @@ describe('Query Generation ::', function() {
             bindings: ['Test', 'User']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select "id" from "users" where "firstName" = :1 and "lastName" = :2',
             bindings: ['Test', 'User']
           },
@@ -80,7 +80,7 @@ describe('Query Generation ::', function() {
             bindings: ['100']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select * from "users" where "votes" > :1',
             bindings: ['100']
           },
@@ -130,7 +130,7 @@ describe('Query Generation ::', function() {
             bindings: ['100', '200']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select * from "users" where "votes" > :1 and "votes" < :2',
             bindings: ['100', '200']
           },
@@ -180,7 +180,7 @@ describe('Query Generation ::', function() {
             bindings: ['100', '50']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select * from "users" where "votes" > :1 and "age" < :2',
             bindings: ['100', '50']
           },

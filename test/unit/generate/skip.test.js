@@ -26,7 +26,7 @@ describe('Query Generation ::', function() {
             bindings: ['-1', '10']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select * from (select row_.*, ROWNUM rownum_ from (select * from "users") row_ where rownum <= :1) where rownum_ > :2',
             bindings: ['10000000000010', '10']
           },

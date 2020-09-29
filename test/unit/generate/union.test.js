@@ -56,7 +56,7 @@ describe('Query Generation ::', function() {
             bindings: ['Bob', 'Smith', 'Allen']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select * from "users" where "firstName" = :1 union (select * from "users" where "lastName" = :2) union (select * from "users" where "middleName" = :3)',
             bindings: ['Bob', 'Smith', 'Allen']
           },

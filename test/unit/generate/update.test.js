@@ -36,7 +36,7 @@ describe('Query Generation ::', function() {
             bindings: ['archived', 2000]
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'update "books" set "status" = :1 where "publishedDate" > :2',
             bindings: ['archived', 2000]
           },
@@ -81,7 +81,7 @@ describe('Query Generation ::', function() {
             bindings: [10, 'test']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'update "user" set "age" = :1 where "type" = :2',
             bindings: [10, 'test']
           },

@@ -32,7 +32,7 @@ describe('Query Generation ::', function() {
             bindings: [false]
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'delete from "accounts" where "activated" = :1',
             bindings: ['0']
           },

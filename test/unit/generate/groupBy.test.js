@@ -26,7 +26,7 @@ describe('Query Generation ::', function() {
             bindings: []
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select * from "users" group by "count"',
             bindings: []
           },

@@ -27,7 +27,7 @@ describe('Query Generation ::', function() {
             bindings: ['Slaughterhouse Five']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'insert into "books" ("title") values (:1)',
             bindings: ['Slaughterhouse Five']
           },
@@ -66,7 +66,7 @@ describe('Query Generation ::', function() {
             bindings: ['Kurt Vonnegut', 'Slaughterhouse Five']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'insert into "books" ("author", "title") values (:1, :2)',
             bindings: ['Kurt Vonnegut', 'Slaughterhouse Five']
           },
@@ -111,7 +111,7 @@ describe('Query Generation ::', function() {
             bindings: ['Kurt Vonnegut', 'Slaughterhouse Five', 'F. Scott Fitzgerald', 'The Great Gatsby']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'begin execute immediate \'insert into "books" ("author", "title") values (:1, :2)\' using :1, :2; execute immediate \'insert into "books" ("author", "title") values (:1, :2)\' using :3, :4;end;',
             bindings: ['Kurt Vonnegut', 'Slaughterhouse Five', 'F. Scott Fitzgerald', 'The Great Gatsby']
           },

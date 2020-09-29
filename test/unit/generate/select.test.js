@@ -25,7 +25,7 @@ describe('Query Generation ::', function() {
             bindings: []
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select * from "books"',
             bindings: []
           },
@@ -61,7 +61,7 @@ describe('Query Generation ::', function() {
             bindings: []
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select "title", "author", "year" from "books"',
             bindings: []
           },
@@ -97,7 +97,7 @@ describe('Query Generation ::', function() {
             bindings: []
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select "title" "book_title", "author" "book_author", "year" "book_year" from "books"',
             bindings: []
           },

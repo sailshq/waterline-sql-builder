@@ -28,8 +28,8 @@ describe('Query Generation ::', function() {
             bindings: ['Slaughterhouse Five']
           },
           {
-            dialect: 'oracle',
-            sql: 'insert into "books" ("title") values (:1) returning ROWID into :2',
+            dialect: 'oracledb',
+            sql: 'insert into "books" ("title") values (:1) returning "author" into :2',
             bindings: ['Slaughterhouse Five', { 'columnName': 'author' }]
           },
           {

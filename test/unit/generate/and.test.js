@@ -35,7 +35,7 @@ describe('Query Generation ::', function() {
             bindings: ['foo', 'bar']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select * from "users" where "firstName" = :1 and "lastName" = :2',
             bindings: ['foo', 'bar']
           },
@@ -99,7 +99,7 @@ describe('Query Generation ::', function() {
             bindings: ['John', 'Smith', '100', '10.01']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select * from "users" where ("firstName" = :1 or "lastName" = :2) and ("qty" > :3 or "price" < :4)',
             bindings: ['John', 'Smith', '100', '10.01']
           },

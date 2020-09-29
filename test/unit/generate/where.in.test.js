@@ -34,7 +34,7 @@ describe('Query Generation ::', function() {
             bindings: ['1', '2', '3']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select "name" from "users" where "id" in (:1, :2, :3)',
             bindings: ['1', '2', '3']
           },
@@ -84,7 +84,7 @@ describe('Query Generation ::', function() {
             bindings: ['1', '2', '3', '4', '5', '6']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select "name" from "users" where "id" in (:1, :2, :3) or "id" in (:4, :5, :6)',
             bindings: ['1', '2', '3', '4', '5', '6']
           },

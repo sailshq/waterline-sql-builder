@@ -27,7 +27,7 @@ describe('Query Generation ::', function() {
             bindings: []
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select distinct "firstName", "lastName" from "customers"',
             bindings: []
           },

@@ -26,7 +26,7 @@ describe('Query Generation ::', function() {
             bindings: ['10']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select * from (select "id" from "users") where rownum <= :1',
             bindings: ['10']
           },

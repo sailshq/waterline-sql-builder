@@ -33,7 +33,7 @@ describe('Query Generation ::', function() {
               bindings: []
             },
             {
-              dialect: 'oracle',
+              dialect: 'oracledb',
               sql: 'select * from "users" where "updatedAt" is null',
               bindings: []
             },

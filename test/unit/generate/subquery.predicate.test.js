@@ -44,7 +44,7 @@ describe('Query Generation ::', function() {
               bindings: ['active', 'John']
             },
             {
-              dialect: 'oracle',
+              dialect: 'oracledb',
               sql: 'select * from "accounts" where "id" in (select "id" from "users" where "status" = :1 or "name" = :2)',
               bindings: ['active', 'John']
             },
@@ -98,7 +98,7 @@ describe('Query Generation ::', function() {
               bindings: ['active', 'John']
             },
             {
-              dialect: 'oracle',
+              dialect: 'oracledb',
               sql: 'select * from "accounts" where "id" not in (select "id" from "users" where "status" = :1 or "name" = :2)',
               bindings: ['active', 'John']
             },
