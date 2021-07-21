@@ -24,12 +24,12 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'insert into "books" ("title") values (?)',
+            sql: 'insert into `books` (`title`) values (?)',
             bindings: ['Slaughterhouse Five']
           },
           {
-            dialect: 'oracle',
-            sql: 'insert into "books" ("title") values (:1) returning ROWID into :2',
+            dialect: 'oracledb',
+            sql: 'insert into "books" ("title") values (:1) returning "author" into :2',
             bindings: ['Slaughterhouse Five', { 'columnName': 'author' }]
           },
           {
@@ -64,13 +64,13 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'insert into "books" ("author", "title") values (?, ?)',
+            sql: 'insert into `books` (`author`, `title`) values (?, ?)',
             bindings: ['Kurt Vonnegut', 'Slaughterhouse Five']
           },
           {
-            dialect: 'oracle',
-            sql: 'insert into "books" ("author", "title") values (:1, :2) returning ROWID into :3',
-            bindings: ['Kurt Vonnegut', 'Slaughterhouse Five', { 'columnName': 'author:title' }]
+            dialect: 'oracledb',
+            sql: 'insert into "books" ("author", "title") values (:1, :2) returning "author","title" into :3,:4',
+            bindings: ['Kurt Vonnegut', 'Slaughterhouse Five', { 'columnName': 'author'}, { 'columnName': 'title' }]
           },
           {
             dialect: 'mariadb',
@@ -103,13 +103,13 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'insert into "books" ("title") values (?)',
+            sql: 'insert into `books` (`title`) values (?)',
             bindings: ['Slaughterhouse Five']
           },
           {
-            dialect: 'oracle',
-            sql: 'insert into "books" ("title") values (:1) returning ROWID into :2',
-            bindings: ['Slaughterhouse Five', { 'columnName': '*' }]
+            dialect: 'oracledb',
+            sql: 'insert into "books" ("title") values (:1) returning "ROWID" into :2',
+            bindings: ['Slaughterhouse Five', { 'columnName': 'ROWID' }]
           },
           {
             dialect: 'mariadb',

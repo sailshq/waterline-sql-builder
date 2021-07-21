@@ -22,11 +22,11 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select * from "users" group by "count"',
+            sql: 'select * from `users` group by `count`',
             bindings: []
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select * from "users" group by "count"',
             bindings: []
           },

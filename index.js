@@ -24,9 +24,17 @@ module.exports = function sqlBuilder(options) {
     throw new Error('Missing Dialect!');
   }
 
+  // Modify deprecated dialect values
+  if (options.dialect==='mariadb') {
+    options.dialect='mysql';
+  }
+  if (options.dialect==='oracle') {
+    options.dialect='oracledb';
+  }
+
   // Build up a Knex instance to use in the query builder
   var knexInstance = Knex({
-    dialect: options.dialect,
+    client: options.dialect,
     useNullAsDefault: true
   });
 

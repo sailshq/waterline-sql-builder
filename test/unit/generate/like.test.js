@@ -35,11 +35,11 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select * from "users" where "name" like ? or "id" not in (?, ?, ?)',
+            sql: 'select * from `users` where `name` like ? or `id` not in (?, ?, ?)',
             bindings: ['%Test%', '1', '2', '3']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select * from "users" where "name" like :1 or "id" not in (:2, :3, :4)',
             bindings: ['%Test%', '1', '2', '3']
           },

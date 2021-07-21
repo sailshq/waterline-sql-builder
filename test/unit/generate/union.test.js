@@ -52,11 +52,11 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select * from "users" where "firstName" = ? union (select * from "users" where "lastName" = ?) union (select * from "users" where "middleName" = ?)',
+            sql: 'select * from `users` where `firstName` = ? union (select * from `users` where `lastName` = ?) union (select * from `users` where `middleName` = ?)',
             bindings: ['Bob', 'Smith', 'Allen']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select * from "users" where "firstName" = :1 union (select * from "users" where "lastName" = :2) union (select * from "users" where "middleName" = :3)',
             bindings: ['Bob', 'Smith', 'Allen']
           },

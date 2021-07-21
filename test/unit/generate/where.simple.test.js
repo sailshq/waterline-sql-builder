@@ -31,11 +31,11 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select "id" from "users" where "firstName" = ? and "lastName" = ?',
+            sql: 'select `id` from `users` where `firstName` = ? and `lastName` = ?',
             bindings: ['Test', 'User']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select "id" from "users" where "firstName" = :1 and "lastName" = :2',
             bindings: ['Test', 'User']
           },
@@ -76,11 +76,11 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select * from "users" where "votes" > ?',
+            sql: 'select * from `users` where `votes` > ?',
             bindings: ['100']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select * from "users" where "votes" > :1',
             bindings: ['100']
           },
@@ -126,11 +126,11 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select * from "users" where "votes" > ? and "votes" < ?',
+            sql: 'select * from `users` where `votes` > ? and `votes` < ?',
             bindings: ['100', '200']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select * from "users" where "votes" > :1 and "votes" < :2',
             bindings: ['100', '200']
           },
@@ -176,11 +176,11 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select * from "users" where "votes" > ? and "age" < ?',
+            sql: 'select * from `users` where `votes` > ? and `age` < ?',
             bindings: ['100', '50']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select * from "users" where "votes" > :1 and "age" < :2',
             bindings: ['100', '50']
           },

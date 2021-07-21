@@ -32,7 +32,7 @@ describe('Query Generation ::', function() {
             },
             {
               dialect: 'sqlite3',
-              sql: 'select "name", (select "username" from "users" where "status" = ? or "name" = ?) as "username", "age" from "accounts"',
+              sql: 'select `name`, (select `username` from `users` where `status` = ? or `name` = ?) as `username`, `age` from `accounts`',
               bindings: ['active', 'John']
             },
             {
@@ -81,7 +81,7 @@ describe('Query Generation ::', function() {
             },
             {
               dialect: 'sqlite3',
-              sql: 'select "name", "age" from "accounts" where "username" = (select "username" from "users" where "color" = ?)',
+              sql: 'select `name`, `age` from `accounts` where `username` = (select `username` from `users` where `color` = ?)',
               bindings: ['accounts.color']
             },
             {
