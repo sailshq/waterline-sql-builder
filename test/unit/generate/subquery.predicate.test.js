@@ -40,19 +40,14 @@ describe('Query Generation ::', function() {
             },
             {
               dialect: 'sqlite3',
-              sql: 'select * from "accounts" where "id" in (select "id" from "users" where "status" = ? or "name" = ?)',
+              sql: 'select * from `accounts` where `id` in (select `id` from `users` where `status` = ? or `name` = ?)',
               bindings: ['active', 'John']
             },
             {
-              dialect: 'oracle',
+              dialect: 'oracledb',
               sql: 'select * from "accounts" where "id" in (select "id" from "users" where "status" = :1 or "name" = :2)',
               bindings: ['active', 'John']
             },
-            {
-              dialect: 'mariadb',
-              sql: 'select * from `accounts` where `id` in (select `id` from `users` where `status` = ? or `name` = ?)',
-              bindings: ['active', 'John']
-            }
           ]
         }, done);
       });
@@ -94,19 +89,14 @@ describe('Query Generation ::', function() {
             },
             {
               dialect: 'sqlite3',
-              sql: 'select * from "accounts" where "id" not in (select "id" from "users" where "status" = ? or "name" = ?)',
+              sql: 'select * from `accounts` where `id` not in (select `id` from `users` where `status` = ? or `name` = ?)',
               bindings: ['active', 'John']
             },
             {
-              dialect: 'oracle',
+              dialect: 'oracledb',
               sql: 'select * from "accounts" where "id" not in (select "id" from "users" where "status" = :1 or "name" = :2)',
               bindings: ['active', 'John']
             },
-            {
-              dialect: 'mariadb',
-              sql: 'select * from `accounts` where `id` not in (select `id` from `users` where `status` = ? or `name` = ?)',
-              bindings: ['active', 'John']
-            }
           ]
         }, done);
       });

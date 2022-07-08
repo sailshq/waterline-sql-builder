@@ -31,19 +31,14 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select * from "users" where "firstName" = ? and "lastName" = ?',
+            sql: 'select * from `users` where `firstName` = ? and `lastName` = ?',
             bindings: ['foo', 'bar']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select * from "users" where "firstName" = :1 and "lastName" = :2',
             bindings: ['foo', 'bar']
           },
-          {
-            dialect: 'mariadb',
-            sql: 'select * from `users` where `firstName` = ? and `lastName` = ?',
-            bindings: ['foo', 'bar']
-          }
         ]
       }, done);
     });
@@ -95,19 +90,14 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select * from "users" where ("firstName" = ? or "lastName" = ?) and ("qty" > ? or "price" < ?)',
+            sql: 'select * from `users` where (`firstName` = ? or `lastName` = ?) and (`qty` > ? or `price` < ?)',
             bindings: ['John', 'Smith', '100', '10.01']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select * from "users" where ("firstName" = :1 or "lastName" = :2) and ("qty" > :3 or "price" < :4)',
             bindings: ['John', 'Smith', '100', '10.01']
           },
-          {
-            dialect: 'mariadb',
-            sql: 'select * from `users` where (`firstName` = ? or `lastName` = ?) and (`qty` > ? or `price` < ?)',
-            bindings: ['John', 'Smith', '100', '10.01']
-          }
         ]
       }, done);
     });

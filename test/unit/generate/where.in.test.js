@@ -30,19 +30,14 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select "name" from "users" where "id" in (?, ?, ?)',
+            sql: 'select `name` from `users` where `id` in (?, ?, ?)',
             bindings: ['1', '2', '3']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select "name" from "users" where "id" in (:1, :2, :3)',
             bindings: ['1', '2', '3']
           },
-          {
-            dialect: 'mariadb',
-            sql: 'select `name` from `users` where `id` in (?, ?, ?)',
-            bindings: ['1', '2', '3']
-          }
         ]
       }, done);
     });
@@ -80,19 +75,14 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select "name" from "users" where "id" in (?, ?, ?) or "id" in (?, ?, ?)',
+            sql: 'select `name` from `users` where `id` in (?, ?, ?) or `id` in (?, ?, ?)',
             bindings: ['1', '2', '3', '4', '5', '6']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select "name" from "users" where "id" in (:1, :2, :3) or "id" in (:4, :5, :6)',
             bindings: ['1', '2', '3', '4', '5', '6']
           },
-          {
-            dialect: 'mariadb',
-            sql: 'select `name` from `users` where `id` in (?, ?, ?) or `id` in (?, ?, ?)',
-            bindings: ['1', '2', '3', '4', '5', '6']
-          }
         ]
       }, done);
     });

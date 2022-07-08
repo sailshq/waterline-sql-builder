@@ -21,19 +21,14 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select sum("active") from "users"',
-            bindings: []
-          },
-          {
-            dialect: 'oracle',
-            sql: 'select sum("active") from "users"',
-            bindings: []
-          },
-          {
-            dialect: 'mariadb',
             sql: 'select sum(`active`) from `users`',
             bindings: []
-          }
+          },
+          {
+            dialect: 'oracledb',
+            sql: 'select sum("active") from "users"',
+            bindings: []
+          },
         ]
       }, done);
     });

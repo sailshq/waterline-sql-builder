@@ -21,19 +21,14 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select * from "books"',
-            bindings: []
-          },
-          {
-            dialect: 'oracle',
-            sql: 'select * from "books"',
-            bindings: []
-          },
-          {
-            dialect: 'mariadb',
             sql: 'select * from `books`',
             bindings: []
-          }
+          },
+          {
+            dialect: 'oracledb',
+            sql: 'select * from "books"',
+            bindings: []
+          },
         ]
       }, done);
     });

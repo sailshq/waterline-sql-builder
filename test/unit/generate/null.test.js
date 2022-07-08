@@ -29,19 +29,14 @@ describe('Query Generation ::', function() {
             },
             {
               dialect: 'sqlite3',
-              sql: 'select * from "users" where "updatedAt" is null',
-              bindings: []
-            },
-            {
-              dialect: 'oracle',
-              sql: 'select * from "users" where "updatedAt" is null',
-              bindings: []
-            },
-            {
-              dialect: 'mariadb',
               sql: 'select * from `users` where `updatedAt` is null',
               bindings: []
-            }
+            },
+            {
+              dialect: 'oracledb',
+              sql: 'select * from "users" where "updatedAt" is null',
+              bindings: []
+            },
           ]
         }, done);
       });

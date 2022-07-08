@@ -23,19 +23,14 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'insert into "books" ("title") values (?)',
+            sql: 'insert into `books` (`title`) values (?)',
             bindings: ['Slaughterhouse Five']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'insert into "books" ("title") values (:1)',
             bindings: ['Slaughterhouse Five']
           },
-          {
-            dialect: 'mariadb',
-            sql: 'insert into `books` (`title`) values (?)',
-            bindings: ['Slaughterhouse Five']
-          }
         ]
       }, done);
     });
@@ -62,19 +57,14 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'insert into "books" ("author", "title") values (?, ?)',
+            sql: 'insert into `books` (`author`, `title`) values (?, ?)',
             bindings: ['Kurt Vonnegut', 'Slaughterhouse Five']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'insert into "books" ("author", "title") values (:1, :2)',
             bindings: ['Kurt Vonnegut', 'Slaughterhouse Five']
           },
-          {
-            dialect: 'mariadb',
-            sql: 'insert into `books` (`author`, `title`) values (?, ?)',
-            bindings: ['Kurt Vonnegut', 'Slaughterhouse Five']
-          }
         ]
       }, done);
     });
@@ -107,19 +97,14 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'insert into "books" ("author", "title") select ? as "author", ? as "title" union all select ? as "author", ? as "title"',
+            sql: 'insert into `books` (`author`, `title`) select ? as `author`, ? as `title` union all select ? as `author`, ? as `title`',
             bindings: ['Kurt Vonnegut', 'Slaughterhouse Five', 'F. Scott Fitzgerald', 'The Great Gatsby']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'begin execute immediate \'insert into "books" ("author", "title") values (:1, :2)\' using :1, :2; execute immediate \'insert into "books" ("author", "title") values (:1, :2)\' using :3, :4;end;',
             bindings: ['Kurt Vonnegut', 'Slaughterhouse Five', 'F. Scott Fitzgerald', 'The Great Gatsby']
           },
-          {
-            dialect: 'mariadb',
-            sql: 'insert into `books` (`author`, `title`) values (?, ?), (?, ?)',
-            bindings: ['Kurt Vonnegut', 'Slaughterhouse Five', 'F. Scott Fitzgerald', 'The Great Gatsby']
-          }
         ]
       }, done);
     });

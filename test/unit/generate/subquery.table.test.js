@@ -33,19 +33,14 @@ describe('Query Generation ::', function() {
             },
             {
               dialect: 'sqlite3',
-              sql: 'select "name", "age" from (select "age" from "users" where "age" = ?) as "userage"',
+              sql: 'select `name`, `age` from (select `age` from `users` where `age` = ?) as `userage`',
               bindings: [21]
             },
             {
-              dialect: 'oracle',
+              dialect: 'oracledb',
               sql: 'select "name", "age" from (select "age" from "users" where "age" = :1) "userage"',
               bindings: [21]
             },
-            {
-              dialect: 'mariadb',
-              sql: 'select `name`, `age` from (select `age` from `users` where `age` = ?) as `userage`',
-              bindings: [21]
-            }
           ]
         }, done);
       });

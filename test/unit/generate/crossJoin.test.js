@@ -30,19 +30,14 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select "users"."id", "contacts"."phone" from "users" cross join "contacts" on "users"."id" = "contacts"."user_id"',
-            bindings: []
-          },
-          {
-            dialect: 'oracle',
-            sql: 'select "users"."id", "contacts"."phone" from "users" cross join "contacts" on "users"."id" = "contacts"."user_id"',
-            bindings: []
-          },
-          {
-            dialect: 'mariadb',
             sql: 'select `users`.`id`, `contacts`.`phone` from `users` cross join `contacts` on `users`.`id` = `contacts`.`user_id`',
             bindings: []
-          }
+          },
+          {
+            dialect: 'oracledb',
+            sql: 'select "users"."id", "contacts"."phone" from "users" cross join "contacts" on "users"."id" = "contacts"."user_id"',
+            bindings: []
+          },
         ]
       }, done);
     });

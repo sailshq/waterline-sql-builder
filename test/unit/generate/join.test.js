@@ -30,19 +30,14 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select "users"."id", "contacts"."phone" from "users" inner join "contacts" on "users"."id" = "contacts"."user_id"',
-            bindings: []
-          },
-          {
-            dialect: 'oracle',
-            sql: 'select "users"."id", "contacts"."phone" from "users" inner join "contacts" on "users"."id" = "contacts"."user_id"',
-            bindings: []
-          },
-          {
-            dialect: 'mariadb',
             sql: 'select `users`.`id`, `contacts`.`phone` from `users` inner join `contacts` on `users`.`id` = `contacts`.`user_id`',
             bindings: []
-          }
+          },
+          {
+            dialect: 'oracledb',
+            sql: 'select "users"."id", "contacts"."phone" from "users" inner join "contacts" on "users"."id" = "contacts"."user_id"',
+            bindings: []
+          },
         ]
       }, done);
     });
@@ -82,19 +77,14 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select "users"."id", "contacts"."phone", "carriers"."name" from "users" inner join "contacts" on "users"."id" = "contacts"."user_id" inner join "carriers" on "users"."id" = "carriers"."user_id"',
-            bindings: []
-          },
-          {
-            dialect: 'oracle',
-            sql: 'select "users"."id", "contacts"."phone", "carriers"."name" from "users" inner join "contacts" on "users"."id" = "contacts"."user_id" inner join "carriers" on "users"."id" = "carriers"."user_id"',
-            bindings: []
-          },
-          {
-            dialect: 'mariadb',
             sql: 'select `users`.`id`, `contacts`.`phone`, `carriers`.`name` from `users` inner join `contacts` on `users`.`id` = `contacts`.`user_id` inner join `carriers` on `users`.`id` = `carriers`.`user_id`',
             bindings: []
-          }
+          },
+          {
+            dialect: 'oracledb',
+            sql: 'select "users"."id", "contacts"."phone", "carriers"."name" from "users" inner join "contacts" on "users"."id" = "contacts"."user_id" inner join "carriers" on "users"."id" = "carriers"."user_id"',
+            bindings: []
+          },
         ]
       }, done);
     });
@@ -135,19 +125,14 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select * from "users" inner join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"',
-            bindings: []
-          },
-          {
-            dialect: 'oracle',
-            sql: 'select * from "users" inner join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"',
-            bindings: []
-          },
-          {
-            dialect: 'mariadb',
             sql: 'select * from `users` inner join `accounts` on `accounts`.`id` = `users`.`account_id` or `accounts`.`owner_id` = `users`.`id`',
             bindings: []
-          }
+          },
+          {
+            dialect: 'oracledb',
+            sql: 'select * from "users" inner join "accounts" on "accounts"."id" = "users"."account_id" or "accounts"."owner_id" = "users"."id"',
+            bindings: []
+          },
         ]
       }, done);
     });

@@ -22,19 +22,14 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select * from "users" order by "name" desc, "age" asc',
-            bindings: []
-          },
-          {
-            dialect: 'oracle',
-            sql: 'select * from "users" order by "name" desc, "age" asc',
-            bindings: []
-          },
-          {
-            dialect: 'mariadb',
             sql: 'select * from `users` order by `name` desc, `age` asc',
             bindings: []
-          }
+          },
+          {
+            dialect: 'oracledb',
+            sql: 'select * from "users" order by "name" desc, "age" asc',
+            bindings: []
+          },
         ]
       }, done);
     });

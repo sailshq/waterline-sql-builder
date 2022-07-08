@@ -27,8 +27,8 @@ describe('Sequelizer ::', function() {
     it('should generate a query with multiple values being inserted', function() {
       var tree = analyze({
         update: {
-          status: 'archived',
-          active: false
+          active: false,
+          status: 'archived'
         },
         where: {
           and: [

@@ -22,19 +22,14 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select "id" from "users" limit ?',
+            sql: 'select `id` from `users` limit ?',
             bindings: ['10']
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select * from (select "id" from "users") where rownum <= :1',
             bindings: ['10']
           },
-          {
-            dialect: 'mariadb',
-            sql: 'select `id` from `users` limit ?',
-            bindings: ['10']
-          }
         ]
       }, done);
     });

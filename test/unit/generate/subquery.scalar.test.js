@@ -32,19 +32,14 @@ describe('Query Generation ::', function() {
             },
             {
               dialect: 'sqlite3',
-              sql: 'select "name", (select "username" from "users" where "status" = ? or "name" = ?) as "username", "age" from "accounts"',
+              sql: 'select `name`, (select `username` from `users` where `status` = ? or `name` = ?) as `username`, `age` from `accounts`',
               bindings: ['active', 'John']
             },
             {
-              dialect: 'oracle',
+              dialect: 'oracledb',
               sql: 'select "name", (select "username" from "users" where "status" = :1 or "name" = :2) "username", "age" from "accounts"',
               bindings: ['active', 'John']
             },
-            {
-              dialect: 'mariadb',
-              sql: 'select `name`, (select `username` from `users` where `status` = ? or `name` = ?) as `username`, `age` from `accounts`',
-              bindings: ['active', 'John']
-            }
           ]
         }, done);
       });
@@ -81,19 +76,14 @@ describe('Query Generation ::', function() {
             },
             {
               dialect: 'sqlite3',
-              sql: 'select "name", "age" from "accounts" where "username" = (select "username" from "users" where "color" = ?)',
+              sql: 'select `name`, `age` from `accounts` where `username` = (select `username` from `users` where `color` = ?)',
               bindings: ['accounts.color']
             },
             {
-              dialect: 'oracle',
+              dialect: 'oracledb',
               sql: 'select "name", "age" from "accounts" where "username" = (select "username" from "users" where "color" = :1)',
               bindings: ['accounts.color']
             },
-            {
-              dialect: 'mariadb',
-              sql: 'select `name`, `age` from `accounts` where `username` = (select `username` from `users` where `color` = ?)',
-              bindings: ['accounts.color']
-            }
           ]
         }, done);
       });
