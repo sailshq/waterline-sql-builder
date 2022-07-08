@@ -26,7 +26,7 @@ module.exports = function sqlBuilder(options) {
 
   // Build up a Knex instance to use in the query builder
   var knexInstance = Knex({
-    dialect: options.dialect,
+    client: options.dialect,
     useNullAsDefault: true
   });
 
