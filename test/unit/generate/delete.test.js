@@ -28,11 +28,11 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'delete from "accounts" where "activated" = ?',
+            sql: 'delete from `accounts` where `activated` = ?',
             bindings: [false]
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'delete from "accounts" where "activated" = :1',
             bindings: ['0']
           },

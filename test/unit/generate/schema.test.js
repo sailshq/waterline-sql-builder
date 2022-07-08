@@ -24,11 +24,11 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select "title", "author", "year" from "foo"."books"',
+            sql: 'select `title`, `author`, `year` from `foo`.`books`',
             bindings: []
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select "title", "author", "year" from "foo"."books"',
             bindings: []
           },

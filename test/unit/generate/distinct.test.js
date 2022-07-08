@@ -23,11 +23,11 @@ describe('Query Generation ::', function() {
           },
           {
             dialect: 'sqlite3',
-            sql: 'select distinct "firstName", "lastName" from "customers"',
+            sql: 'select distinct `firstName`, `lastName` from `customers`',
             bindings: []
           },
           {
-            dialect: 'oracle',
+            dialect: 'oracledb',
             sql: 'select distinct "firstName", "lastName" from "customers"',
             bindings: []
           },
