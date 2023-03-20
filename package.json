@@ -1,6 +1,6 @@
 {
   "name": "waterline-sql-builder",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "Generate SQL (stage 5 query) from a Waterline statement (stage 4 query).",
   "scripts": {
     "test": "node ./node_modules/mocha/bin/mocha test/unit --recursive",
